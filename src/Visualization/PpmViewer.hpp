@@ -22,6 +22,7 @@ class PpmViewer {
         bool loadFromFile(const std::string& filename);
         bool loadFromPixelData(const std::vector<sf::Color>& pixels, int width, int height);
         void display();
+        const sf::Image& getImage() const { return _image; }
     private:
         sf::RenderWindow _window;
         sf::Texture _texture;

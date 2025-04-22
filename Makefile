@@ -8,7 +8,7 @@
 NAME = raytracer
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
-LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system -pthread
 PLUGINS_DIR = ./Plugins
 PRIMITIVES_DIR = $(PLUGINS_DIR)/Primitives
 LIGHTS_DIR = $(PLUGINS_DIR)/Lights
@@ -62,7 +62,7 @@ fclean: clean
 	rm -rf $(PRIMITIVES_DIR)
 	rm -rf $(LIGHTS_DIR)
 	rm -rf $(MATERIALS_DIR)
-	rm -rf *.ppm
+	rm -f *.ppm
 
 re: fclean all
 

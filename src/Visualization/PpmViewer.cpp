@@ -35,9 +35,7 @@ namespace RayTracer {
         file >> _width >> _height;
         int maxValue;
         file >> maxValue;
-
         _image.create(_width, _height);
-
         for (int y = 0; y < _height; ++y) {
             for (int x = 0; x < _width; ++x) {
                 int r, g, b;
