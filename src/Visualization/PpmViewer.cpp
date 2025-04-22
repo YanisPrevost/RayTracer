@@ -90,7 +90,6 @@ namespace RayTracer {
                     _window.close();
                 }
             }
-
             _window.clear();
             _window.draw(_sprite);
             _window.display();
