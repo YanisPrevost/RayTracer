@@ -19,10 +19,10 @@ namespace Math {
     template<size_t N>
     Vector<N>::Vector(const std::initializer_list<double>& values) {
         size_t i = 0;
-        for (auto it = values.begin(); it != values.end() && i < N; ++it, ++i) {
+        for (auto it = values.begin(); it != values.end() && i < N; it++, i++) {
             components[i] = *it;
         }
-        for (; i < N; ++i) {
+        for (; i < N; i++) {
             components[i] = 0.0;
         }
     }
