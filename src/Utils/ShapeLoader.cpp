@@ -31,7 +31,6 @@ namespace RayTracer {
         }
         loadedLibraries.push_back(std::make_unique<LibraryHandle>(handle, libraryPath));
         shapes.push_back(std::unique_ptr<IShape>(shape));
-        std::cout << "Forme chargée avec succès: " << shape->getType() << " depuis " << libraryPath << std::endl;
         return true;
     }
 

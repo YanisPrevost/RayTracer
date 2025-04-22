@@ -8,8 +8,7 @@
 NAME = raytracer
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
-LDFLAGS = -ldl
-LIBS_DIR = ./libs
+LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system
 PLUGINS_DIR = ./Plugins
 PRIMITIVES_DIR = $(PLUGINS_DIR)/Primitives
 LIGHTS_DIR = $(PLUGINS_DIR)/Lights
@@ -26,7 +25,8 @@ SRC_DIRS = $(SRC_BASE) \
            $(SRC_BASE)/Utils \
            $(SRC_BASE)/Vectors \
            $(SRC_BASE)/Interfaces \
-           $(SRC_BASE)/Display
+           $(SRC_BASE)/Display	\
+		   $(SRC_BASE)/Visualization
 
 SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.cpp))
 OBJS = $(SRCS:.cpp=.o)
@@ -37,7 +37,6 @@ INCLUDES = -I$(SRC_BASE)
 all: prepare_libs $(SHAPES_LIBS) $(NAME)
 
 prepare_libs:
-	mkdir -p $(LIBS_DIR)
 	mkdir -p $(PRIMITIVES_DIR)
 	mkdir -p $(LIGHTS_DIR)
 	mkdir -p $(MATERIALS_DIR)
@@ -63,6 +62,7 @@ fclean: clean
 	rm -rf $(PRIMITIVES_DIR)
 	rm -rf $(LIGHTS_DIR)
 	rm -rf $(MATERIALS_DIR)
+	rm -rf *.ppm
 
 re: fclean all
 

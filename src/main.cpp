@@ -1,14 +1,20 @@
+/*
+** EPITECH PROJECT, 2024
+** RayTracer
+** File description:
+** main.cpp
+*/
+
 #include <iostream>
 #include "Camera/Camera.hpp"
 #include "Utils/ShapeLoader.hpp"
 #include "Utils/utils.hpp"
+#include "Visualization/PpmViewer.hpp"
 
 int main() {
-    const int width = 400;
-    const int height = 400;
-
+    const int width = 1280;
+    const int height = 720;
     RayTracer::Camera cam;
-
     RayTracer::ShapeLoader shapeLoader;
 
     if (!shapeLoader.loadShapeLibrary("./Plugins/Primitives/libsphere.so")) {
@@ -35,7 +41,6 @@ int main() {
                     break;
                 }
             }
-
             if (hit) {
                 RayTracer::write_color(Math::Vector3D(1, 0, 0)); // Rouge
             } else {
@@ -45,5 +50,17 @@ int main() {
     }
 
     std::cerr << "Image générée. Redirection vers un fichier .ppm pour visualisation.\n";
+
+    try {
+        RayTracer::PpmViewer viewer;
+        if (!viewer.loadFromFile("output.ppm")) {
+            std::cerr << "Erreur lors du chargement de l'image PPM." << std::endl;
+            return 1;
+        }
+        viewer.display();
+    } catch (const std::exception& e) {
+        std::cerr << "Erreur: " << e.what() << std::endl;
+        return 1;
+    }
     return 0;
 }
