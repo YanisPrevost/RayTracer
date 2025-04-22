@@ -14,11 +14,4 @@ namespace RayTracer {
         this->direction = direction;
     }
 
-    const Math::Point3D& Ray::getOrigin() const {
-        return origin;
-    }
-
-    const Math::Vector3D& Ray::getDirection() const {
-        return direction;
-    }
 }
