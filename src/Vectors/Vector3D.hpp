@@ -20,6 +20,7 @@ namespace Math {
             Vector3D(double x, double y, double z);
             double length() const;
             double dot(const Vector3D& other) const;
+
             Vector3D operator+(const Vector3D& other) const;
             Vector3D& operator+=(const Vector3D& other);
 

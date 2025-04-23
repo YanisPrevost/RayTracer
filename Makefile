@@ -30,8 +30,7 @@ SRC_DIRS = $(SRC_BASE) \
 
 SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.cpp))
 OBJS = $(SRCS:.cpp=.o)
-SHAPES_LIBS = libsphere.so \
-			libplane.so
+SHAPES_LIBS = libsphere.so
 INCLUDES = -I$(SRC_BASE)
 
 all: prepare_libs $(SHAPES_LIBS) $(NAME)
@@ -48,9 +47,6 @@ $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 libsphere.so: $(SRC_BASE)/Primitives/Sphere/Sphere.cpp $(MATH_FILES)
-	$(CXX) $(CXXFLAGS) -fPIC -shared -o $(PRIMITIVES_DIR)/$@ $^ $(INCLUDES)
-
-libplane.so: $(SRC_BASE)/Primitives/Plane/Plane.cpp $(MATH_FILES)
 	$(CXX) $(CXXFLAGS) -fPIC -shared -o $(PRIMITIVES_DIR)/$@ $^ $(INCLUDES)
 
 clean:

@@ -6,10 +6,29 @@
 */
 
 #include "Camera.hpp"
+#include <cmath>
 
 namespace RayTracer {
-    Camera::Camera() : origin(Math::Point3D(0, 0, -5)), screen(Math::Point3D(0, 0, -3), Math::Vector3D(2, 0, 0), Math::Vector3D(0, 2, 0)) {}
-    Camera::Camera(const Math::Point3D& origin, const Math::Rectangle3D& screen) : origin(origin), screen(screen) {}
+
+    Camera::Camera(const Math::Point3D& position, double fieldOfView, int width, int height)
+        : origin(position), screen(position, Math::Vector3D(0, 0, 0), Math::Vector3D(0, 0, 0))
+    {
+        double focalDistance = 50.0;
+        double fovRadians = fieldOfView * M_PI / 180.0;
+        double screenWidth = 2 * focalDistance * tan(fovRadians / 2);
+        double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
+        double screenHeight = screenWidth / aspectRatio;
+        Math::Point3D screenOrigin(
+            position.getX() - screenWidth/2,
+            position.getY() + focalDistance,
+            position.getZ() - screenHeight/2
+        );
+        screen = Math::Rectangle3D(
+            screenOrigin,
+            Math::Vector3D(screenWidth, 0, 0),
+            Math::Vector3D(0, 0, screenHeight)
+        );
+    }
 
     Ray Camera::ray(double u, double v) const
     {

@@ -17,11 +17,10 @@ namespace RayTracer {
             Math::Point3D origin;
             Math::Rectangle3D screen;
         public:
-            Camera();
             Camera(const Camera& other) = default;
             Camera& operator=(const Camera& other) = default;
             ~Camera() = default;
-            Camera(const Math::Point3D& origin, const Math::Rectangle3D& screen);
+            Camera(const Math::Point3D& position, double fieldOfView, int width, int height);
             Ray ray(double u, double v) const;
     };
 }

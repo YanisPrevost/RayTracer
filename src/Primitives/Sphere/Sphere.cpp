@@ -19,7 +19,6 @@ namespace RayTracer {
         double b = 2.0 * ray.getDirection().dot(originToCenter); // 2 * D · (O-C)
         double c = originToCenter.dot(originToCenter) - radius * radius; // (O-C) · (O-C) - R²
         double discriminant = b * b - 4 * a * c;
-
         return discriminant >= 0;
     }
 }

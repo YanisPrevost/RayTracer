@@ -12,9 +12,11 @@
 #include <vector>
 #include <chrono>
 #include "Camera/Camera.hpp"
-#include "Utils/ShapeLoader.hpp"
+#include "Utils/ShapeBuilder.hpp"
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
+#include "Primitives/ShapeDecorator.hpp"
+#include <cstring>
 
 void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
         const std::vector<std::unique_ptr<RayTracer::IShape>>& shapes)
@@ -26,17 +28,31 @@ void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
             double v = static_cast<double>(j) / (height - 1);
             RayTracer::Ray r = cam.ray(u, v);
             bool hit = false;
-            for (const auto& shape : shapes) {
+            const RayTracer::IShape* hitShape = nullptr;
+            for (auto it = shapes.rbegin(); it != shapes.rend(); ++it) {
+                const auto& shape = *it;
                 if (shape && shape->hits(r)) {
                     hit = true;
+                    hitShape = shape.get();
                     break;
                 }
             }
             Math::Vector3D color;
-            if (hit)
-                color = Math::Vector3D(1.0, 0.0, 0.0); // Red if hit
+            if (hit) {
+                if (hitShape && strcmp(hitShape->getType(), "ColoredShape") == 0) {
+                    const RayTracer::ColoredShape* coloredShape = dynamic_cast<const RayTracer::ColoredShape*>(hitShape);
+                    if (coloredShape) {
+                        color = Math::Vector3D( coloredShape->getRed() / 255.0, coloredShape->getGreen() / 255.0, coloredShape->getBlue() / 255.0
+                        );
+                    } else {
+                        color = Math::Vector3D(1.0, 0.0, 0.0);
+                    }
+                } else {
+                    color = Math::Vector3D(1.0, 1.0, 0.0);
+                }
+            }
             else
-                color = Math::Vector3D(0.5, 0.7, 1.0); // Bg color
+                color = Math::Vector3D(0.5, 0.7, 1.0); // Couleur d'arrière-plan
             RayTracer::Utils::write_color(color);
         }
     }
@@ -85,22 +101,25 @@ void displayThread()
 }
 
 int main() {
-    const int width = 1280;
+    // Configuration selon config.cfg
+    const int width = 1270;
     const int height = 720;
-    RayTracer::Camera cam;
-    RayTracer::ShapeLoader shapeLoader;
+    double fov = 90.0;
 
-    std::cout << "Chargement des formes..." << std::endl;
-    if (!shapeLoader.loadShapeLibrary("./Plugins/Primitives/libsphere.so")) {
-        std::cout << "Impossible de charger la sphère." << std::endl;
-        return 1;
-    }
-    const auto& shapes = shapeLoader.getShapes();
-    if (shapes.empty()) {
-        std::cout << "Aucune forme n'a été chargée." << std::endl;
-        return 1;
-    }
-    std::cout << "Nombre de formes chargées: " << shapes.size() << std::endl;
+    RayTracer::Camera cam(Math::Point3D(0, 30, 10), fov, width, height);
+
+    std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
+    RayTracer::SphereBuilder sphereBuilder;
+    RayTracer::ShapeDirector director;
+
+    std::cout << "Construction des formes avec le pattern Builder..." << std::endl;
+
+    sphereBuilder.setColor(0, 0, 255).setRadius(10.0); // Couleur bleue
+    shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 5, 0)));
+    sphereBuilder.setColor(0, 255, 0).setRadius(15.0); // Couleur verte
+    shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 8, 0)));
+
+    std::cout << "Nombre de formes créées: " << shapes.size() << std::endl;
     for (const auto& shape : shapes) {
         std::cout << "Type de forme: " << (shape ? shape->getType() : "null") << std::endl;
     }
