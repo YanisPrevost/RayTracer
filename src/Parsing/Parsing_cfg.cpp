@@ -13,6 +13,13 @@ namespace RayTracer
 
         libconfig::Config cfg;
 
+        std::fstream file(_filename.c_str());
+        if (!file.is_open()) {
+            std::cerr << "Error: Unable to open file " << _filename << std::endl;
+            exit(84); // EXCEPTION A FAIRE
+        }
+        file.close();
+
         cfg.readFile(_filename.c_str());
 
         // Parsing camera informations
@@ -40,16 +47,18 @@ namespace RayTracer
                 libconfig::Setting& sphere = spheres[i];
                 Sphere_info sphereInfo;
                 int x, y, z;
-                double radius;
+                int radius = 0;
                 int r, g, b;
 
-                sphere.lookupValue("position.x", x);
-                sphere.lookupValue("position.y", y);
-                sphere.lookupValue("position.z", z);
-                sphere.lookupValue("radius", radius);
-                sphere.lookupValue("color.r", r);
-                sphere.lookupValue("color.g", g);
-                sphere.lookupValue("color.b", b);
+                sphere.lookupValue("x", x);
+                sphere.lookupValue("y", y);
+                sphere.lookupValue("z", z);
+                sphere.lookupValue("r", radius);
+
+                const libconfig::Setting& color = sphere["color"];
+                color.lookupValue("r", r);
+                color.lookupValue("g", g);
+                color.lookupValue("b", b);
 
                 sphereInfo.setPosition(Math::Point3D(x, y, z));
                 sphereInfo.setRadius(radius);
