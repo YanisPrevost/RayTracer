@@ -10,6 +10,7 @@
 #include <fstream>
 #include "Points/Point3D.hpp"
 #include <vector>
+#include <libconfig.h++>
 
 namespace RayTracer
 {
@@ -26,9 +27,9 @@ namespace RayTracer
                     void setPosition(const Math::Point3D& position) { _position = position; }
                     void setWidth(int width) { _width = width; }
                     void setHeight(int height) { _height = height; }
-                private:
                     double _fov;
                     Math::Point3D _position;
+                    Math::Point3D _rotation;
                     int _width;
                     int _height;
             };
