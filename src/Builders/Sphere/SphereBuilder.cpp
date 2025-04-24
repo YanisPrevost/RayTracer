@@ -7,8 +7,8 @@
 
 #include "SphereBuilder.hpp"
 #include "../../Interfaces/IShape.hpp"
-#include "../../Primitives/ShapeDecorator.hpp"
-#include "../../Primitives/PositionedShape.hpp"
+#include "../../Decorator/ShapeDecorator.hpp"
+#include "../../Decorator/PositionedShape.hpp"
 #include <memory>
 #include <dlfcn.h>
 #include <iostream>

@@ -11,7 +11,7 @@
 #include "../Interfaces/IShapeBuilder.hpp"
 #include "../Points/Point3D.hpp"
 #include "../Vectors/Vector3D.hpp"
-#include "../Primitives/ShapeDecorator.hpp"
+#include "../Decorator/ShapeDecorator.hpp"
 #include <memory>
 
 namespace RayTracer {

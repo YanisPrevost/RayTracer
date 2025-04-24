@@ -9,8 +9,8 @@
 
 #include "Interfaces/IShape.hpp"
 #include "Interfaces/IShapeBuilder.hpp"
-#include "Primitives/ShapeDecorator.hpp"
-#include "Primitives/PositionedShape.hpp"
+#include "Decorator/ShapeDecorator.hpp"
+#include "Decorator/PositionedShape.hpp"
 #include <memory>
 #include <dlfcn.h>
 #include <iostream>

@@ -16,7 +16,7 @@
 #include "Builders/Sphere/SphereBuilder.hpp"
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
-#include "Primitives/ShapeDecorator.hpp"
+#include "Decorator/ShapeDecorator.hpp"
 #include "Parsing/Parsing_cfg.hpp"
 #include <cstring>
 
@@ -114,7 +114,6 @@ int main(int argc, char **argv)
     RayTracer::Camera cam(info.getCamInfo().getPosition(), info.getCamInfo().getFov(), width, height);
 
     for (const auto& sphereInfo : info.getSphereInfos()) {
-        std::cout << "test\n";
         sphereBuilder.reset();
         sphereBuilder.setPosition(sphereInfo.getPosition());
         sphereBuilder.setRadius(sphereInfo.getRadius());
