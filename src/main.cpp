@@ -14,6 +14,7 @@
 #include "Camera/Camera.hpp"
 #include "Builders/ShapeBuilder.hpp"
 #include "Builders/Sphere/SphereBuilder.hpp"
+#include "Builders/Plane/PlaneBuilder.hpp"
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
 #include "Decorator/ShapeDecorator.hpp"
@@ -46,13 +47,10 @@ void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
                     if (coloredShape) {
                         color = Math::Vector3D( coloredShape->getRed() / 255.0, coloredShape->getGreen() / 255.0, coloredShape->getBlue() / 255.0
                         );
-                    } else {
-                        color = Math::Vector3D(1.0, 0.0, 0.0);
                     }
                 }
-            }
-            else
-                color = Math::Vector3D(0.5, 0.7, 1.0); // Couleur d'arrière-plan
+            } else
+                color = Math::Vector3D(0.0, 0.0, 0.0); // Couleur d'arrière-plan
             RayTracer::Utils::write_color(color);
         }
     }
@@ -107,6 +105,7 @@ int main(int argc, char **argv)
 
     std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
     RayTracer::SphereBuilder sphereBuilder;
+    RayTracer::PlaneBuilder planeBuilder;
     RayTracer::ShapeDirector director;
     int width = info.getCamInfo().getWidth();
     int height = info.getCamInfo().getHeight();
@@ -120,6 +119,13 @@ int main(int argc, char **argv)
         sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
         shapes.push_back(director.createSphere(sphereBuilder, sphereInfo.getPosition()));
     }
+
+    // for (const auto& planeInfo : info.getPlaneInfos()) {
+        planeBuilder.reset();
+        planeBuilder.setAxis("Z");
+        planeBuilder.setColor(255, 0, 0);
+        shapes.push_back(director.createPlane(planeBuilder, Math::Point3D(0, 0, 0)));
+    // }
 
     std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
     std::thread sfmlThread(displayThread);
