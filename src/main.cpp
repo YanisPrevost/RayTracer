@@ -16,6 +16,7 @@
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
 #include "Primitives/ShapeDecorator.hpp"
+#include "Parsing/Parsing_cfg.hpp"
 #include <cstring>
 
 void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
@@ -100,8 +101,11 @@ void displayThread()
     }
 }
 
-int main() {
-    // Configuration selon config.cfg
+int main(int argc, char **argv)
+{
+    RayTracer::Parsing_cfg parser(argv[1]);
+    parser.parse();
+
     const int width = 1270;
     const int height = 720;
     double fov = 90.0;

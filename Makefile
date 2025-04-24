@@ -26,7 +26,8 @@ SRC_DIRS = $(SRC_BASE) \
            $(SRC_BASE)/Vectors \
            $(SRC_BASE)/Interfaces \
            $(SRC_BASE)/Display	\
-		   $(SRC_BASE)/Visualization
+		   $(SRC_BASE)/Visualization	\
+		   $(SRC_BASE)/Parsing
 
 SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.cpp))
 OBJS = $(SRCS:.cpp=.o)
