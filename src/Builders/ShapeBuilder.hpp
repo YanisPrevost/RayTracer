@@ -23,5 +23,9 @@ namespace RayTracer {
                 builder.setPosition(position);
                 return builder.build();
             }
+            std::unique_ptr<IShape> createPlane(IShapeBuilder& builder, const Math::Point3D& position) {
+                builder.setPosition(position);
+                return builder.build();
+            }
     };
 }
