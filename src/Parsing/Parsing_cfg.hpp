@@ -18,5 +18,7 @@ namespace RayTracer
             Parsing_cfg(const std::string& filename) : _filename(filename) {}
             ~Parsing_cfg() = default;
             void parse();
+            void create(std::vector<std::unique_ptr<RayTracer::IShape>> shapes, RayTracer::SphereBuilder sphereBuilder, 
+                         RayTracer::ShapeDirector director, RayTracer::Camera cam);
     };
 }

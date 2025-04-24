@@ -106,22 +106,12 @@ int main(int argc, char **argv)
     RayTracer::Parsing_cfg parser(argv[1]);
     parser.parse();
 
-    const int width = 1270;
-    const int height = 720;
-    double fov = 90.0;
-
-    RayTracer::Camera cam(Math::Point3D(0, 30, 10), fov, width, height);
-
     std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
     RayTracer::SphereBuilder sphereBuilder;
     RayTracer::ShapeDirector director;
+    RayTracer::Camera cam;
 
-    std::cout << "Construction des formes avec le pattern Builder..." << std::endl;
-
-    sphereBuilder.setColor(0, 0, 255).setRadius(10.0); // Couleur bleue
-    shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 5, 0)));
-    sphereBuilder.setColor(0, 255, 0).setRadius(15.0); // Couleur verte
-    shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 8, 0)));
+    parser.create(shapes, sphereBuilder, director, cam);
 
     std::cout << "Nombre de formes créées: " << shapes.size() << std::endl;
     for (const auto& shape : shapes) {

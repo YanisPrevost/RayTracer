@@ -18,6 +18,7 @@ namespace RayTracer {
             Math::Rectangle3D screen;
         public:
             Camera(const Camera& other) = default;
+            Camera() = default;
             Camera& operator=(const Camera& other) = default;
             ~Camera() = default;
             Camera(const Math::Point3D& position, double fieldOfView, int width, int height);
