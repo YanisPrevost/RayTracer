@@ -48,8 +48,6 @@ void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
                     } else {
                         color = Math::Vector3D(1.0, 0.0, 0.0);
                     }
-                } else {
-                    color = Math::Vector3D(1.0, 1.0, 0.0);
                 }
             }
             else
@@ -109,16 +107,24 @@ int main(int argc, char **argv)
     std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
     RayTracer::SphereBuilder sphereBuilder;
     RayTracer::ShapeDirector director;
-    RayTracer::Camera cam;
 
-    parser.create(shapes, sphereBuilder, director, cam);
+    RayTracer::Camera cam(parser.getCamInfo().getPosition(), parser.getCamInfo().getFov(), parser.getCamInfo().getWidth(), parser.getCamInfo().getHeight());
 
-    std::cout << "Nombre de formes créées: " << shapes.size() << std::endl;
-    for (const auto& shape : shapes) {
-        std::cout << "Type de forme: " << (shape ? shape->getType() : "null") << std::endl;
-    }
-    std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
+    // for (const auto& sphereInfo : parser.getSphereInfos()) {
+    //     std::cout << "test\n";
+    //     sphereBuilder.reset();
+    //     sphereBuilder.setPosition(sphereInfo.getPosition());
+    //     sphereBuilder.setRadius(sphereInfo.getRadius());
+    //     sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
+    //     shapes.push_back(director.createSphereAt(sphereBuilder, sphereInfo.getPosition()));
+    // }
+
+    // sphereBuilder.setColor(0, 0, 255).setRadius(10.0); //! a changer
+    // shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 5, 0))); //! a changer
+
+    std::thread tracingThread(rayTracingThread, parser.getCamInfo().getWidth(), parser.getCamInfo().getHeight(), std::cref(cam), std::cref(shapes));
     std::thread sfmlThread(displayThread);
+
     tracingThread.join();
     if (sfmlThread.joinable()) {
         sfmlThread.join();
