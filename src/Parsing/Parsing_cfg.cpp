@@ -71,7 +71,7 @@ namespace RayTracer
             int numPlanes = planes.getLength();
             for (int i = 0; i < numPlanes; ++i) {
                 libconfig::Setting& plane = planes[i];
-                Sphere_info planeInfo;
+                Plane_info planeInfo;
                 std::string axis;
                 int position;
                 int r, g, b;

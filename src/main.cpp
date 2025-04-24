@@ -120,12 +120,13 @@ int main(int argc, char **argv)
         shapes.push_back(director.createSphere(sphereBuilder, sphereInfo.getPosition()));
     }
 
-    // for (const auto& planeInfo : info.getPlaneInfos()) {
+    for (const auto& planeInfo : info.getPlaneInfos()) {
         planeBuilder.reset();
-        planeBuilder.setAxis("Z");
-        planeBuilder.setColor(255, 0, 0);
-        shapes.push_back(director.createPlane(planeBuilder, Math::Point3D(0, 0, 0)));
-    // }
+        planeBuilder.setPosition(planeInfo.getPosition());
+        planeBuilder.setAxis(planeInfo.getAxis());
+        planeBuilder.setColor(planeInfo.getR(), planeInfo.getG(), planeInfo.getB());
+        shapes.push_back(director.createPlane(planeBuilder, planeInfo.getPosition()));
+    }
 
     std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
     std::thread sfmlThread(displayThread);
