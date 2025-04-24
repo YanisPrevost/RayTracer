@@ -8,14 +8,17 @@
 #pragma once
 
 #include "../Rays/Ray.hpp"
+#include <memory>
 
 namespace RayTracer {
+
     class IShape {
-    public:
-        virtual ~IShape() = default;
-        virtual bool hits(const Ray& ray) const = 0;
-        virtual const char* getType() const = 0;
-    };
+        public:
+            virtual ~IShape() = default;
+            virtual bool hits(const Ray& ray) const = 0;
+            virtual const char* getType() const = 0;
+        };
+
 }
 
 extern "C" {

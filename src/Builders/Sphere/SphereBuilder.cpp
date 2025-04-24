@@ -5,9 +5,10 @@
 ** ShapeBuilder.cpp
 */
 
-#include "ShapeBuilder.hpp"
-#include "../Primitives/ShapeDecorator.hpp"
-#include "../Primitives/PositionedShape.hpp"
+#include "SphereBuilder.hpp"
+#include "../../Interfaces/IShape.hpp"
+#include "../../Primitives/ShapeDecorator.hpp"
+#include "../../Primitives/PositionedShape.hpp"
 #include <memory>
 #include <dlfcn.h>
 #include <iostream>
@@ -37,4 +38,5 @@ namespace RayTracer {
 
         return coloredSphere;
     }
+
 }

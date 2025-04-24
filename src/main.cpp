@@ -12,7 +12,8 @@
 #include <vector>
 #include <chrono>
 #include "Camera/Camera.hpp"
-#include "Utils/ShapeBuilder.hpp"
+#include "Builders/ShapeBuilder.hpp"
+#include "Builders/Sphere/SphereBuilder.hpp"
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
 #include "Primitives/ShapeDecorator.hpp"
@@ -118,7 +119,7 @@ int main(int argc, char **argv)
         sphereBuilder.setPosition(sphereInfo.getPosition());
         sphereBuilder.setRadius(sphereInfo.getRadius());
         sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
-        shapes.push_back(director.createSphereAt(sphereBuilder, sphereInfo.getPosition()));
+        shapes.push_back(director.createSphere(sphereBuilder, sphereInfo.getPosition()));
     }
 
     std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));

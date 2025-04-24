@@ -23,6 +23,8 @@ SRC_DIRS = $(SRC_BASE) \
            $(SRC_BASE)/Points \
            $(SRC_BASE)/Rays \
            $(SRC_BASE)/Utils \
+		   $(SRC_BASE)/Builders \
+		   $(SRC_BASE)/Builders/Sphere \
            $(SRC_BASE)/Vectors \
            $(SRC_BASE)/Interfaces \
            $(SRC_BASE)/Display	\
