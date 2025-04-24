@@ -8,7 +8,7 @@
 NAME = raytracer
 CXX = g++
 CXXFLAGS = -std=c++17
-LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system -pthread
+LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system -pthread -lconfig++
 PLUGINS_DIR = ./Plugins
 PRIMITIVES_DIR = $(PLUGINS_DIR)/Primitives
 LIGHTS_DIR = $(PLUGINS_DIR)/Lights

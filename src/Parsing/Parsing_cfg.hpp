@@ -17,7 +17,7 @@ namespace RayTracer
         public:
             class Cam_info {
                 public:
-                    Cam_info() : _fov(90.0), _position(Math::Point3D(0, 30, 10)), _width(1270), _height(720) {}
+                    Cam_info() : _fov(90.0), _position(Math::Point3D(0, 0, 0)), _width(800), _height(600) {}
                     double getFov() const { return _fov; }
                     Math::Point3D getPosition() const { return _position; }
                     int getWidth() const { return _width; }

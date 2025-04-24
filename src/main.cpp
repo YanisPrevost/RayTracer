@@ -101,28 +101,27 @@ void displayThread()
 
 int main(int argc, char **argv)
 {
-    RayTracer::Parsing_cfg parser(argv[1]);
-    parser.parse();
+    RayTracer::Parsing_cfg info(argv[1]);
+    info.parse();
 
     std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
     RayTracer::SphereBuilder sphereBuilder;
     RayTracer::ShapeDirector director;
+    int width = info.getCamInfo().getWidth();
+    int height = info.getCamInfo().getHeight();
 
-    RayTracer::Camera cam(parser.getCamInfo().getPosition(), parser.getCamInfo().getFov(), parser.getCamInfo().getWidth(), parser.getCamInfo().getHeight());
+    RayTracer::Camera cam(info.getCamInfo().getPosition(), info.getCamInfo().getFov(), width, height);
 
-    // for (const auto& sphereInfo : parser.getSphereInfos()) {
-    //     std::cout << "test\n";
-    //     sphereBuilder.reset();
-    //     sphereBuilder.setPosition(sphereInfo.getPosition());
-    //     sphereBuilder.setRadius(sphereInfo.getRadius());
-    //     sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
-    //     shapes.push_back(director.createSphereAt(sphereBuilder, sphereInfo.getPosition()));
-    // }
+    for (const auto& sphereInfo : info.getSphereInfos()) {
+        std::cout << "test\n";
+        sphereBuilder.reset();
+        sphereBuilder.setPosition(sphereInfo.getPosition());
+        sphereBuilder.setRadius(sphereInfo.getRadius());
+        sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
+        shapes.push_back(director.createSphereAt(sphereBuilder, sphereInfo.getPosition()));
+    }
 
-    // sphereBuilder.setColor(0, 0, 255).setRadius(10.0); //! a changer
-    // shapes.push_back(director.createSphereAt(sphereBuilder, Math::Point3D(0, 5, 0))); //! a changer
-
-    std::thread tracingThread(rayTracingThread, parser.getCamInfo().getWidth(), parser.getCamInfo().getHeight(), std::cref(cam), std::cref(shapes));
+    std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
     std::thread sfmlThread(displayThread);
 
     tracingThread.join();

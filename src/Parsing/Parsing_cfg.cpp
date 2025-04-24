@@ -6,15 +6,25 @@
 */
 
 #include "Parsing_cfg.hpp"
+#include <libconfig.h++>
 
 namespace RayTracer
 {
     void Parsing_cfg::parse() {
-        std::ifstream file(_filename);
-        if (!file.is_open()) {
-            std::cerr << "Impossible d'ouvrir le fichier de configuration: " << _filename << std::endl;
-            return;
-        }
-        file.close();
+
+        libconfig::Config cfg;
+
+        cfg.readFile(_filename.c_str());
+
+        // Parsing camera informations
+
+        // Parsing Primitives informations
+
+        Sphere_info sphereInfo;
+        sphereInfo.setPosition(Math::Point3D(0, 8, 0));
+        sphereInfo.setRadius(10.0);
+        sphereInfo.setColor(255, 0, 0);
+        _sphereInfos.push_back(sphereInfo);
+
     }
 }
