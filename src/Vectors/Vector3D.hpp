@@ -43,6 +43,9 @@ namespace Math {
             double getX() const { return x; }
             double getY() const { return y; }
             double getZ() const { return z; }
+
+            Vector3D normalize() const;
+            Vector3D cross(const Vector3D& other) const;
         };
     Vector3D operator*(double scalar, const Vector3D& vector);
 }

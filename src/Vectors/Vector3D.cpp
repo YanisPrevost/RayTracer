@@ -88,4 +88,20 @@ namespace Math {
     Vector3D operator*(double scalar, const Vector3D& vector) {
         return vector * scalar;
     }
+    
+    Vector3D Vector3D::normalize() const {
+        double len = length();
+        if (len > 0) {
+            return Vector3D(x / len, y / len, z / len);
+        }
+        return Vector3D(0, 0, 0);
+    }
+    
+    Vector3D Vector3D::cross(const Vector3D& other) const {
+        return Vector3D(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x
+        );
+    }
 }

@@ -11,46 +11,23 @@
 #include <mutex>
 #include <vector>
 #include <chrono>
-#include "Camera/Camera.hpp"
-#include "Builders/ShapeBuilder.hpp"
-#include "Builders/Sphere/SphereBuilder.hpp"
-#include "Builders/Plane/PlaneBuilder.hpp"
+#include "Scene/Scene.hpp"
 #include "Utils/utils.hpp"
 #include "Visualization/PpmViewer.hpp"
-#include "Decorator/ShapeDecorator.hpp"
 #include "Parsing/Parsing_cfg.hpp"
-#include <cstring>
 
-void rayTracingThread(int width, int height, const RayTracer::Camera& cam,
-        const std::vector<std::unique_ptr<RayTracer::IShape>>& shapes)
+void rayTracingThread(int width, int height, const RayTracer::Scene& scene)
 {
     RayTracer::Utils::init_ppm_file(width, height);
+    const RayTracer::Camera& cam = scene.getCamera();
+
     for (int j = height - 1; j >= 0; --j) {
         for (int i = 0; i < width; ++i) {
             double u = static_cast<double>(i) / (width - 1);
             double v = static_cast<double>(j) / (height - 1);
             RayTracer::Ray r = cam.ray(u, v);
-            bool hit = false;
-            const RayTracer::IShape* hitShape = nullptr;
-            for (auto it = shapes.rbegin(); it != shapes.rend(); ++it) {
-                const auto& shape = *it;
-                if (shape && shape->hits(r)) {
-                    hit = true;
-                    hitShape = shape.get();
-                    break;
-                }
-            }
             Math::Vector3D color;
-            if (hit) {
-                if (hitShape && strcmp(hitShape->getType(), "ColoredShape") == 0) {
-                    const RayTracer::ColoredShape* coloredShape = dynamic_cast<const RayTracer::ColoredShape*>(hitShape);
-                    if (coloredShape) {
-                        color = Math::Vector3D( coloredShape->getRed() / 255.0, coloredShape->getGreen() / 255.0, coloredShape->getBlue() / 255.0
-                        );
-                    }
-                }
-            } else
-                color = Math::Vector3D(0.0, 0.0, 0.0); // Couleur d'arrière-plan
+            scene.trace(r, color);
             RayTracer::Utils::write_color(color);
         }
     }
@@ -100,32 +77,25 @@ void displayThread()
 
 int main(int argc, char **argv)
 {
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <config_file>" << std::endl;
+        return 84;
+    }
     RayTracer::Parsing_cfg info(argv[1]);
     info.parse();
 
-    std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
-    RayTracer::SphereBuilder sphereBuilder;
-    RayTracer::ShapeDirector director;
+    RayTracer::Scene scene(info);
+
     int width = info.getCamInfo().getWidth();
     int height = info.getCamInfo().getHeight();
 
-    RayTracer::Camera cam(info.getCamInfo().getPosition(), info.getCamInfo().getFov(), width, height);
-
-    for (const auto& sphereInfo : info.getSphereInfos()) {
-        sphereBuilder.reset();
-        sphereBuilder.setPosition(sphereInfo.getPosition());
-        sphereBuilder.setRadius(sphereInfo.getRadius());
-        sphereBuilder.setColor(sphereInfo.getR(), sphereInfo.getG(), sphereInfo.getB());
-        shapes.push_back(director.createSphere(sphereBuilder, sphereInfo.getPosition()));
-    }
-
-
-    std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
+    std::thread tracingThread(rayTracingThread, width, height, std::cref(scene));
     std::thread sfmlThread(displayThread);
 
     tracingThread.join();
     if (sfmlThread.joinable()) {
         sfmlThread.join();
     }
+
     return 0;
 }
