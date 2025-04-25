@@ -24,10 +24,12 @@ namespace RayTracer {
 }
 
 extern "C" {
+
     RayTracer::IShape* create_shape() {
         return new RayTracer::Sphere();
     }
     void destroy_shape(RayTracer::IShape* shape) {
         delete shape;
     }
+
 }

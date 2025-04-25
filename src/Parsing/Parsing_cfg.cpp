@@ -37,7 +37,6 @@ namespace RayTracer
         else
             _camInfo._rotation = Math::Point3D(0, 0, 0);
 
-
         // Parsing Primitives informations
 
         if (cfg.exists("primitives")) {
@@ -65,7 +64,6 @@ namespace RayTracer
                 sphereInfo.setColor(r, g, b);
                 _sphereInfos.push_back(sphereInfo);
             }
-
 
             libconfig::Setting& planes = cfg.lookup("primitives.planes");
             int numPlanes = planes.getLength();

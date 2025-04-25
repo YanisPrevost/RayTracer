@@ -11,6 +11,7 @@
 #include "../Interfaces/IShape.hpp"
 
 namespace RayTracer {
+
     class ShapeDecorator : public IShape {
         protected:
             std::unique_ptr<IShape> decoratedShape;

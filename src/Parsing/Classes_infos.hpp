@@ -50,7 +50,7 @@ namespace RayTracer
 
     class Plane_info {
         public:
-            Plane_info() : _position(Math::Point3D(0, 0, 0)), _axis("Z"), _r(255), _g(0), _b(0) {}
+            Plane_info() : _position(Math::Point3D(0, 0, 0)), _axis(""), _r(255), _g(0), _b(0) {}
             Math::Point3D getPosition() const { return _position; }
             std::string getAxis() const { return _axis; }
             int getR() const { return _r; }

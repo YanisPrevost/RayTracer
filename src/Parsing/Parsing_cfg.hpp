@@ -11,7 +11,7 @@
 #include "Points/Point3D.hpp"
 #include <vector>
 #include <libconfig.h++>
-#include "Classes.hpp"
+#include "Classes_infos.hpp"
 
 namespace RayTracer
 {

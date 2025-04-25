@@ -19,8 +19,7 @@ namespace RayTracer {
             Math::Point3D position;
             double scale;
         public:
-            PositionedShape(std::unique_ptr<IShape> shape, const Math::Point3D& position, double scale = 1.0)
-                : shape(std::move(shape)), position(position), scale(scale) {}
+            PositionedShape(std::unique_ptr<IShape> shape, const Math::Point3D& position, double scale = 1.0) : shape(std::move(shape)), position(position), scale(scale) {}
             bool hits(const Ray& ray) const override {
                 Math::Vector3D translation = ray.getOrigin() - position;
                 Math::Point3D newOrigin(

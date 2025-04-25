@@ -105,7 +105,6 @@ int main(int argc, char **argv)
 
     std::vector<std::unique_ptr<RayTracer::IShape>> shapes;
     RayTracer::SphereBuilder sphereBuilder;
-    RayTracer::PlaneBuilder planeBuilder;
     RayTracer::ShapeDirector director;
     int width = info.getCamInfo().getWidth();
     int height = info.getCamInfo().getHeight();
@@ -120,13 +119,6 @@ int main(int argc, char **argv)
         shapes.push_back(director.createSphere(sphereBuilder, sphereInfo.getPosition()));
     }
 
-    for (const auto& planeInfo : info.getPlaneInfos()) {
-        planeBuilder.reset();
-        planeBuilder.setPosition(planeInfo.getPosition());
-        planeBuilder.setAxis(planeInfo.getAxis());
-        planeBuilder.setColor(planeInfo.getR(), planeInfo.getG(), planeInfo.getB());
-        shapes.push_back(director.createPlane(planeBuilder, planeInfo.getPosition()));
-    }
 
     std::thread tracingThread(rayTracingThread, width, height, std::cref(cam), std::cref(shapes));
     std::thread sfmlThread(displayThread);
