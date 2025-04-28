@@ -94,6 +94,9 @@ namespace RayTracer
                 planeInfo.setColor(r, g, b);
                 _planeInfos.push_back(planeInfo);
             }
+        } else {
+            std::cerr << "Error: No primitives found in the configuration file." << std::endl;
+            exit(84); // EXCEPTION A FAIRE
         }
     }
 }
