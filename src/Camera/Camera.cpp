@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
 ** Camera.cpp
 */
@@ -10,31 +10,40 @@
 
 namespace RayTracer {
 
-    Camera::Camera(const Math::Point3D& position, double fieldOfView, int width, int height)
-        : origin(position), screen(position, Math::Vector3D(0, 0, 0), Math::Vector3D(0, 0, 0))
+    Camera::Camera(const Math::Point3D& position, const Math::Vector3D& direction, const Math::Vector3D& up, double fov, double aspectRatio)
+        : position(position), direction(direction.normalize()), up(up.normalize()), fov(fov), aspectRatio(aspectRatio)
     {
-        double focalDistance = 1.0;
-        double fovRadians = fieldOfView * M_PI / 180.0;
-        double screenHeight = 2 * tan(fovRadians / 2);
-        double aspectRatio = static_cast<double>(width) / static_cast<double>(height);
-        double screenWidth = screenHeight * aspectRatio;
-
-        Math::Point3D screenOrigin(
-            position.getX() - screenWidth / 2,
-            position.getY() + focalDistance,
-            position.getZ() - screenHeight / 2
-        );
-        screen = Math::Rectangle3D(
-            screenOrigin,
-            Math::Vector3D(screenWidth, 0, 0),
-            Math::Vector3D(0, 0, screenHeight)
-        );
     }
 
-    Ray Camera::ray(double u, double v) const
+    Ray Camera::generate_ray(double u, double v) const
     {
-        Math::Point3D pointOnScreen = screen.getPointAt(u, v);
-        Math::Vector3D direction = pointOnScreen - origin;
-        return Ray(origin, direction);
+        double theta = fov * M_PI / 180.0;
+        double halfHeight = tan(theta / 2);
+        double halfWidth = aspectRatio * halfHeight;
+
+        Math::Vector3D w = direction * (-1.0);
+        Math::Vector3D u_vec = up.cross(w).normalize();
+        Math::Vector3D v_vec = w.cross(u_vec);
+
+        double uu = (2.0 * u - 1.0) * halfWidth;
+        double vv = (2.0 * v - 1.0) * halfHeight;
+
+        Math::Vector3D rayDir = u_vec * uu + v_vec * vv - w;
+        rayDir = rayDir.normalize();
+
+        return Ray(position, rayDir);
     }
+
+    void Camera::lookAt(const Math::Point3D& target)
+    {
+        direction = Math::Vector3D(
+            target.X - position.X,
+            target.Y - position.Y,
+            target.Z - position.Z
+        ).normalize();
+
+        Math::Vector3D right = Math::Vector3D(0, 1, 0).cross(direction).normalize();
+        up = direction.cross(right).normalize();
+    }
+
 }

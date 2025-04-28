@@ -64,39 +64,6 @@ namespace RayTracer
                 sphereInfo.setColor(r, g, b);
                 _sphereInfos.push_back(sphereInfo);
             }
-
-            libconfig::Setting& planes = cfg.lookup("primitives.planes");
-            int numPlanes = planes.getLength();
-            for (int i = 0; i < numPlanes; ++i) {
-                libconfig::Setting& plane = planes[i];
-                Plane_info planeInfo;
-                std::string axis;
-                int position;
-                int r, g, b;
-
-                plane.lookupValue("axis", axis);
-                plane.lookupValue("position", position);
-
-                const libconfig::Setting& color = plane["color"];
-                color.lookupValue("r", r);
-                color.lookupValue("g", g);
-                color.lookupValue("b", b);
-
-                if (axis == "X") {
-                    planeInfo.setPosition(Math::Point3D(position, 0, 0));
-                } else if (axis == "Y") {
-                    planeInfo.setPosition(Math::Point3D(0, position, 0));
-                } else if (axis == "Z") {
-                    planeInfo.setPosition(Math::Point3D(0, 0, position));
-                } else {
-                    // EXCEPTION A FAIRE ICI
-                }
-                planeInfo.setColor(r, g, b);
-                _planeInfos.push_back(planeInfo);
-            }
-        } else {
-            std::cerr << "Error: No primitives found in the configuration file." << std::endl;
-            exit(84); // EXCEPTION A FAIRE
         }
     }
 }

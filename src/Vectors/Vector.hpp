@@ -1,47 +1,44 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
 ** Vector.hpp
 */
 
 #pragma once
+
 #include <cmath>
-#include <iostream>
-#include <initializer_list>
 
 namespace Math {
-    template<size_t N>
-    class Vector {
-        private:
-            double components[N];
-        public:
-            Vector();
-            Vector(const std::initializer_list<double>& values);
-            double& operator[](size_t index);
-            const double& operator[](size_t index) const;
+    class Vector3D {
+    public:
+        double X;
+        double Y;
+        double Z;
 
-            double length() const;
-            double dot(const Vector<N>& other) const;
+        Vector3D();
+        Vector3D(double x, double y, double z);
 
-            Vector<N> operator+(const Vector<N>& other) const;
-            Vector<N>& operator+=(const Vector<N>& other);
+        double length() const;
+        Vector3D normalize() const;
+        double dot(const Vector3D& other) const;
 
-            Vector<N> operator-(const Vector<N>& other) const;
-            Vector<N>& operator-=(const Vector<N>& other);
+        Vector3D operator+(const Vector3D& other) const;
+        Vector3D& operator+=(const Vector3D& other);
+        Vector3D operator-(const Vector3D& other) const;
+        Vector3D& operator-=(const Vector3D& other);
+        Vector3D operator*(const Vector3D& other) const;
+        Vector3D& operator*=(const Vector3D& other);
+        Vector3D operator/(const Vector3D& other) const;
+        Vector3D& operator/=(const Vector3D& other);
 
-            Vector<N> operator*(const Vector<N>& other) const;
-            Vector<N>& operator*=(const Vector<N>& other);
+        // Opérateurs avec scalaire
+        Vector3D operator*(double scalar) const;
+        Vector3D& operator*=(double scalar);
+        Vector3D operator/(double scalar) const;
+        Vector3D& operator/=(double scalar);
 
-            Vector<N> operator/(const Vector<N>& other) const;
-            Vector<N>& operator/=(const Vector<N>& other);
-
-            Vector<N> operator*(double scalar) const;
-            Vector<N>& operator*=(double scalar);
-
-            Vector<N> operator/(double scalar) const;
-            Vector<N>& operator/=(double scalar);
-        };
-    template<size_t N>
-    Vector<N> operator*(double scalar, const Vector<N>& vector);
+        // Produit vectoriel
+        Vector3D cross(const Vector3D& other) const;
+    };
 }
