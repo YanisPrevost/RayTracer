@@ -48,7 +48,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(TARGET)
 
-fclean: clean clean_ppm
+fclean: clean
 	rm -rf $(PLUGINS_DIR)
 
 clean_ppm:
