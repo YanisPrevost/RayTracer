@@ -51,6 +51,9 @@ clean:
 fclean: clean
 	rm -rf $(PLUGINS_DIR)
 
+clean_ppm:
+	rm *.ppm
+
 re: fclean all
 
 .PHONY: all directories clean fclean re
