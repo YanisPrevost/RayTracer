@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     }
 
     const RayTracer::Cam_info& camInfo = parser.getCamInfo();
-    std::cout << camInfo.getWidth() << " " << camInfo.getHeight() << std::endl;
     RayTracer::RayTracer raytracer(camInfo.getWidth(), camInfo.getHeight());
     RayTracer::Camera camera(
         camInfo.getPosition(),

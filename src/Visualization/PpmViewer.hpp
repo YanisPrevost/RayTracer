@@ -30,6 +30,7 @@ namespace RayTracer {
             RayTracer* raytracer;
             int lastRenderedLine;
             std::atomic<bool> displayActive;
+            std::thread displayThread;
 
         public:
             PpmViewer(const std::string& ppmFile = "", const Cam_info& camInfo = Cam_info());
@@ -42,8 +43,6 @@ namespace RayTracer {
             void stopDisplay();
             void displayLoop();
             void updateTexture();
-            void display();
-            void displayFromScreen();
 
             int getWindowWidth() const { return windowWidth; }
             int getWindowHeight() const { return windowHeight; }
