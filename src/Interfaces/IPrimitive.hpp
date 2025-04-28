@@ -1,0 +1,50 @@
+/*
+** EPITECH PROJECT, 2024
+** Zero
+** File description:
+** IPrimitive.hpp
+*/
+
+#pragma once
+
+#include <memory>
+#include <string>
+#include <vector>
+#include "../Vectors/Vector.hpp"
+#include "../Points/Points.hpp"
+
+namespace RayTracer {
+
+    class Ray {
+        public:
+            Math::Point3D origin;
+            Math::Vector3D direction;
+
+            Ray() = default;
+            Ray(const Math::Point3D& o, const Math::Vector3D& d) : origin(o), direction(d) {}
+    };
+
+    class HitInfo {
+        public:
+            bool hit;
+            double distance;
+            Math::Point3D point;
+            Math::Vector3D normal;
+            Math::Vector3D color;
+            double reflection;
+    };
+
+    class IPrimitive {
+        public:
+            virtual ~IPrimitive() = default;
+            virtual HitInfo intersect(const Ray& ray) const = 0;
+            virtual std::string getName() const = 0;
+            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
+    };
+
+    extern "C" {
+        IPrimitive* createPrimitive();
+        void destroyPrimitive(IPrimitive* primitive);
+    }
+
+}

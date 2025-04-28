@@ -1,75 +1,56 @@
 ##
 ## EPITECH PROJECT, 2024
-## RayTracer
+## Zero
 ## File description:
 ## Makefile
 ##
 
-NAME = raytracer
-CXX = g++
-CXXFLAGS = -std=c++17
-LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system -pthread -lconfig++
-PLUGINS_DIR = ./Plugins
-PRIMITIVES_DIR = $(PLUGINS_DIR)/Primitives
-LIGHTS_DIR = $(PLUGINS_DIR)/Lights
-MATERIALS_DIR = $(PLUGINS_DIR)/Materials
-SRC_BASE = src
-MATH_FILES = $(SRC_BASE)/Points/Point3D.cpp \
-			$(SRC_BASE)/Vectors/Vector3D.cpp \
-			$(SRC_BASE)/Rays/Ray.cpp
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./src
+LDFLAGS = -ldl -lsfml-graphics -lsfml-window -lsfml-system -lconfig++ -lpthread
 
-SRC_DIRS = $(SRC_BASE) \
-           $(SRC_BASE)/Camera \
-           $(SRC_BASE)/Points \
-           $(SRC_BASE)/Rays \
-           $(SRC_BASE)/Utils \
-		   $(SRC_BASE)/Scene \
-		   $(SRC_BASE)/Builders \
-		   $(SRC_BASE)/Builders/Sphere \
-		   $(SRC_BASE)/Builders/Plane \
-		   $(SRC_BASE)/Decorator \
-           $(SRC_BASE)/Vectors \
-           $(SRC_BASE)/Interfaces \
-           $(SRC_BASE)/Display	\
-		   $(SRC_BASE)/Visualization	\
-		   $(SRC_BASE)/Parsing
+SRC_DIR = src
+BUILD_DIR = build
+PLUGINS_DIR = Plugins
 
-SRCS = $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.cpp))
-OBJS = $(SRCS:.cpp=.o)
-INCLUDES = -I$(SRC_BASE)
-SHAPES_LIBS = libsphere.so \
-               libplane.so \
+SRCS = $(shell find $(SRC_DIR) -name "*.cpp" -not -path "$(SRC_DIR)/Primitives/*")
 
-all: prepare_libs $(SHAPES_LIBS) $(NAME)
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 
-prepare_libs:
-	mkdir -p $(PRIMITIVES_DIR)
-	mkdir -p $(LIGHTS_DIR)
-	mkdir -p $(MATERIALS_DIR)
+PRIMITIVE_SRCS = $(SRC_DIR)/Primitives/Sphere/Sphere.cpp
+PRIMITIVE_LIBS = $(PLUGINS_DIR)/libSphere.so
 
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS)
+TARGET = raytracer
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+all: directories $(TARGET)
+all_with_plugins: directories $(TARGET) plugins
 
-libsphere.so: $(SRC_BASE)/Primitives/Sphere/Sphere.cpp $(MATH_FILES)
-	$(CXX) $(CXXFLAGS) -fPIC -shared -o $(PRIMITIVES_DIR)/$@ $^ $(INCLUDES)
+directories:
+	@mkdir -p $(BUILD_DIR)/Builder
+	@mkdir -p $(BUILD_DIR)/Camera
+	@mkdir -p $(BUILD_DIR)/Decorator
+	@mkdir -p $(BUILD_DIR)/Parsing
+	@mkdir -p $(BUILD_DIR)/Points
+	@mkdir -p $(BUILD_DIR)/Rectangle3D
+	@mkdir -p $(BUILD_DIR)/Vectors
+	@mkdir -p $(BUILD_DIR)/Visualization
+	@mkdir -p $(PLUGINS_DIR)
 
-libplane.so: $(SRC_BASE)/Primitives/Plane/Plane.cpp $(MATH_FILES)
-	$(CXX) $(CXXFLAGS) -fPIC -shared -o $(PRIMITIVES_DIR)/$@ $^ $(INCLUDES)
+$(TARGET): $(OBJS)
+	g++ $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	g++ $(CXXFLAGS) -c $< -o $@
+
+primitive_%:
+	g++ $(CXXFLAGS) -shared -fPIC -o $(PLUGINS_DIR)/lib$*.so $(SRC_DIR)/Primitives/$*/$*.cpp $(SRC_DIR)/Points/Points.cpp $(SRC_DIR)/Vectors/Vector.cpp -I./src
 
 clean:
-	rm -f $(OBJS)
+	rm -rf $(BUILD_DIR)
+	rm -f $(TARGET)
 
 fclean: clean
-	rm -f $(NAME)
-	rm -rf $(LIBS_DIR)
-	rm -rf $(PRIMITIVES_DIR)
-	rm -rf $(LIGHTS_DIR)
-	rm -rf $(MATERIALS_DIR)
-	rm -f *.ppm
+	rm -rf $(PLUGINS_DIR)
 
 re: fclean all
 
-.PHONY: all prepare_libs clean fclean re
+.PHONY: all directories clean fclean re

@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "Parsing_cfg.hpp"
+#include "../Vectors/Vector.hpp"
+#include "../Points/Points.hpp"
 
 namespace RayTracer
 {
@@ -48,22 +49,4 @@ namespace RayTracer
             int _b;
     };
 
-    class Plane_info {
-        public:
-            Plane_info() : _position(Math::Point3D(0, 0, 0)), _axis(""), _r(255), _g(0), _b(0) {}
-            Math::Point3D getPosition() const { return _position; }
-            std::string getAxis() const { return _axis; }
-            int getR() const { return _r; }
-            int getG() const { return _g; }
-            int getB() const { return _b; }
-            void setPosition(const Math::Point3D& position) { _position = position; }
-            void setAxis(const std::string& axis) { _axis = axis; }
-            void setColor(int r, int g, int b) { _r = r; _g = g; _b = b; }
-        private:
-            Math::Point3D _position;
-            std::string _axis;
-            int _r;
-            int _g;
-            int _b;
-    };
 }

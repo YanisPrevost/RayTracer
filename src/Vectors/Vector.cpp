@@ -1,164 +1,106 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
-** Vector.tpp
+** Vector.cpp
 */
 
 #include "Vector.hpp"
 
 namespace Math {
 
-    template<size_t N>
-    Vector<N>::Vector() {
-        for (size_t i = 0; i < N; i++) {
-            components[i] = 0.0;
-        }
+    Vector3D::Vector3D() : X(0), Y(0), Z(0) {}
+
+    Vector3D::Vector3D(double x, double y, double z) : X(x), Y(y), Z(z) {}
+
+    double Vector3D::length() const {
+        return std::sqrt(X * X + Y * Y + Z * Z);
     }
 
-    template<size_t N>
-    Vector<N>::Vector(const std::initializer_list<double>& values) {
-        size_t i = 0;
-        for (auto it = values.begin(); it != values.end() && i < N; it++, i++) {
-            components[i] = *it;
-        }
-        for (; i < N; i++) {
-            components[i] = 0.0;
-        }
-    }
-
-    template<size_t N>
-    double& Vector<N>::operator[](size_t index) {
-        return components[index];
-    }
-
-    template<size_t N>
-    const double& Vector<N>::operator[](size_t index) const {
-        return components[index];
-    }
-
-    template<size_t N>
-    double Vector<N>::length() const {
-        double sum = 0.0;
-        for (size_t i = 0; i < N; i++) {
-            sum += components[i] * components[i];
-        }
-        return std::sqrt(sum);
-    }
-
-    template<size_t N>
-    double Vector<N>::dot(const Vector<N>& other) const {
-        double sum = 0.0;
-        for (size_t i = 0; i < N; i++) {
-            sum += components[i] * other.components[i];
-        }
-        return sum;
-    }
-
-    template<size_t N>
-    Vector<N> Vector<N>::operator+(const Vector<N>& other) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] + other.components[i];
-        }
-        return result;
-    }
-
-    template<size_t N>
-    Vector<N>& Vector<N>::operator+=(const Vector<N>& other) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] += other.components[i];
+    Vector3D Vector3D::normalize() const {
+        double len = length();
+        if (len > 0) {
+            return Vector3D(X / len, Y / len, Z / len);
         }
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> Vector<N>::operator-(const Vector<N>& other) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] - other.components[i];
-        }
-        return result;
+    double Vector3D::dot(const Vector3D& other) const {
+        return X * other.X + Y * other.Y + Z * other.Z;
     }
 
-    template<size_t N>
-    Vector<N>& Vector<N>::operator-=(const Vector<N>& other) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] -= other.components[i];
-        }
+    Vector3D Vector3D::operator+(const Vector3D& other) const {
+        return Vector3D(X + other.X, Y + other.Y, Z + other.Z);
+    }
+
+    Vector3D& Vector3D::operator+=(const Vector3D& other) {
+        X += other.X;
+        Y += other.Y;
+        Z += other.Z;
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> Vector<N>::operator*(const Vector<N>& other) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] * other.components[i];
-        }
-        return result;
+    Vector3D Vector3D::operator-(const Vector3D& other) const {
+        return Vector3D(X - other.X, Y - other.Y, Z - other.Z);
     }
 
-    template<size_t N>
-    Vector<N>& Vector<N>::operator*=(const Vector<N>& other) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] *= other.components[i];
-        }
+    Vector3D& Vector3D::operator-=(const Vector3D& other) {
+        X -= other.X;
+        Y -= other.Y;
+        Z -= other.Z;
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> Vector<N>::operator/(const Vector<N>& other) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] / other.components[i];
-        }
-        return result;
+    Vector3D Vector3D::operator*(const Vector3D& other) const {
+        return Vector3D(X * other.X, Y * other.Y, Z * other.Z);
     }
 
-    template<size_t N>
-    Vector<N>& Vector<N>::operator/=(const Vector<N>& other) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] /= other.components[i];
-        }
+    Vector3D& Vector3D::operator*=(const Vector3D& other) {
+        X *= other.X;
+        Y *= other.Y;
+        Z *= other.Z;
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> Vector<N>::operator*(double scalar) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] * scalar;
-        }
-        return result;
+    Vector3D Vector3D::operator/(const Vector3D& other) const {
+        return Vector3D(X / other.X, Y / other.Y, Z / other.Z);
     }
 
-    template<size_t N>
-    Vector<N>& Vector<N>::operator*=(double scalar) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] *= scalar;
-        }
+    Vector3D& Vector3D::operator/=(const Vector3D& other) {
+        X /= other.X;
+        Y /= other.Y;
+        Z /= other.Z;
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> Vector<N>::operator/(double scalar) const {
-        Vector<N> result;
-        for (size_t i = 0; i < N; i++) {
-            result.components[i] = components[i] / scalar;
-        }
-        return result;
+    Vector3D Vector3D::operator*(double scalar) const {
+        return Vector3D(X * scalar, Y * scalar, Z * scalar);
     }
 
-    template<size_t N>
-    Vector<N>& Vector<N>::operator/=(double scalar) {
-        for (size_t i = 0; i < N; i++) {
-            components[i] /= scalar;
-        }
+    Vector3D& Vector3D::operator*=(double scalar) {
+        X *= scalar;
+        Y *= scalar;
+        Z *= scalar;
         return *this;
     }
 
-    template<size_t N>
-    Vector<N> operator*(double scalar, const Vector<N>& vector) {
-        return vector * scalar;
+    Vector3D Vector3D::operator/(double scalar) const {
+        return Vector3D(X / scalar, Y / scalar, Z / scalar);
     }
+
+    Vector3D& Vector3D::operator/=(double scalar) {
+        X /= scalar;
+        Y /= scalar;
+        Z /= scalar;
+        return *this;
+    }
+
+    Vector3D Vector3D::cross(const Vector3D& other) const {
+        return Vector3D(
+            Y * other.Z - Z * other.Y,
+            Z * other.X - X * other.Z,
+            X * other.Y - Y * other.X
+        );
+    }
+
 }

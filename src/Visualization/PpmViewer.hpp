@@ -1,36 +1,54 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
 ** PpmViewer.hpp
 */
 
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include <string>
-#include <vector>
-#include <fstream>
-#include <iostream>
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include "../Parsing/Classes_infos.hpp"
+#include "../Builder/RayTracer.hpp"
 
 namespace RayTracer {
 
-class PpmViewer {
-    public:
-        PpmViewer();
-        ~PpmViewer();
-        bool loadFromFile(const std::string& filename);
-        bool loadFromPixelData(const std::vector<sf::Color>& pixels, int width, int height);
-        void display();
-        const sf::Image& getImage() const { return _image; }
-    private:
-        sf::RenderWindow _window;
-        sf::Texture _texture;
-        sf::Sprite _sprite;
-        sf::Image _image;
-        int _width;
-        int _height;
-        bool _isLoaded;
-    };
+    class PpmViewer {
+        private:
+            sf::RenderWindow window;
+            sf::Texture texture;
+            sf::Sprite sprite;
+            sf::Image displayImage;
+            std::string ppmFilePath;
+            int windowWidth;
+            int windowHeight;
+
+            std::mutex displayMutex;
+            RayTracer* raytracer;
+            int lastRenderedLine;
+            std::atomic<bool> displayActive;
+
+        public:
+            PpmViewer(const std::string& ppmFile = "", const Cam_info& camInfo = Cam_info());
+            ~PpmViewer();
+
+            bool loadPpmFile(const std::string& filePath);
+            bool parsePpm();
+
+            void start_rendering(RayTracer* raytracer);
+            void stopDisplay();
+            void displayLoop();
+            void updateTexture();
+            void display();
+            void displayFromScreen();
+
+            int getWindowWidth() const { return windowWidth; }
+            int getWindowHeight() const { return windowHeight; }
+            void setWindowSize(int width, int height);
+            bool isDisplayActive() const { return displayActive.load(); }
+        };
 
 }

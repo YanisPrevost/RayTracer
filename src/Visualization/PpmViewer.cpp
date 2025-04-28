@@ -1,96 +1,206 @@
-/*
-** EPITECH PROJECT, 2024
-** RayTracer
-** File description:
-** PpmViewer.cpp
-*/
-
 #include "PpmViewer.hpp"
+#include <fstream>
+#include <iostream>
+#include <vector>
 #include <sstream>
 
 namespace RayTracer {
 
-    PpmViewer::PpmViewer() : _width(0), _height(0), _isLoaded(false) {}
+    PpmViewer::PpmViewer(const std::string& ppmFile, const Cam_info& camInfo)
+        : windowWidth(camInfo._width), windowHeight(camInfo._height), raytracer(nullptr), lastRenderedLine(0), displayActive(false)
+    {
+        if (!ppmFile.empty()) {
+            loadPpmFile(ppmFile);
+        }
+        displayImage.create(windowWidth, windowHeight, sf::Color::Black);
+    }
 
     PpmViewer::~PpmViewer()
     {
-        if (_window.isOpen()) {
-            _window.close();
-        }
+        stopDisplay();
     }
 
-    bool PpmViewer::loadFromFile(const std::string& filename)
+    bool PpmViewer::loadPpmFile(const std::string& filePath)
     {
-        std::ifstream file(filename);
+        ppmFilePath = filePath;
+        return parsePpm();
+    }
+
+    bool PpmViewer::parsePpm()
+    {
+        std::ifstream file(ppmFilePath);
         if (!file.is_open()) {
-            std::cerr << "Impossible d'ouvrir le fichier PPM: " << filename << std::endl;
+            std::cerr << "Erreur: Impossible d'ouvrir le fichier PPM " << ppmFilePath << std::endl;
             return false;
         }
         std::string format;
+        int width, height, maxVal;
         file >> format;
-        if (format != "P3") {
-            std::cerr << "Format PPM non supporté: " << format << std::endl;
-            return false;
-        }
-        file >> _width >> _height;
-        int maxValue;
-        file >> maxValue;
-        _image.create(_width, _height);
-        for (int y = 0; y < _height; ++y) {
-            for (int x = 0; x < _width; ++x) {
-                int r, g, b;
-                file >> r >> g >> b;
-                if (maxValue != 255) {
-                    r = static_cast<int>(r * 255.0 / maxValue);
-                    g = static_cast<int>(g * 255.0 / maxValue);
-                    b = static_cast<int>(b * 255.0 / maxValue);
-                }
-                _image.setPixel(x, _height - 1 - y, sf::Color(r, g, b));
+        char c;
+        file.get(c);
+        while (c == '\n' || c == ' ') {
+            file.get(c);
+            if (c == '#') {
+                std::string comment;
+                std::getline(file, comment);
+                file.get(c);
             }
         }
-        _texture.loadFromImage(_image);
-        _sprite.setTexture(_texture);
-        _isLoaded = true;
+        file.unget();
+        file >> width >> height >> maxVal;
+        if (format != "P3") {
+            std::cerr << "Format PPM non supporté: " << format << std::endl;
+            file.close();
+            return false;
+        }
+
+        sf::Image image;
+        image.create(width, height);
+
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                int r, g, b;
+                file >> r >> g >> b;
+                image.setPixel(x, y, sf::Color(r, g, b));
+            }
+        }
+
+        file.close();
+        texture.loadFromImage(image);
+        sprite.setTexture(texture, true);
+        if (windowWidth == 0 || windowHeight == 0) {
+            windowWidth = width;
+            windowHeight = height;
+        }
         return true;
     }
 
-    bool PpmViewer::loadFromPixelData(const std::vector<sf::Color>& pixels, int width, int height)
+    void PpmViewer::setWindowSize(int width, int height)
     {
-        if (pixels.size() != static_cast<size_t>(width * height)) {
-            std::cerr << "Taille des données de pixels incorrecte" << std::endl;
-            return false;
+        windowWidth = width;
+        windowHeight = height;
+    }
+
+    void PpmViewer::start_rendering(RayTracer* raytracer)
+    {
+        if (displayActive.load() || !raytracer) {
+            return;
         }
-        _width = width;
-        _height = height;
-        _image.create(_width, _height);
-        for (int y = 0; y < _height; ++y) {
-            for (int x = 0; x < _width; ++x) {
-                _image.setPixel(x, y, pixels[y * _width + x]);
+
+        this->raytracer = raytracer;
+        lastRenderedLine = 0;
+        displayActive.store(true);
+
+        if (!window.isOpen()) {
+            window.create(sf::VideoMode(windowWidth, windowHeight), "RayTracer");
+        }
+
+        displayImage.create(windowWidth, windowHeight, sf::Color::Black);
+        texture.create(windowWidth, windowHeight);
+        texture.update(displayImage);
+        sprite.setTexture(texture, true);
+        std::thread displayThread(&PpmViewer::displayLoop, this);
+        displayThread.detach();
+    }
+
+    void PpmViewer::stopDisplay()
+    {
+        displayActive.store(false);
+        if (window.isOpen()) {
+            window.close();
+        }
+    }
+
+    void PpmViewer::updateTexture()
+    {
+        if (!raytracer) {
+            return;
+        }
+
+        const Screen& screen = raytracer->getScreen();
+        int width = screen.getWidth();
+        int height = screen.getHeight();
+        int currentLine = raytracer->getCurrentLine();
+
+        {
+            std::lock_guard<std::mutex> lock(displayMutex);
+            for (int y = lastRenderedLine; y < currentLine && y < height; ++y) {
+                for (int x = 0; x < width; ++x) {
+                    Math::Vector3D color = screen.getPixel(x, y);
+                    // couleur de [0,1] à [0,255]
+                    sf::Color pixelColor(
+                        static_cast<sf::Uint8>(std::min(255.0, color.X * 255)),
+                        static_cast<sf::Uint8>(std::min(255.0, color.Y * 255)),
+                        static_cast<sf::Uint8>(std::min(255.0, color.Z * 255))
+                    );
+                    displayImage.setPixel(x, y, pixelColor);
+                }
+            }
+            if (lastRenderedLine < currentLine) {
+                texture.update(displayImage);
+                lastRenderedLine = currentLine;
             }
         }
-        _texture.loadFromImage(_image);
-        _sprite.setTexture(_texture);
-        _isLoaded = true;
-        return true;
+    }
+
+    void PpmViewer::displayLoop()
+    {
+        float scaleX = static_cast<float>(windowWidth) / displayImage.getSize().x;
+        float scaleY = static_cast<float>(windowHeight) / displayImage.getSize().y;
+        sprite.setScale(scaleX, scaleY);
+
+        while (window.isOpen() && displayActive.load()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                    displayActive.store(false);
+                } else if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        window.close();
+                        displayActive.store(false);
+                    }
+                }
+            }
+
+            updateTexture();
+            window.clear(sf::Color::Black);
+            window.draw(sprite);
+            window.display();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+    }
+
+    void PpmViewer::displayFromScreen()
+    {
+        if (raytracer) {
+            start_rendering(raytracer);
+        }
     }
 
     void PpmViewer::display()
     {
-        if (!_isLoaded) {
-            std::cerr << "Aucune image n'a été chargée" << std::endl;
-            return;
+        if (!window.isOpen()) {
+            window.create(sf::VideoMode(windowWidth, windowHeight), "RayTracer");
         }
-        _window.create(sf::VideoMode(_width, _height), "RayTracer - Visualisation");
-        while (_window.isOpen()) {
+        float scaleX = static_cast<float>(windowWidth) / texture.getSize().x;
+        float scaleY = static_cast<float>(windowHeight) / texture.getSize().y;
+        sprite.setScale(scaleX, scaleY);
+        while (window.isOpen()) {
             sf::Event event;
-            while (_window.pollEvent(event)) {
+            while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
-                    _window.close();
+                    window.close();
+                } else if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        window.close();
+                    }
                 }
             }
-            _window.clear();
-            _window.draw(_sprite);
-            _window.display();
+            window.clear(sf::Color::Black);
+            window.draw(sprite);
+            window.display();
         }
     }
 

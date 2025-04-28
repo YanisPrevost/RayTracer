@@ -1,29 +1,42 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
 ** Sphere.hpp
 */
 
 #pragma once
 
-#include <cmath>
-#include <iostream>
-#include "../../Vectors/Vector3D.hpp"
-#include "../../Points/Point3D.hpp"
-#include "../../Rays/Ray.hpp"
-#include "../../Interfaces/IShape.hpp"
+#include "../../Interfaces/IPrimitive.hpp"
+#include <memory>
 
 namespace RayTracer {
 
-    class Sphere : public IShape {
+    class Sphere : public IPrimitive {
         private:
             Math::Point3D center;
             double radius;
+            Math::Vector3D color;
+            double reflection;
+
         public:
-            Sphere();
-            Sphere(const Math::Point3D& center, double radius);
-            bool hits(const Ray& ray) const override;
-            const char* getType() const override { return "Sphere"; }
+            Sphere(const Math::Point3D& center = Math::Point3D(0, 0, 0),
+                double radius = 1.0,
+                const Math::Vector3D& color = Math::Vector3D(1, 1, 1),
+                double reflection = 0.0);
+            HitInfo intersect(const Ray& ray) const override;
+            std::string getName() const override;
+            std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+
+            Math::Point3D getCenter() const { return center; }
+            double getRadius() const { return radius; }
+            Math::Vector3D getColor() const { return color; }
+            double getReflection() const { return reflection; }
+
+            void setCenter(const Math::Point3D& center) { this->center = center; }
+            void setRadius(double radius) { this->radius = radius; }
+            void setColor(const Math::Vector3D& color) { this->color = color; }
+            void setReflection(double reflection) { this->reflection = reflection; }
         };
+
 }

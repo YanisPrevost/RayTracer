@@ -1,35 +1,72 @@
 /*
 ** EPITECH PROJECT, 2024
-** RayTracer
+** Zero
 ** File description:
 ** Sphere.cpp
 */
 
 #include "Sphere.hpp"
+#include <cmath>
 
 namespace RayTracer {
 
-    Sphere::Sphere() : center(Math::Point3D(0, 0, 0)), radius(1.0) {}
-    Sphere::Sphere(const Math::Point3D& center, double radius) : center(center), radius(radius) {}
+    Sphere::Sphere(const Math::Point3D& center, double radius, const Math::Vector3D& color, double reflection)
+        : center(center), radius(radius), color(color), reflection(reflection) {}
 
-    bool Sphere::hits(const Ray& ray) const
+    HitInfo Sphere::intersect(const Ray& ray) const
     {
-        Math::Vector3D originToCenter = ray.getOrigin() - center;
-        double a = ray.getDirection().dot(ray.getDirection()); // D · D
-        double b = 2.0 * ray.getDirection().dot(originToCenter); // 2 * D · (O-C)
-        double c = originToCenter.dot(originToCenter) - radius * radius; // (O-C) · (O-C) - R²
+        HitInfo info;
+        info.hit = false;
+        Math::Vector3D oc = ray.origin - center;
+        double a = ray.direction.dot(ray.direction);
+        double b = 2.0 * oc.dot(ray.direction);
+        double c = oc.dot(oc) - radius * radius;
+
         double discriminant = b * b - 4 * a * c;
-        return discriminant >= 0;
-    }
-}
 
-extern "C" {
+        if (discriminant < 0)
+            return info;
 
-    RayTracer::IShape* create_shape() {
-        return new RayTracer::Sphere();
+        double t1 = (-b - sqrt(discriminant)) / (2.0 * a);
+        double t2 = (-b + sqrt(discriminant)) / (2.0 * a);
+        double t = (t1 > 0) ? t1 : t2;
+        if (t < 0)
+            return info;
+        info.hit = true;
+        info.distance = t;
+        info.point = ray.origin + ray.direction * t;
+        info.normal = (info.point - center).normalize();
+        info.color = color;
+        info.reflection = reflection;
+        return info;
     }
-    void destroy_shape(RayTracer::IShape* shape) {
-        delete shape;
+
+    std::string Sphere::getName() const
+    {
+        return "Sphere";
+    }
+
+    std::unique_ptr<IPrimitive> Sphere::create(const std::vector<double>& params)
+    {
+        if (params.size() >= 7) {
+            Math::Point3D center(params[0], params[1], params[2]);
+            double radius = params[3];
+            Math::Vector3D color(params[4], params[5], params[6]);
+            double reflection = (params.size() > 7) ? params[7] : 0.0;
+
+            return std::make_unique<Sphere>(center, radius, color, reflection);
+        }
+
+        return std::make_unique<Sphere>();
+    }
+
+    extern "C" {
+        IPrimitive* createPrimitive() {
+            return new Sphere();
+        }
+        void destroyPrimitive(IPrimitive* primitive) {
+            delete primitive;
+        }
     }
 
 }
