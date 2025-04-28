@@ -102,8 +102,11 @@ namespace RayTracer {
 
     void RayTracer::stopRendering()
     {
+        if (!renderingActive.load())
+            return;
         renderingActive.store(false);
         renderUpdate.notify_all();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     void RayTracer::waitForUpdate(int& lastLine)
@@ -154,7 +157,6 @@ namespace RayTracer {
     {
         int height = screen.getHeight();
         renderLines(0, height);
-        renderingActive.store(false);
         renderUpdate.notify_all();
     }
 

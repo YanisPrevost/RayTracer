@@ -99,21 +99,27 @@ namespace RayTracer {
         texture.create(windowWidth, windowHeight);
         texture.update(displayImage);
         sprite.setTexture(texture, true);
-        std::thread displayThread(&PpmViewer::displayLoop, this);
-        displayThread.detach();
+        if (displayThread.joinable()) {
+            displayThread.join();
+        }
+        displayThread = std::thread(&PpmViewer::displayLoop, this);
     }
 
     void PpmViewer::stopDisplay()
     {
         displayActive.store(false);
+        if (displayThread.joinable()) {
+            displayThread.join();
+        }
         if (window.isOpen()) {
             window.close();
         }
+        raytracer = nullptr;
     }
 
     void PpmViewer::updateTexture()
     {
-        if (!raytracer) {
+        if (!raytracer || !displayActive.load()) {
             return;
         }
 
@@ -149,17 +155,13 @@ namespace RayTracer {
         float scaleY = static_cast<float>(windowHeight) / displayImage.getSize().y;
         sprite.setScale(scaleX, scaleY);
 
+        displayActive.store(true);
         while (window.isOpen() && displayActive.load()) {
             sf::Event event;
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
-                    window.close();
                     displayActive.store(false);
-                } else if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::Escape) {
-                        window.close();
-                        displayActive.store(false);
-                    }
+                    return;
                 }
             }
 
@@ -169,38 +171,6 @@ namespace RayTracer {
             window.display();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        }
-    }
-
-    void PpmViewer::displayFromScreen()
-    {
-        if (raytracer) {
-            start_rendering(raytracer);
-        }
-    }
-
-    void PpmViewer::display()
-    {
-        if (!window.isOpen()) {
-            window.create(sf::VideoMode(windowWidth, windowHeight), "RayTracer");
-        }
-        float scaleX = static_cast<float>(windowWidth) / texture.getSize().x;
-        float scaleY = static_cast<float>(windowHeight) / texture.getSize().y;
-        sprite.setScale(scaleX, scaleY);
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                } else if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::Escape) {
-                        window.close();
-                    }
-                }
-            }
-            window.clear(sf::Color::Black);
-            window.draw(sprite);
-            window.display();
         }
     }
 
