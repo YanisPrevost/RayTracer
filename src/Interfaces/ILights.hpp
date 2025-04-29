@@ -7,23 +7,22 @@
 
 #pragma once
 #include <memory>
-#include "../Math/Vector3D.hpp"
-#include "../Math/Point3D.hpp"
-
+#include "../Vectors/Vector.hpp"
+#include "../Points/Points.hpp"
+#include "../Interfaces/IPrimitive.hpp"
 namespace RayTracer {
 
     class ILights {
         private:
-            Math::Point3D position;
-            Math::Vector3D color;
-            double intensity;
+
         public:
-            ILights(const Math::Point3D& pos, const Math::Vector3D& col, double intensity) : position(pos), color(col), intensity(intensity) {}
+            ILights() = default;
             virtual ~ILights() = default;
 
-            Math::Point3D getPosition() const;
-            Math::Vector3D getColor() const;
-            double getIntensity() const;
+            virtual Math::Point3D getPosition() const = 0;
+            virtual Math::Vector3D getColor() const = 0;
+            virtual double getIntensity() const = 0;
+            virtual double getDiffuse(HitInfo &info) const = 0;
     };
 
 }
