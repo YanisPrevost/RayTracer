@@ -10,7 +10,6 @@
 #include <thread>
 #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
-// #include "Parsing/Parsing_cfg.hpp"
 
 namespace RayTracer {
 
@@ -24,11 +23,6 @@ namespace RayTracer {
     {
         stopRendering();
         clearPrimitives();
-        // for (auto& handle : libraryHandles) {
-        //     if (handle.second) {
-        //         dlclose(handle.second);
-        //     }
-        // }
         libraryHandles.clear();
     }
 
@@ -153,9 +147,11 @@ namespace RayTracer {
         if (!closestHit.hit) {
             return backgroundColor;
         }
-        // Lumiere Temporaiare
+        // Lumiere Temporaire
         Math::Vector3D color = closestHit.color;
-        double lightIntensity = std::max(0.0, closestHit.normal.dot(Math::Vector3D(0, 1, 0)));
+        double ambientIntensity = 0.1;
+        double directionalIntensity = std::max(0.0, closestHit.normal.dot(Math::Vector3D(0, 1, 0)));
+        double lightIntensity = ambientIntensity + (1.0 - ambientIntensity) * directionalIntensity;
         color = color * lightIntensity;
         // Lumiere Temporaire
         if (closestHit.reflection > 0 && depth > 1) {
@@ -198,6 +194,28 @@ namespace RayTracer {
                 sphereInfo.getR() / 255.0, sphereInfo.getG() / 255.0, sphereInfo.getB() / 255.0
             };
             addPrimitive("Sphere", params);
+        }
+
+        const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
+        for (const auto& planeInfo : planeInfos) {
+            int axisValue = 2;
+            if (planeInfo.getPosition().X != 0) {
+                axisValue = 0;
+            } else if (planeInfo.getPosition().Y != 0) {
+                axisValue = 1;
+            }
+            double position = 0;
+            switch (axisValue) {
+                case 0: position = planeInfo.getPosition().X; break;
+                case 1: position = planeInfo.getPosition().Y; break;
+                case 2: position = planeInfo.getPosition().Z; break;
+            }
+            std::vector<double> params = {
+                static_cast<double>(axisValue),
+                position,
+                planeInfo.getR() / 255.0, planeInfo.getG() / 255.0, planeInfo.getB() / 255.0
+            };
+            addPrimitive("Plane", params);
         }
     }
 
