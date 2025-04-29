@@ -33,7 +33,7 @@ namespace RayTracer {
         return "EmptyDecorator";
     }
 
-    std::unique_ptr<IPrimitive> APrimitiveDecorator::create(const std::vector<double>& params) override
+    std::unique_ptr<IPrimitive> APrimitiveDecorator::create(const std::vector<double>& params)
     {
         if (wrappedPrimitive) {
             return wrappedPrimitive->create(params);
