@@ -6,7 +6,6 @@
 #include <thread>
 #include <chrono>
 #include <dlfcn.h>
-#include "Parsing/Parsing_cfg.hpp"
 #include "Builder/RayTracer.hpp"
 #include "Visualization/PpmViewer.hpp"
 
@@ -22,8 +21,6 @@ int main(int argc, char *argv[])
     RayTracer::Parsing_cfg parser(configFile);
     parser.parse();
 
-    std::vector<std::string> primitiveTypes = {"Sphere"};
-
     const RayTracer::Cam_info& camInfo = parser.getCamInfo();
     RayTracer::RayTracer raytracer(camInfo.getWidth(), camInfo.getHeight());
     RayTracer::Camera camera(
@@ -33,19 +30,13 @@ int main(int argc, char *argv[])
         camInfo.getFov()
     );
     raytracer.setCamera(camera);
+    std::vector<std::string> primitiveTypes = {"Sphere", "Plane"};
     for (const auto& type : primitiveTypes) {
         std::string libPath = "./Plugins/Primitives/lib" + type + ".so";
         raytracer.loadPrimitiveLibrary(libPath, type);
     }
-    const std::vector<RayTracer::Sphere_info>& sphereInfos = parser.getSphereInfos();
-    for (const auto& sphereInfo : sphereInfos) {
-        std::vector<double> params = {
-            sphereInfo.getPosition().X, sphereInfo.getPosition().Y, sphereInfo.getPosition().Z,
-            sphereInfo.getRadius(),
-            sphereInfo.getR() / 255.0, sphereInfo.getG() / 255.0, sphereInfo.getB() / 255.0
-        };
-        raytracer.addPrimitive("Sphere", params);
-    }
+
+    raytracer.BuildScene(parser);
 
     std::cout << "Lancement du rendu...";
 
