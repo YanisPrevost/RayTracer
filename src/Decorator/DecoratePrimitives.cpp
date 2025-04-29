@@ -33,13 +33,13 @@ namespace RayTracer {
         return "EmptyDecorator";
     }
 
-    std::unique_ptr<IPrimitive> APrimitiveDecorator::create(const std::vector<double>& params)
-    {
-        if (wrappedPrimitive) {
-            return wrappedPrimitive->create(params);
-        }
-        return nullptr;
-    }
+    // std::unique_ptr<IPrimitive> APrimitiveDecorator::create(const std::vector<double>& params)
+    // {
+    //     if (wrappedPrimitive) {
+    //         return wrappedPrimitive->create(params);
+    //     }
+    //     return nullptr;
+    // }
 
     ColorDecorator::ColorDecorator(std::unique_ptr<IPrimitive> primitive, const Math::Vector3D& color)
         : APrimitiveDecorator(std::move(primitive)), color(color)

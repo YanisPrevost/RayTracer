@@ -39,12 +39,11 @@ namespace RayTracer {
             virtual ~IPrimitive() = default;
             virtual HitInfo intersect(const Ray& ray) const = 0;
             virtual std::string getName() const = 0;
-            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
+            // virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
     };
 
     extern "C" {
-        IPrimitive* createPrimitive();
-        void destroyPrimitive(IPrimitive* primitive);
+        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params);
     }
 
 }

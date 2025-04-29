@@ -12,6 +12,12 @@ namespace RayTracer {
 
     Sphere::Sphere(const Math::Point3D& center, double radius, const Math::Vector3D& color, double reflection)
         : center(center), radius(radius), color(color), reflection(reflection) {}
+    Sphere::Sphere(const std::vector<double>& params) :
+    center(params[0], params[1], params[2]),
+    radius(params[3]),
+    color(params[4], params[5], params[6]), reflection(reflection) {
+        double reflection = (params.size() > 7) ? params[7] : 0.0;
+    }
 
     HitInfo Sphere::intersect(const Ray& ray) const
     {
@@ -46,26 +52,23 @@ namespace RayTracer {
         return "Sphere";
     }
 
-    std::unique_ptr<IPrimitive> Sphere::create(const std::vector<double>& params)
-    {
-        if (params.size() >= 7) {
-            Math::Point3D center(params[0], params[1], params[2]);
-            double radius = params[3];
-            Math::Vector3D color(params[4], params[5], params[6]);
-            double reflection = (params.size() > 7) ? params[7] : 0.0;
+    // std::unique_ptr<IPrimitive> Sphere::create(const std::vector<double>& params)
+    // {
+    //     if (params.size() >= 7) {
+    //         Math::Point3D center(params[0], params[1], params[2]);
+    //         double radius = params[3];
+    //         Math::Vector3D color(params[4], params[5], params[6]);
+    //         double reflection = (params.size() > 7) ? params[7] : 0.0;
 
-            return std::make_unique<Sphere>(center, radius, color, reflection);
-        }
+    //         return std::make_unique<Sphere>(center, radius, color, reflection);
+    //     }
 
-        return std::make_unique<Sphere>();
-    }
+    //     return std::make_unique<Sphere>();
+    // }
 
     extern "C" {
-        IPrimitive* createPrimitive() {
-            return new Sphere();
-        }
-        void destroyPrimitive(IPrimitive* primitive) {
-            delete primitive;
+        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params) {
+            return  std::make_unique<Sphere>(params);
         }
     }
 

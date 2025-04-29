@@ -9,6 +9,7 @@
 #include <iostream>
 #include <thread>
 #include <dlfcn.h>
+#include "../DynamicLibrary/DynamicLibrary.hpp"
 
 namespace RayTracer {
 
@@ -22,11 +23,11 @@ namespace RayTracer {
     {
         stopRendering();
         clearPrimitives();
-        for (auto& handle : libraryHandles) {
-            if (handle.second) {
-                dlclose(handle.second);
-            }
-        }
+        // for (auto& handle : libraryHandles) {
+        //     if (handle.second) {
+        //         dlclose(handle.second);
+        //     }
+        // }
         libraryHandles.clear();
     }
 
@@ -44,9 +45,10 @@ namespace RayTracer {
     {
         std::string fullPath = libPath;
 
-        void *handle = dlopen(fullPath.c_str(), RTLD_LAZY);
+        
+        // void *handle = dlopen(fullPath.c_str(), RTLD_LAZY);
 
-        libraryHandles[name] = handle;
+        libraryHandles[name] = std::make_unique<DynamicLibrary>(fullPath);
         std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
         return true;
     }
@@ -59,16 +61,11 @@ namespace RayTracer {
             return false;
         }
 
-        IPrimitive* (*createFunc)() = reinterpret_cast<IPrimitive* (*)()>(dlsym(it->second, "createPrimitive"));
-        IPrimitive* primitive = createFunc();
-        if (primitive) {
-            std::unique_ptr<IPrimitive> configuredPrimitive = primitive->create(params);
-            delete primitive;
-            if (configuredPrimitive) {
-                primitives.push_back(std::move(configuredPrimitive));
-                std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
-                return true;
-            }
+        std::unique_ptr<IPrimitive> configuredPrimitive = it->second->getModule<IPrimitive>("createPrimitive", params);
+        if (configuredPrimitive) {
+            primitives.push_back(std::move(configuredPrimitive));
+            std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
+            return true;
         }
         return false;
     }

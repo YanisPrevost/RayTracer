@@ -21,7 +21,7 @@ namespace RayTracer {
 
             virtual HitInfo intersect(const Ray& ray) const override;
             virtual std::string getName() const override;
-            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params);
     };
 
     class ColorDecorator : public APrimitiveDecorator {
@@ -33,7 +33,7 @@ namespace RayTracer {
 
             virtual HitInfo intersect(const Ray& ray) const override;
             virtual std::string getName() const override;
-            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params);
     };
 
     class ReflectionDecorator : public APrimitiveDecorator {
@@ -45,7 +45,7 @@ namespace RayTracer {
 
             virtual HitInfo intersect(const Ray& ray) const override;
             virtual std::string getName() const override;
-            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params);
     };
 
     std::unique_ptr<IPrimitive> decoratePrimitive(std::unique_ptr<IPrimitive> primitive, const Math::Vector3D& color,double reflection);
