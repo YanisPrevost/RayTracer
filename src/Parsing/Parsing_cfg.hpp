@@ -27,6 +27,7 @@ namespace RayTracer
             ~Parsing_cfg() = default;
             void parse();
             void parseCamera(libconfig::Config& cfg);
+            void parseLight(libconfig::Config& cfg);
             void parseSpheres(libconfig::Config& cfg);
             void parsePlanes(libconfig::Config& cfg);
             void parseCones(libconfig::Config& cfg);
