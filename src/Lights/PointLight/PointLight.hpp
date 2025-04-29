@@ -11,6 +11,7 @@
 #include "../../Points/Points.hpp"
 #include "../ALights.hpp"
 #include "../../Interfaces/IPrimitive.hpp"
+#include "../../Builder/RayTracer.hpp"
 namespace RayTracer
 {
     class PointLight : public ALights {
@@ -20,7 +21,7 @@ namespace RayTracer
                 const Math::Vector3D& col,
                 double intensity) : ALights(pos, col, intensity) {};
             ~PointLight();
-            Math::Vector3D computeDiffuseLightingColor(HitInfo &info) const;
+            Math::Vector3D computeDiffuseLightingColor(HitInfo &info, const RayTracer &raytracer) const;
         protected:
         private:
     };

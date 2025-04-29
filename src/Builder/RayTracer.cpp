@@ -11,6 +11,7 @@
 // #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 #include "../Lights/PointLight/PointLight.hpp"
+#include "../Interfaces/ILights.hpp"
 // #include "Parsing/Parsing_cfg.hpp"
 
 namespace RayTracer {
@@ -146,17 +147,11 @@ namespace RayTracer {
         if (!closestHit.hit) {
             return backgroundColor;
         }
-        // Lumiere Temporaiare
-        // PointLight light = PointLight(Math::Point3D(20, -20, 0), Math::Vector3D(1, 1, 1), 0.0);
-        // PointLight light2 = PointLight(Math::Point3D(20, 0, 3), Math::Vector3D(0, 1, 1), 0.1);
-        // Math::Vector3D color1 = light.computeDiffuseLightingColor(closestHit);
-        // Math::Vector3D color2 = light2.computeDiffuseLightingColor(closestHit);
-        Math::Vector3D color; //= closestHit.color; //color1 + color2;//closestHit.color;
+        Math::Vector3D color;
         for (const auto &light : lights) {
-            Math::Vector3D lightColor = light->computeDiffuseLightingColor(closestHit);
+            Math::Vector3D lightColor = light->computeDiffuseLightingColor(closestHit, *this);
             color += lightColor;
         }
-        // Lumiere Temporaire
         if (closestHit.reflection > 0 && depth > 1) {
             Math::Vector3D reflectDir = ray.direction - closestHit.normal * 2 * ray.direction.dot(closestHit.normal);
             reflectDir = reflectDir.normalize();
@@ -175,7 +170,7 @@ namespace RayTracer {
         closestHit.distance = std::numeric_limits<double>::max();
         for (const auto& primitive : primitives) {
             HitInfo hitInfo = primitive->intersect(ray);
-            if (hitInfo.hit && hitInfo.distance < closestHit.distance) {
+            if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
                 closestHit = hitInfo;
             }
         }
@@ -199,7 +194,7 @@ namespace RayTracer {
             addPrimitive("Sphere", params);
         }
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
-        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(0, 30, 10), Math::Vector3D(1, 1.0, 1), 1));
+        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(0, 30, 0), Math::Vector3D(1, 1.0, 1), 1));
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
     }
 
