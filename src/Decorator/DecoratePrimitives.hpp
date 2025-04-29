@@ -21,7 +21,7 @@ namespace RayTracer {
 
             virtual HitInfo intersect(const Ray& ray) const override;
             virtual std::string getName() const override;
-            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params);
+            virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
     };
 
     class ColorDecorator : public APrimitiveDecorator {
