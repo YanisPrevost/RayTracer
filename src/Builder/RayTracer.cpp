@@ -45,6 +45,10 @@ namespace RayTracer {
         std::string fullPath = libPath;
 
         void *handle = dlopen(fullPath.c_str(), RTLD_LAZY);
+        if (!handle) {
+            std::cerr << "Erreur de chargement de la bibliothèque: " << dlerror() << std::endl;
+            return false;
+        }
 
         libraryHandles[name] = handle;
         std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
@@ -76,17 +80,6 @@ namespace RayTracer {
     void RayTracer::clearPrimitives()
     {
         primitives.clear();
-    }
-
-    void RayTracer::render()
-    {
-        start_rendering();
-
-        int lastLine = 0;
-        int height = screen.getHeight();
-        while (isRenderingActive() && currentLine < height) {
-            waitForUpdate(lastLine);
-        }
     }
 
     void RayTracer::start_rendering()

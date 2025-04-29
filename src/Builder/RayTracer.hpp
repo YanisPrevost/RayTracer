@@ -49,8 +49,6 @@ namespace RayTracer {
             bool addPrimitive(const std::string& type, const std::vector<double>& params);
             void clearPrimitives();
 
-            void render();
-
             void start_rendering();
             void stopRendering();
             bool isRenderingActive() const { return renderingActive; }
