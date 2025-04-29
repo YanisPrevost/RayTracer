@@ -1,2 +1,6 @@
 .vscode/
 *.ppm
+raytracer
+*.o
+*.so
+build

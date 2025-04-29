@@ -23,7 +23,7 @@ class ALights : public ILights {
         Math::Point3D getPosition() const;
         Math::Vector3D getColor() const;
         double getIntensity() const;
-        virtual double getDiffuse(HitInfo &info) const;
+        virtual double getDiffuse(HitInfo &info) const = 0;
     protected:
     private:
         Math::Point3D _position;
