@@ -9,6 +9,7 @@
 #include <iostream>
 #include <thread>
 #include <dlfcn.h>
+#include "Parsing/Parsing_cfg.hpp"
 
 namespace RayTracer {
 
@@ -195,6 +196,19 @@ namespace RayTracer {
     bool RayTracer::saveImage(const std::string& filename) const
     {
         return screen.saveToPPM(filename);
+    }
+
+    void RayTracer::BuildScene(const Parsing_cfg& parser)
+    {
+        const std::vector<Sphere_info>& sphereInfos = parser.getSphereInfos();
+        for (const auto& sphereInfo : sphereInfos) {
+            std::vector<double> params = {
+                sphereInfo.getPosition().X, sphereInfo.getPosition().Y, sphereInfo.getPosition().Z,
+                sphereInfo.getRadius(),
+                sphereInfo.getR() / 255.0, sphereInfo.getG() / 255.0, sphereInfo.getB() / 255.0
+            };
+            addPrimitive("Sphere", params);
+        }
     }
 
 }

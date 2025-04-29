@@ -65,5 +65,61 @@ namespace RayTracer
                 _sphereInfos.push_back(sphereInfo);
             }
         }
+
+        if (cfg.exists("primitives")) {
+            libconfig::Setting& spheres = cfg.lookup("primitives.spheres");
+            int numSpheres = spheres.getLength();
+            for (int i = 0; i < numSpheres; ++i) {
+                libconfig::Setting& sphere = spheres[i];
+                Sphere_info sphereInfo;
+                int x, y, z;
+                int radius = 0;
+                int r, g, b;
+
+                sphere.lookupValue("x", x);
+                sphere.lookupValue("y", y);
+                sphere.lookupValue("z", z);
+                sphere.lookupValue("r", radius);
+
+                const libconfig::Setting& color = sphere["color"];
+                color.lookupValue("r", r);
+                color.lookupValue("g", g);
+                color.lookupValue("b", b);
+
+                sphereInfo.setPosition(Math::Point3D(x, y, z));
+                sphereInfo.setRadius(radius);
+                sphereInfo.setColor(r, g, b);
+                _sphereInfos.push_back(sphereInfo);
+            }
+
+            libconfig::Setting& cones = cfg.lookup("primitives.cones");
+            int numCones = cones.getLength();
+            for (int i = 0; i < numCones; ++i) {
+                libconfig::Setting& cones = cones[i];
+                Cones_Info conesInfo;
+                std::string axis;
+                int position;
+                double radius;
+                int _height;
+                int r, g, b;
+
+                cones.lookupValue("axis", axis);
+                cones.lookupValue("position", position);
+                cones.lookupValue("hength", _height);
+                cones.lookupValue("r", radius);
+
+                const libconfig::Setting& color = cones["color"];
+                color.lookupValue("r", r);
+                color.lookupValue("g", g);
+                color.lookupValue("b", b);
+
+                conesInfo.setPosition(position);
+                conesInfo.setAxis(axis);
+                conesInfo.setHeight(_height);
+                conesInfo.setRadius(radius);
+                conesInfo.setColor(r, g, b);
+                _conesInfos.push_back(conesInfo);
+            }
+        }
     }
 }
