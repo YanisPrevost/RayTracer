@@ -46,9 +46,6 @@ namespace RayTracer {
     {
         std::string fullPath = libPath;
 
-        
-        // void *handle = dlopen(fullPath.c_str(), RTLD_LAZY);
-
         libraryHandles[name] = std::make_unique<DynamicLibrary>(fullPath);
         std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
         return true;

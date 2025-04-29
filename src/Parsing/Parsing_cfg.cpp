@@ -92,42 +92,42 @@ namespace RayTracer
                 _sphereInfos.push_back(sphereInfo);
             }
 
-            libconfig::Setting& cones = cfg.lookup("primitives.cones");
-            int numCones = cones.getLength();
-            for (int i = 0; i < numCones; ++i) {
-                libconfig::Setting& cones = cones[i];
-                Cones_Info conesInfo;
-                std::string axis;
-                int position;
-                double radius;
-                int _height;
-                int r, g, b;
+            // libconfig::Setting& cones = cfg.lookup("primitives.cones");
+            // int numCones = cones.getLength();
+            // for (int i = 0; i < numCones; ++i) {
+            //     libconfig::Setting& cones = cones[i];
+            //     Cones_Info conesInfo;
+            //     std::string axis;
+            //     int position;
+            //     double radius;
+            //     int _height;
+            //     int r, g, b;
 
-                cones.lookupValue("axis", axis);
-                cones.lookupValue("position", position);
-                cones.lookupValue("hength", _height);
-                cones.lookupValue("r", radius);
+            //     cones.lookupValue("axis", axis);
+            //     cones.lookupValue("position", position);
+            //     cones.lookupValue("hength", _height);
+            //     cones.lookupValue("r", radius);
 
-                const libconfig::Setting& color = cones["color"];
-                color.lookupValue("r", r);
-                color.lookupValue("g", g);
-                color.lookupValue("b", b);
+            //     const libconfig::Setting& color = cones["color"];
+            //     color.lookupValue("r", r);
+            //     color.lookupValue("g", g);
+            //     color.lookupValue("b", b);
 
-                if (axis == "X") {
-                    conesInfo.setPosition(Math::Point3D(position, 0, 0));
-                } else if (axis == "Y") {
-                    conesInfo.setPosition(Math::Point3D(0, position, 0));
-                } else if (axis == "Z") {
-                    conesInfo.setPosition(Math::Point3D(0, 0, position));
-                } else {
-                    // EXCEPTION A FAIRE ICI
-                }
-                conesInfo.setAxis(axis);
-                conesInfo.setHeight(_height);
-                conesInfo.setRadius(radius);
-                conesInfo.setColor(r, g, b);
-                _conesInfos.push_back(conesInfo);
-            }
+            //     if (axis == "X") {
+            //         conesInfo.setPosition(Math::Point3D(position, 0, 0));
+            //     } else if (axis == "Y") {
+            //         conesInfo.setPosition(Math::Point3D(0, position, 0));
+            //     } else if (axis == "Z") {
+            //         conesInfo.setPosition(Math::Point3D(0, 0, position));
+            //     } else {
+            //         // EXCEPTION A FAIRE ICI
+            //     }
+            //     conesInfo.setAxis(axis);
+            //     conesInfo.setHeight(_height);
+            //     conesInfo.setRadius(radius);
+            //     conesInfo.setColor(r, g, b);
+            //     _conesInfos.push_back(conesInfo);
+            // }
         }
     }
 }

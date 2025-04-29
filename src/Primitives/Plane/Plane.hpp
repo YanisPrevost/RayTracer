@@ -17,7 +17,7 @@ namespace RayTracer
     class Plane : public IPrimitive
     {
         public:
-            Plane();
+            Plane(const std::vector<double>& params);
             Plane(const std::string& axis, const Math::Vector3D& position, const Math::Vector3D& color, double reflection = 0.0);
             ~Plane() override = default;
 

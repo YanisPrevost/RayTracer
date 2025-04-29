@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         camInfo.getFov()
     );
     raytracer.setCamera(camera);
-    std::vector<std::string> primitiveTypes = {"Sphere", "Plane"};
+    std::vector<std::string> primitiveTypes = {"Sphere", "Plane", "Cone"};
     for (const auto& type : primitiveTypes) {
         std::string libPath = "./Plugins/Primitives/lib" + type + ".so";
         raytracer.loadPrimitiveLibrary(libPath, type);

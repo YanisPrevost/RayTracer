@@ -12,7 +12,27 @@
 
 namespace RayTracer {
 
-    Plane::Plane() : position(0, 0, 0), normal(0, 0, 1), axis("Z"), color(255, 255, 255), reflection(0.0) {}
+    Plane::Plane(const std::vector<double>& params) : position(0, 0, 0), normal(0, 0, 1), axis("Z"), color(255, 255, 255), reflection(0.0)
+    {
+        if (params.size() >= 8) {
+            position = Math::Vector3D(params[0], params[1], params[2]);
+            switch (static_cast<int>(params[3])) {
+                case 0:
+                    axis = "X";
+                    break;
+                case 1:
+                    axis = "Y";
+                    break;
+                case 2:
+                default:
+                    axis = "Z";
+                    break;
+            }
+            color = Math::Vector3D(params[4], params[5], params[6]);
+            reflection = params[7];
+            setNormal();
+        }
+    }
 
     Plane::Plane(const std::string& axis, const Math::Vector3D& position,
             const Math::Vector3D& color, double reflection) : position(position), axis(axis), color(color), reflection(reflection)
@@ -63,31 +83,12 @@ namespace RayTracer {
     {
         if (params.size() < 8)
             return nullptr;
-        Math::Vector3D pos(params[0], params[1], params[2]);
-        std::string axis;
-        switch (static_cast<int>(params[3])) {
-            case 0:
-                axis = "X";
-                break;
-            case 1:
-                axis = "Y";
-                break;
-            case 2:
-            default:
-                axis = "Z";
-                break;
-        }
-        Math::Vector3D col(params[4], params[5], params[6]);
-        double refl = params[7];
-        return std::make_unique<Plane>(axis, pos, col, refl);
+        return std::make_unique<Plane>(params);
     }
 
     extern "C" {
-        IPrimitive* createPrimitive() {
-            return new Plane();
-        }
-        void destroyPrimitive(IPrimitive* primitive) {
-            delete primitive;
+        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params) {
+            return std::make_unique<Plane>(params);
         }
     }
 
