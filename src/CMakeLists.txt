@@ -9,6 +9,8 @@ file(GLOB_RECURSE RAYTRACER_SOURCES
 
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Plane/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Sphere/.*")
+# temporary
+# list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Lights/.*")
 
 
 find_package(PkgConfig REQUIRED)
@@ -27,9 +29,8 @@ target_link_libraries(raytracer
     sfml-system
 )
 
-# Link libconfig++ to the raytracer executable
 target_link_libraries(raytracer ${LIBCONFIGPP_LIBRARIES})
 
-# Add plugin directories
 add_subdirectory(Primitives/Plane)
 add_subdirectory(Primitives/Sphere)
+add_subdirectory(Lights/PointLight)

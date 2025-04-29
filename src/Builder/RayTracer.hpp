@@ -16,6 +16,7 @@
 #include "../Camera/Camera.hpp"
 #include "../Rectangle3D/Screen.hpp"
 #include "../Interfaces/IPrimitive.hpp"
+#include "../Interfaces/ILights.hpp"
 #include "../Parsing/Parsing_cfg.hpp"
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 
@@ -26,6 +27,7 @@ namespace RayTracer {
             Camera camera;
             Screen screen;
             std::vector<std::unique_ptr<IPrimitive>> primitives;
+            std::vector<std::unique_ptr<ILights>> lights;
             std::map<std::string, std::unique_ptr<DynamicLibrary>> libraryHandles;
             int maxDepth;
             int samplesPerPixel;

@@ -8,8 +8,9 @@
 #include "RayTracer.hpp"
 #include <iostream>
 #include <thread>
-#include <dlfcn.h>
+// #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
+#include "../Lights/PointLight/PointLight.hpp"
 // #include "Parsing/Parsing_cfg.hpp"
 
 namespace RayTracer {
@@ -24,11 +25,6 @@ namespace RayTracer {
     {
         stopRendering();
         clearPrimitives();
-        // for (auto& handle : libraryHandles) {
-        //     if (handle.second) {
-        //         dlclose(handle.second);
-        //     }
-        // }
         libraryHandles.clear();
     }
 
@@ -60,12 +56,9 @@ namespace RayTracer {
         }
 
         std::unique_ptr<IPrimitive> configuredPrimitive = it->second->getModule<IPrimitive>("createPrimitive", params);
-        if (configuredPrimitive) {
-            primitives.push_back(std::move(configuredPrimitive));
-            std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
-            return true;
-        }
-        return false;
+        primitives.push_back(std::move(configuredPrimitive));
+        std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
+        return true;
     }
 
     void RayTracer::clearPrimitives()
@@ -154,9 +147,15 @@ namespace RayTracer {
             return backgroundColor;
         }
         // Lumiere Temporaiare
-        Math::Vector3D color = closestHit.color;
-        double lightIntensity = std::max(0.0, closestHit.normal.dot(Math::Vector3D(0, 1, 0)));
-        color = color * lightIntensity;
+        // PointLight light = PointLight(Math::Point3D(20, -20, 0), Math::Vector3D(1, 1, 1), 0.0);
+        // PointLight light2 = PointLight(Math::Point3D(20, 0, 3), Math::Vector3D(0, 1, 1), 0.1);
+        // Math::Vector3D color1 = light.computeDiffuseLightingColor(closestHit);
+        // Math::Vector3D color2 = light2.computeDiffuseLightingColor(closestHit);
+        Math::Vector3D color; //= closestHit.color; //color1 + color2;//closestHit.color;
+        for (const auto &light : lights) {
+            Math::Vector3D lightColor = light->computeDiffuseLightingColor(closestHit);
+            color += lightColor;
+        }
         // Lumiere Temporaire
         if (closestHit.reflection > 0 && depth > 1) {
             Math::Vector3D reflectDir = ray.direction - closestHit.normal * 2 * ray.direction.dot(closestHit.normal);
@@ -199,6 +198,9 @@ namespace RayTracer {
             };
             addPrimitive("Sphere", params);
         }
+        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
+        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(0, 30, 10), Math::Vector3D(1, 1.0, 1), 1));
+        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
     }
 
 }

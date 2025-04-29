@@ -7,10 +7,10 @@
 
 #ifndef POINTLIGHT_HPP_
 #define POINTLIGHT_HPP_
-#include "../Vectors/Vector.hpp"
-#include "../Points/Points.hpp"
-#include "ALights.hpp"
-#include "../Interfaces/IPrimitive.hpp"
+#include "../../Vectors/Vector.hpp"
+#include "../../Points/Points.hpp"
+#include "../ALights.hpp"
+#include "../../Interfaces/IPrimitive.hpp"
 namespace RayTracer
 {
     class PointLight : public ALights {
@@ -20,7 +20,7 @@ namespace RayTracer
                 const Math::Vector3D& col,
                 double intensity) : ALights(pos, col, intensity) {};
             ~PointLight();
-            double getDiffuse(HitInfo &info) const;
+            Math::Vector3D computeDiffuseLightingColor(HitInfo &info) const;
         protected:
         private:
     };
