@@ -10,20 +10,6 @@
 #include "Builder/RayTracer.hpp"
 #include "Visualization/PpmViewer.hpp"
 
-void compileSharedLibrary(const std::string& primitiveType)
-{
-    std::string command = "make primitive_" + primitiveType;
-
-    std::cout << "Compilation de la bibliothèque partagée pour " << primitiveType << "..." << std::endl;
-    int result = system(command.c_str());
-
-    if (result != 0) {
-        std::cerr << "Erreur lors de la compilation de la bibliothèque " << primitiveType << std::endl;
-    } else {
-        std::cout << "Bibliothèque " << primitiveType << " compilée avec succès." << std::endl;
-    }
-}
-
 int main(int argc, char *argv[])
 {
     if (argc < 2) {
@@ -37,9 +23,6 @@ int main(int argc, char *argv[])
     parser.parse();
 
     std::vector<std::string> primitiveTypes = {"Sphere"};
-    for (const auto& type : primitiveTypes) {
-        compileSharedLibrary(type);
-    }
 
     const RayTracer::Cam_info& camInfo = parser.getCamInfo();
     RayTracer::RayTracer raytracer(camInfo.getWidth(), camInfo.getHeight());
@@ -51,7 +34,7 @@ int main(int argc, char *argv[])
     );
     raytracer.setCamera(camera);
     for (const auto& type : primitiveTypes) {
-        std::string libPath = "./Plugins/lib" + type + ".so";
+        std::string libPath = "./Plugins/Primitives/lib" + type + ".so";
         raytracer.loadPrimitiveLibrary(libPath, type);
     }
     const std::vector<RayTracer::Sphere_info>& sphereInfos = parser.getSphereInfos();
