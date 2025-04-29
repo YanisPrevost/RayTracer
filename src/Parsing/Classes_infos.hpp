@@ -51,22 +51,22 @@ namespace RayTracer
 
     class Cones_Info {
         public:
-            Cones_Info() : _axis("X"), _position(0), _radius(10.0), _height(10), _r(255), _g(0), _b(0) {}
-            int getPosition() const { return _position; }
+            Cones_Info() : _axis("X"), _position(Math::Point3D(0, 8, 0)), _radius(10.0), _height(10), _r(255), _g(0), _b(0) {}
+            Math::Point3D getPosition() const { return _position; }
             int getHeight() const { return _height; }
             std::string getAxis() const { return _axis; }
             double getRadius() const { return _radius; }
             int getR() const { return _r; }
             int getG() const { return _g; }
             int getB() const { return _b; }
-            void setPosition(int position) { _position = position; }
+            void setPosition(const Math::Point3D& position) { _position = position; }
             void setRadius(double radius) { _radius = radius; }
             void setHeight(int height) { _height = height; }
             void setAxis(const std::string& axis) { _axis = axis; }
             void setColor(int r, int g, int b) { _r = r; _g = g; _b = b; }
         private:
             std::string _axis;
-            int _position;
+            Math::Point3D _position;
             double _radius;
             int _height;
             int _r;

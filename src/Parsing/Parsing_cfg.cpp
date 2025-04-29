@@ -113,7 +113,15 @@ namespace RayTracer
                 color.lookupValue("g", g);
                 color.lookupValue("b", b);
 
-                conesInfo.setPosition(position);
+                if (axis == "X") {
+                    conesInfo.setPosition(Math::Point3D(position, 0, 0));
+                } else if (axis == "Y") {
+                    conesInfo.setPosition(Math::Point3D(0, position, 0));
+                } else if (axis == "Z") {
+                    conesInfo.setPosition(Math::Point3D(0, 0, position));
+                } else {
+                    // EXCEPTION A FAIRE ICI
+                }
                 conesInfo.setAxis(axis);
                 conesInfo.setHeight(_height);
                 conesInfo.setRadius(radius);
