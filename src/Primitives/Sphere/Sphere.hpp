@@ -27,7 +27,7 @@ namespace RayTracer {
             Sphere(const std::vector<double>& params);
             HitInfo intersect(const Ray& ray) const override;
             std::string getName() const override;
-            // std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+            std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
 
             Math::Point3D getCenter() const { return center; }
             double getRadius() const { return radius; }
