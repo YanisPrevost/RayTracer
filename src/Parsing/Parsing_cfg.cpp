@@ -167,6 +167,7 @@ namespace RayTracer
     //     for (int i = 0; i < numSpheres; ++i) {
     //         libconfig::Setting& sphere = lights[i];
     //         Light_Info lightInfo;
+    //     }
     // }
 
     void Parsing_cfg::parse() {
