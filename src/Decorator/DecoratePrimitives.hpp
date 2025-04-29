@@ -11,22 +11,22 @@
 
 namespace RayTracer {
 
-    class PrimitiveDecorator : public IPrimitive {
+    class APrimitiveDecorator : public IPrimitive {
         protected:
             std::unique_ptr<IPrimitive> wrappedPrimitive;
 
         public:
-            PrimitiveDecorator(std::unique_ptr<IPrimitive> primitive);
-            virtual ~PrimitiveDecorator() = default;
+            APrimitiveDecorator(std::unique_ptr<IPrimitive> primitive);
+            virtual ~APrimitiveDecorator() = default;
 
             virtual HitInfo intersect(const Ray& ray) const override;
             virtual std::string getName() const override;
             virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
     };
 
-    class ColorDecorator : public PrimitiveDecorator {
+    class ColorDecorator : public APrimitiveDecorator {
         private:
-        Math::Vector3D color;
+            Math::Vector3D color;
 
         public:
             ColorDecorator(std::unique_ptr<IPrimitive> primitive, const Math::Vector3D& color);
@@ -36,7 +36,7 @@ namespace RayTracer {
             virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
     };
 
-    class ReflectionDecorator : public PrimitiveDecorator {
+    class ReflectionDecorator : public APrimitiveDecorator {
         private:
             double reflectionCoefficient;
 

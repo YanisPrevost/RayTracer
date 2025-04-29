@@ -1,0 +1,16 @@
+1/ Raph -> Systeme de lights
+    Pour cela :
+    Créer une hiérarchie de classes pour les lumières
+    Étendre votre parseur pour lire les configurations de lumière
+    Ajouter la logique d'éclairage dans la classe RayTracer lors du rendu de la scène
+    Mettre à jour l'algorithme de lancer de rayons pour prendre en compte les effets de lumière
+    Méthode trace_ray de RayTracer.cpp pour calculer l'éclairage sur chaque point d'intersection.
+
+2/ Antho -> Avancer sur les Shoulds (nvl primitives)
+    Pour cela :
+    Créer le .so (rajouter une regles ds le Makefile et l'appeler ds le main.cpp)
+    Réimplémenter le parsing
+    Créer le vector de Plane_infos (comme avec la sphere)
+    raytracer.addPrimitive("Plane", params);
+
+3/ Max -> Exception

@@ -9,12 +9,12 @@
 
 namespace RayTracer {
 
-    PrimitiveDecorator::PrimitiveDecorator(std::unique_ptr<IPrimitive> primitive)
+    APrimitiveDecorator::APrimitiveDecorator(std::unique_ptr<IPrimitive> primitive)
         : wrappedPrimitive(std::move(primitive))
     {
     }
 
-    HitInfo PrimitiveDecorator::intersect(const Ray& ray) const
+    HitInfo APrimitiveDecorator::intersect(const Ray& ray) const
     {
         if (wrappedPrimitive) {
             return wrappedPrimitive->intersect(ray);
@@ -25,7 +25,7 @@ namespace RayTracer {
         return info;
     }
 
-    std::string PrimitiveDecorator::getName() const
+    std::string APrimitiveDecorator::getName() const
     {
         if (wrappedPrimitive) {
             return "Decorated_" + wrappedPrimitive->getName();
@@ -33,7 +33,7 @@ namespace RayTracer {
         return "EmptyDecorator";
     }
 
-    std::unique_ptr<IPrimitive> PrimitiveDecorator::create(const std::vector<double>& params)
+    std::unique_ptr<IPrimitive> APrimitiveDecorator::create(const std::vector<double>& params)
     {
         if (wrappedPrimitive) {
             return wrappedPrimitive->create(params);
@@ -42,13 +42,13 @@ namespace RayTracer {
     }
 
     ColorDecorator::ColorDecorator(std::unique_ptr<IPrimitive> primitive, const Math::Vector3D& color)
-        : PrimitiveDecorator(std::move(primitive)), color(color)
+        : APrimitiveDecorator(std::move(primitive)), color(color)
     {
     }
 
     HitInfo ColorDecorator::intersect(const Ray& ray) const
     {
-        HitInfo info = PrimitiveDecorator::intersect(ray);
+        HitInfo info = APrimitiveDecorator::intersect(ray);
 
         if (info.hit) {
             info.color = color;
@@ -58,12 +58,12 @@ namespace RayTracer {
 
     std::string ColorDecorator::getName() const
     {
-        return "Colored_" + PrimitiveDecorator::getName();
+        return "Colored_" + APrimitiveDecorator::getName();
     }
 
     std::unique_ptr<IPrimitive> ColorDecorator::create(const std::vector<double>& params)
     {
-        auto primitive = PrimitiveDecorator::create(params);
+        auto primitive = APrimitiveDecorator::create(params);
         if (!primitive) return nullptr;
         if (params.size() >= 3) {
             Math::Vector3D newColor(params[0], params[1], params[2]);
@@ -73,13 +73,13 @@ namespace RayTracer {
     }
 
     ReflectionDecorator::ReflectionDecorator(std::unique_ptr<IPrimitive> primitive, double coefficient)
-        : PrimitiveDecorator(std::move(primitive)), reflectionCoefficient(coefficient)
+        : APrimitiveDecorator(std::move(primitive)), reflectionCoefficient(coefficient)
     {
     }
 
     HitInfo ReflectionDecorator::intersect(const Ray& ray) const
     {
-        HitInfo info = PrimitiveDecorator::intersect(ray);
+        HitInfo info = APrimitiveDecorator::intersect(ray);
         if (info.hit) {
             info.reflection = reflectionCoefficient;
         }
@@ -88,12 +88,12 @@ namespace RayTracer {
 
     std::string ReflectionDecorator::getName() const
     {
-        return "Reflective_" + PrimitiveDecorator::getName();
+        return "Reflective_" + APrimitiveDecorator::getName();
     }
 
     std::unique_ptr<IPrimitive> ReflectionDecorator::create(const std::vector<double>& params)
     {
-        auto primitive = PrimitiveDecorator::create(params);
+        auto primitive = APrimitiveDecorator::create(params);
         if (!params.empty()) {
             double coef = params[0];
             return std::make_unique<ReflectionDecorator>(std::move(primitive), coef);
