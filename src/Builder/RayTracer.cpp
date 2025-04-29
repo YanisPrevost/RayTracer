@@ -10,6 +10,7 @@
 #include <thread>
 #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
+#include <filesystem>
 
 namespace RayTracer {
 
@@ -36,12 +37,24 @@ namespace RayTracer {
         screen = Screen(width, height);
     }
 
-    bool RayTracer::loadPrimitiveLibrary(const std::string& libPath, const std::string& name)
+    bool RayTracer::loadPrimitiveLibrary()
     {
-        std::string fullPath = libPath;
+        std::filesystem::path libPath = "Plugins/Primitives/";
 
-        libraryHandles[name] = std::make_unique<DynamicLibrary>(fullPath);
-        std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
+        for (const auto& entry : std::filesystem::directory_iterator(libPath)) {
+            if (entry.path().extension() == ".so") {
+                std::string libName = entry.path().filename().string();
+                std::cout << "Chargement de la bibliothèque: " << libName << std::endl;
+                std::string typeName = libName;
+                if (typeName.substr(0, 3) == "lib") {
+                    typeName = typeName.substr(3);
+                }
+                if (typeName.size() > 3 && typeName.substr(typeName.size() - 3) == ".so") {
+                    typeName = typeName.substr(0, typeName.size() - 3);
+                }
+                libraryHandles[typeName] = std::make_unique<DynamicLibrary>(libPath / libName);
+            }
+        }
         return true;
     }
 
