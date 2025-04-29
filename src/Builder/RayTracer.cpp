@@ -10,6 +10,7 @@
 #include <thread>
 #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
+// #include "Parsing/Parsing_cfg.hpp"
 
 namespace RayTracer {
 
@@ -73,17 +74,6 @@ namespace RayTracer {
     void RayTracer::clearPrimitives()
     {
         primitives.clear();
-    }
-
-    void RayTracer::render()
-    {
-        start_rendering();
-
-        int lastLine = 0;
-        int height = screen.getHeight();
-        while (isRenderingActive() && currentLine < height) {
-            waitForUpdate(lastLine);
-        }
     }
 
     void RayTracer::start_rendering()
@@ -199,6 +189,19 @@ namespace RayTracer {
     bool RayTracer::saveImage(const std::string& filename) const
     {
         return screen.saveToPPM(filename);
+    }
+
+    void RayTracer::BuildScene(const Parsing_cfg& parser)
+    {
+        const std::vector<Sphere_info>& sphereInfos = parser.getSphereInfos();
+        for (const auto& sphereInfo : sphereInfos) {
+            std::vector<double> params = {
+                sphereInfo.getPosition().X, sphereInfo.getPosition().Y, sphereInfo.getPosition().Z,
+                sphereInfo.getRadius(),
+                sphereInfo.getR() / 255.0, sphereInfo.getG() / 255.0, sphereInfo.getB() / 255.0
+            };
+            addPrimitive("Sphere", params);
+        }
     }
 
 }

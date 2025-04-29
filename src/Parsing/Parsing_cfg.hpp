@@ -19,6 +19,7 @@ namespace RayTracer
             const std::string _filename;
             Cam_info _camInfo;
             std::vector<Sphere_info> _sphereInfos;
+            std::vector<Cones_Info> _conesInfos;
 
         public:
             Parsing_cfg(const std::string& filename) : _filename(filename) {}
@@ -30,5 +31,6 @@ namespace RayTracer
 
             // Getters for primitives info
             const std::vector<Sphere_info>& getSphereInfos() const { return _sphereInfos; }
+            const std::vector<Cones_Info>& getConesInfos() const { return _conesInfos; }
     };
 }
