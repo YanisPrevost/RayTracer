@@ -1,89 +1,129 @@
 /*
 ** EPITECH PROJECT, 2024
 ** RayTracer
-** File description:
-** Plane.cpp
+** File description:        // Calculate the distance to the intersection point
+        double d = 0;
+        switch (axis) {
+            case Axis::X:
+                d = (position - ray.origin.X) / ray.direction.X;
+                break;
+            case Axis::Y:
+                d = (position - ray.origin.Y) / ray.direction.Y;
+                break;
+            case Axis::Z:
+                d = (position - ray.origin.Z) / ray.direction.Z;
+                break;
+        }
 */
 
 #include "Plane.hpp"
 #include <cmath>
-#include <iostream>
-#include <limits>
+#include <stdexcept>
 
 namespace RayTracer {
 
-    Plane::Plane(const std::vector<double>& params) : position(0, 0, 0), normal(0, 0, 1), axis("Z"), color(255, 255, 255), reflection(0.0)
-    {
-        if (params.size() >= 8) {
-            position = Math::Vector3D(params[0], params[1], params[2]);
-            switch (static_cast<int>(params[3])) {
-                case 0:
-                    axis = "X";
-                    break;
-                case 1:
-                    axis = "Y";
-                    break;
-                case 2:
-                default:
-                    axis = "Z";
-                    break;
-            }
-            color = Math::Vector3D(params[4], params[5], params[6]);
-            reflection = params[7];
-            setNormal();
+    Plane::Plane(Axis axis, double position, const Math::Vector3D& color, double reflection)
+        : axis(axis), position(position), color(color), reflection(reflection) {}
+
+    Plane::Plane(const std::vector<double>& params) {
+        // params[0] = Axis as int (0 = X, 1 = Y, 2 = Z)
+        // params[1] = Position
+        // params[2, 3, 4] = RGB color
+        // params[5] (optional) = Reflection
+        if (params.size() >= 5) {
+            axis = static_cast<Axis>(static_cast<int>(params[0]));
+            position = params[1];
+            color = Math::Vector3D(params[2], params[3], params[4]);
+            reflection = (params.size() > 5) ? params[5] : 0.0;
+        } else {
+            axis = Axis::Z;
+            position = 0.0;
+            color = Math::Vector3D(1, 1, 1);
+            reflection = 0.0;
         }
     }
 
-    Plane::Plane(const std::string& axis, const Math::Vector3D& position,
-            const Math::Vector3D& color, double reflection) : position(position), axis(axis), color(color), reflection(reflection)
-    {
-        setNormal();
-    }
-
-    void Plane::setNormal()
-    {
-        if (axis == "X" || axis == "x")
-            normal = Math::Vector3D(1, 0, 0);
-        else if (axis == "Y" || axis == "y")
-            normal = Math::Vector3D(0, 1, 0);
-        else
-            normal = Math::Vector3D(0, 0, 1);
-    }
-
-    HitInfo Plane::intersect(const Ray& ray) const
-    {
+    HitInfo Plane::intersect(const Ray& ray) const {
         HitInfo info;
         info.hit = false;
+        
+        double normalComponent = 0;
+        Math::Vector3D normal;
 
-        double denom = normal.dot(ray.direction);
+        // Set normal based on the axis
+        switch (axis) {
+            case Axis::X:
+                normal = Math::Vector3D(1, 0, 0);
+                normalComponent = ray.direction.X;
+                break;
+            case Axis::Y:
+                normal = Math::Vector3D(0, 1, 0);
+                normalComponent = ray.direction.Y;
+                break;
+            case Axis::Z:
+                normal = Math::Vector3D(0, 0, 1);
+                normalComponent = ray.direction.Z;
+                break;
+        }
 
-        if (std::fabs(denom) < 1e-6)
+        // Check if ray is parallel to the plane
+        if (std::fabs(normalComponent) < 1e-8)
             return info;
-        Math::Vector3D rayToPlane = Math::Vector3D(position.X - ray.origin.X, position.Y - ray.origin.Y, position.Z - ray.origin.Z);
-        double t = rayToPlane.dot(normal) / denom;
-        if (t < 0)
+
+        // Calculate the distance to the intersection point
+        double d = 0;
+        switch (axis) {
+            case Axis::X:
+                d = (position - ray.origin.X) / ray.direction.X;
+                break;
+            case Axis::Y:
+                d = (position - ray.origin.Y) / ray.direction.Y;
+                break;
+            case Axis::Z:
+                d = (position - ray.origin.Z) / ray.direction.Z;
+                break;
+        }
+        if (d < 0)
             return info;
         info.hit = true;
-        info.distance = t;
-        info.point = Math::Point3D(ray.origin.X + ray.direction.X * t, ray.origin.Y + ray.direction.Y * t, ray.origin.Z + ray.direction.Z * t);
-        info.normal = normal;
-        if (denom > 0)
-            info.normal = Math::Vector3D(-normal.X, -normal.Y, -normal.Z);
+        info.distance = d;
+        info.point = ray.origin + ray.direction * d;
+
+        if (ray.direction.dot(normal) > 0)
+            info.normal = normal * -1;
+        else
+            info.normal = normal;
         info.color = color;
         info.reflection = reflection;
         return info;
     }
 
-    std::string Plane::getName() const
-    {
+    std::string Plane::getName() const {
         return "Plane";
     }
 
-    std::unique_ptr<IPrimitive> Plane::create(const std::vector<double>& params)
-    {
-        if (params.size() < 8)
-            return nullptr;
-        return std::make_unique<Plane>(params);
+    std::unique_ptr<IPrimitive> Plane::create(const std::vector<double>& params) {
+        if (params.size() >= 5) {
+            Axis axis = static_cast<Axis>(static_cast<int>(params[0]));
+            double position = params[1];
+            Math::Vector3D color(params[2], params[3], params[4]);
+            double reflection = (params.size() > 5) ? params[5] : 0.0;
+
+            return std::make_unique<Plane>(axis, position, color, reflection);
+        }
+
+        return std::make_unique<Plane>();
+    }
+
+    Axis Plane::stringToAxis(const std::string& axisStr) {
+        if (axisStr == "X" || axisStr == "x")
+            return Axis::X;
+        else if (axisStr == "Y" || axisStr == "y")
+            return Axis::Y;
+        else if (axisStr == "Z" || axisStr == "z")
+            return Axis::Z;
+        else
+            throw std::invalid_argument("Invalid axis string: " + axisStr);
     }
 
     extern "C" {

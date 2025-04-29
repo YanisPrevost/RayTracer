@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
     raytracer.BuildScene(parser);
 
-    std::cout << "Lancement du rendu...";
+    std::cout << "Lancement du rendu..." << std::endl;
 
     RayTracer::PpmViewer viewer("", parser.getCamInfo());
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     std::string outputFile = "output.ppm";
-    std::cout << "\nSauvegarde de l'image dans " << outputFile << std::endl;
+    std::cout << "Sauvegarde de l'image dans " << outputFile << std::endl;
     raytracer.saveImage(outputFile);
 
     std::cout << "Rendu terminé !" << std::endl;
