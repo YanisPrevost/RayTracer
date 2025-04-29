@@ -49,6 +49,25 @@ namespace RayTracer
             int _b;
     };
 
+    class Plane_info {
+        public:
+            Plane_info() : _position(Math::Point3D(0, 0, 0)), _axis(""), _r(255), _g(0), _b(0) {}
+            Math::Point3D getPosition() const { return _position; }
+            std::string getAxis() const { return _axis; }
+            int getR() const { return _r; }
+            int getG() const { return _g; }
+            int getB() const { return _b; }
+            void setPosition(const Math::Point3D& position) { _position = position; }
+            void setAxis(const std::string& axis) { _axis = axis; }
+            void setColor(int r, int g, int b) { _r = r; _g = g; _b = b; }
+        private:
+            Math::Point3D _position;
+            std::string _axis;
+            int _r;
+            int _g;
+            int _b;
+    };
+
     class Cones_Info {
         public:
             Cones_Info() : _axis("X"), _position(Math::Point3D(0, 8, 0)), _radius(10.0), _height(10), _r(255), _g(0), _b(0) {}
