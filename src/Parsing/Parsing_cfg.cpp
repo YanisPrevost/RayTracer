@@ -185,7 +185,7 @@ namespace RayTracer
 
         if (cfg.exists("primitives")) {
             parseSpheres(cfg);
-            // parsePlanes(cfg);
+            parsePlanes(cfg);
             // parseCones(cfg);
         }
     }
