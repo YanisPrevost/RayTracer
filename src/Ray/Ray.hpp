@@ -5,8 +5,7 @@
 ** Ray
 */
 
-#ifndef RAY_HPP_
-#define RAY_HPP_
+#pragma once
 
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
@@ -27,4 +26,3 @@ namespace RayTracer {
     };
 
 }
-#endif /* !RAY_HPP_ */

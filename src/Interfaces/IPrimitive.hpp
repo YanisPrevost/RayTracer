@@ -13,6 +13,7 @@
 #include <limits>
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
+#include "../Interfaces/HitInfo.hpp"
 #include "../Ray/Ray.hpp"
 
 namespace RayTracer {
