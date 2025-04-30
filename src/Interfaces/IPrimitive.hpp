@@ -10,13 +10,12 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <limits>
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
 
-
 namespace RayTracer {
-    class IPrimitive;
-    class Ray;
+
     class HitInfo {
         public:
             bool hit;
@@ -27,6 +26,16 @@ namespace RayTracer {
             double reflection;
     };
 
+    class Ray {
+        public:
+            Math::Point3D origin;
+            Math::Vector3D direction;
+
+            Ray() = default;
+            Ray(const Math::Point3D& o, const Math::Vector3D& d) : origin(o), direction(d) {}
+            HitInfo find_intersection(const std::vector<std::unique_ptr<class IPrimitive>> &primitives) const;
+    };
+
     class IPrimitive {
         public:
             virtual ~IPrimitive() = default;
@@ -35,27 +44,19 @@ namespace RayTracer {
             virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
     };
 
-    class Ray {
-        public:
-            Math::Point3D origin;
-            Math::Vector3D direction;
-
-            Ray() = default;
-            Ray(const Math::Point3D& o, const Math::Vector3D& d) : origin(o), direction(d) {}
-            HitInfo find_intersection(const std::vector<std::unique_ptr<IPrimitive>> &primitives) const
-            {
-                HitInfo closestHit;
-                closestHit.hit = false;
-                closestHit.distance = std::numeric_limits<double>::max();
-                for (const auto& element : primitives) {
-                    HitInfo hitInfo = element->intersect(*this);
-                    if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
-                        closestHit = hitInfo;
-                    }
-                }
-                return closestHit;
+    inline HitInfo Ray::find_intersection(const std::vector<std::unique_ptr<IPrimitive>> &primitives) const
+    {
+        HitInfo closestHit;
+        closestHit.hit = false;
+        closestHit.distance = std::numeric_limits<double>::max();
+        for (const auto& element : primitives) {
+            HitInfo hitInfo = element->intersect(*this);
+            if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
+                closestHit = hitInfo;
             }
-    };
+        }
+        return closestHit;
+    }
 
     extern "C" {
         std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params);
