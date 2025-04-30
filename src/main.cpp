@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** RayTracer
+** File description:
+** main.cpp
+*/
+
 #include <iostream>
 #include <string>
 #include <memory>
