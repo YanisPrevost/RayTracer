@@ -16,6 +16,7 @@
 #include "../Camera/Camera.hpp"
 #include "../Rectangle3D/Screen.hpp"
 #include "../Interfaces/IPrimitive.hpp"
+#include "../Interfaces/ILights.hpp"
 #include "../Parsing/Parsing_cfg.hpp"
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 
@@ -26,6 +27,7 @@ namespace RayTracer {
             Camera camera;
             Screen screen;
             std::vector<std::unique_ptr<IPrimitive>> primitives;
+            std::vector<std::unique_ptr<ILights>> lights;
             std::map<std::string, std::unique_ptr<DynamicLibrary>> libraryHandles;
             int maxDepth;
             int samplesPerPixel;
@@ -46,7 +48,7 @@ namespace RayTracer {
             void setSamplesPerPixel(int samples) { samplesPerPixel = samples; }
             void setBackgroundColor(const Math::Vector3D& color) { backgroundColor = color; }
 
-            bool loadPrimitiveLibrary(const std::string& libPath, const std::string& name);
+            bool loadPrimitiveLibrary();
             bool addPrimitive(const std::string& type, const std::vector<double>& params);
             void clearPrimitives();
 
@@ -59,9 +61,9 @@ namespace RayTracer {
             void waitForUpdate(int& lastLine);
             void renderLines(int startLine, int endLine);
             void renderLoop();
+            const std::vector<std::unique_ptr<IPrimitive>>& getPrimitives() const {return primitives; }
 
-            Math::Vector3D trace_ray(const Ray& ray, int depth) const;
-            HitInfo find_intersection(const Ray& ray) const;
+            Math::Vector3D trace_ray(const Ray& ray, int depth);
 
             bool saveImage(const std::string& filename) const;
             const Screen& getScreen() const { return screen; }

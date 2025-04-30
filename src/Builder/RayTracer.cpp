@@ -8,8 +8,10 @@
 #include "RayTracer.hpp"
 #include <iostream>
 #include <thread>
-#include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
+#include "../Lights/PointLight/PointLight.hpp"
+#include "../Interfaces/ILights.hpp"
+#include <filesystem>
 
 namespace RayTracer {
 
@@ -36,12 +38,24 @@ namespace RayTracer {
         screen = Screen(width, height);
     }
 
-    bool RayTracer::loadPrimitiveLibrary(const std::string& libPath, const std::string& name)
+    bool RayTracer::loadPrimitiveLibrary()
     {
-        std::string fullPath = libPath;
+        std::filesystem::path libPath = "Plugins/Primitives/";
 
-        libraryHandles[name] = std::make_unique<DynamicLibrary>(fullPath);
-        std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
+        for (const auto& entry : std::filesystem::directory_iterator(libPath)) {
+            if (entry.path().extension() == ".so") {
+                std::string libName = entry.path().filename().string();
+                std::cout << "Chargement de la bibliothèque: " << libName << std::endl;
+                std::string typeName = libName;
+                if (typeName.substr(0, 3) == "lib") {
+                    typeName = typeName.substr(3);
+                }
+                if (typeName.size() > 3 && typeName.substr(typeName.size() - 3) == ".so") {
+                    typeName = typeName.substr(0, typeName.size() - 3);
+                }
+                libraryHandles[typeName] = std::make_unique<DynamicLibrary>(libPath / libName);
+            }
+        }
         return true;
     }
 
@@ -54,12 +68,9 @@ namespace RayTracer {
         }
 
         std::unique_ptr<IPrimitive> configuredPrimitive = it->second->getModule<IPrimitive>("createPrimitive", params);
-        if (configuredPrimitive) {
-            primitives.push_back(std::move(configuredPrimitive));
-            std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
-            return true;
-        }
-        return false;
+        primitives.push_back(std::move(configuredPrimitive));
+        std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
+        return true;
     }
 
     void RayTracer::clearPrimitives()
@@ -138,22 +149,20 @@ namespace RayTracer {
         renderUpdate.notify_all();
     }
 
-    Math::Vector3D RayTracer::trace_ray(const Ray& ray, int depth) const
+    Math::Vector3D RayTracer::trace_ray(const Ray& ray, int depth)
     {
         if (depth <= 0) {
             return backgroundColor;
         }
-        HitInfo closestHit = find_intersection(ray);
+        HitInfo closestHit = ray.find_intersection(primitives);
         if (!closestHit.hit) {
             return backgroundColor;
         }
-        // Lumiere Temporaire
-        Math::Vector3D color = closestHit.color;
-        double ambientIntensity = 0.1;
-        double directionalIntensity = std::max(0.0, closestHit.normal.dot(Math::Vector3D(0, 1, 0)));
-        double lightIntensity = ambientIntensity + (1.0 - ambientIntensity) * directionalIntensity;
-        color = color * lightIntensity;
-        // Lumiere Temporaire
+        Math::Vector3D color;
+        for (const auto &light : lights) {
+            Math::Vector3D lightColor = light->computePointLightingColor(closestHit, *this);
+            color += lightColor;
+        }
         if (closestHit.reflection > 0 && depth > 1) {
             Math::Vector3D reflectDir = ray.direction - closestHit.normal * 2 * ray.direction.dot(closestHit.normal);
             reflectDir = reflectDir.normalize();
@@ -162,21 +171,6 @@ namespace RayTracer {
             color = color * (1 - closestHit.reflection) + reflectColor * closestHit.reflection;
         }
         return color;
-    }
-
-    HitInfo RayTracer::find_intersection(const Ray& ray) const
-    {
-        HitInfo closestHit;
-
-        closestHit.hit = false;
-        closestHit.distance = std::numeric_limits<double>::max();
-        for (const auto& primitive : primitives) {
-            HitInfo hitInfo = primitive->intersect(ray);
-            if (hitInfo.hit && hitInfo.distance < closestHit.distance) {
-                closestHit = hitInfo;
-            }
-        }
-        return closestHit;
     }
 
     bool RayTracer::saveImage(const std::string& filename) const
@@ -195,6 +189,9 @@ namespace RayTracer {
             };
             addPrimitive("Sphere", params);
         }
+        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
+        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(100, 100, 14), Math::Vector3D(1, 1.0, 1), 1));
+        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
 
         const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
         for (const auto& planeInfo : planeInfos) {

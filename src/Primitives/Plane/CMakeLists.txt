@@ -5,3 +5,4 @@ add_library(plane SHARED
 )
 target_include_directories(plane PRIVATE ${CMAKE_SOURCE_DIR}/src)
 set_target_properties(plane PROPERTIES OUTPUT_NAME "Plane")
+set_target_properties(plane PROPERTIES PREFIX "Primitives/lib")

@@ -235,7 +235,7 @@ namespace RayTracer
             }
         }
     }
-
+ 
     void Parsing_cfg::parse() {
 
         libconfig::Config cfg;
