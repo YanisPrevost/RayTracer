@@ -128,8 +128,7 @@ namespace RayTracer
     };
     class Light_Direction : public Light_Info {
         public:
-            Light_Direction(const Math::Point3D& direction, double intensity, int r, int g, int b)
-                : _direction(direction), _intensity(intensity), _r(r), _g(g), _b(b) {}
+            Light_Direction() : _direction(Math::Point3D(0, 0, 0)), _intensity(1.0), _r(255), _g(255), _b(255) {}
             Math::Point3D getDirection() const { return _direction; }
             double getIntensity() const { return _intensity; }
             int getR() const { return _r; }

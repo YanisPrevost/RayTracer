@@ -160,15 +160,81 @@ namespace RayTracer
         }
     }
 
-    // void Parsing_cfg::parseLight(libconfig::Config& cfg)
-    // {
-    //     libconfig::Setting& lights = cfg.lookup("primitives.lights");
-    //     int numSpheres = lights.getLength();
-    //     for (int i = 0; i < numSpheres; ++i) {
-    //         libconfig::Setting& sphere = lights[i];
-    //         Light_Info lightInfo;
-    //     }
-    // }
+    void Parsing_cfg::parseLight(libconfig::Config& cfg)
+    {
+        libconfig::Setting& lights = cfg.lookup("primitives.lights");
+        int numLights = lights.getLength();
+        for (int i = 0; i < numLights; ++i) {
+            libconfig::Setting& _lights = lights[i];
+            Light_Info lightInfo;
+            Light_Direction lightDirection;
+            Light_Point lightPoint;
+            
+            double ambient, diffuse, intensity;
+            int x, y, z;
+            int r, g, b;
+            if (!(_lights.lookupValue("ambient", ambient) &&
+            _lights.lookupValue("diffuse", diffuse))) {
+                std::cerr << "Error: Missing ambient or diffuse parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            } else {
+                lightInfo.setAmbient(ambient);
+                lightInfo.setDiffuse(diffuse);
+            }
+
+            if (_lights.exists("point")) {
+                libconfig::Setting& point = _lights.lookup("point");
+
+                const libconfig::Setting& position = point["position"];
+
+                if (!(position.lookupValue("x", x) &&
+                position.lookupValue("y", y) &&
+                position.lookupValue("z", z))) {
+                    std::cerr << "Error: Missing position parameters in the configuration file." << std::endl;
+                    exit(84);
+                    // EXCEPTION A FAIRE ICI
+                }
+
+                const libconfig::Setting& color = point["color"];
+                if (!(color.lookupValue("r", r) &&
+                color.lookupValue("g", g) &&
+                color.lookupValue("b", b))) {
+                    std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
+                    exit(84);
+                    // EXCEPTION A FAIRE ICI
+                }
+                lightPoint.setPosition(Math::Point3D(x, y, z));
+                lightPoint.setColor(r, g, b);
+            } else if (_lights.exists("directional")) {
+                libconfig::Setting& directional = _lights.lookup("directional");
+
+                directional.lookupValue("intensity", intensity);
+
+                const libconfig::Setting& direction = directional["direction"];
+
+                if (!(direction.lookupValue("x", x) &&
+                direction.lookupValue("y", y) &&
+                direction.lookupValue("z", z))) {
+                    std::cerr << "Error: Missing direction parameters in the configuration file." << std::endl;
+                    exit(84);
+                    // EXCEPTION A FAIRE ICI
+                }
+
+                const libconfig::Setting& color = directional["color"];
+                if (!(color.lookupValue("r", r) &&
+                color.lookupValue("g", g) &&
+                color.lookupValue("b", b))) {
+                    std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
+                    exit(84);
+                    // EXCEPTION A FAIRE ICI
+                }
+                lightDirection.setDirection(Math::Point3D(x, y, z));
+                lightDirection.setColor(r, g, b);
+                lightDirection.setIntensity(intensity);
+            }
+        }
+    }
 
     void Parsing_cfg::parse() {
 
