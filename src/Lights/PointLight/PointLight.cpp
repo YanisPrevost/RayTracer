@@ -9,6 +9,7 @@
 #include "../../Interfaces/ILights.hpp"
 #include <unordered_map>
 #include "../../Builder/RayTracer.hpp"
+#include "../../Interfaces/HitInfo.hpp"
 namespace RayTracer
 {
 

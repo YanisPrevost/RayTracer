@@ -13,28 +13,9 @@
 #include <limits>
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
+#include "../Ray/Ray.hpp"
 
 namespace RayTracer {
-
-    class HitInfo {
-        public:
-            bool hit;
-            double distance;
-            Math::Point3D point;
-            Math::Vector3D normal;
-            Math::Vector3D color;
-            double reflection;
-    };
-
-    class Ray {
-        public:
-            Math::Point3D origin;
-            Math::Vector3D direction;
-
-            Ray() = default;
-            Ray(const Math::Point3D& o, const Math::Vector3D& d) : origin(o), direction(d) {}
-            HitInfo find_intersection(const std::vector<std::unique_ptr<class IPrimitive>> &primitives) const;
-    };
 
     class IPrimitive {
         public:
