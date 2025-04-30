@@ -17,7 +17,7 @@ namespace RayTracer
     {
     }
 
-    Math::Vector3D PointLight::computeDiffuseLightingColor(HitInfo &info, const RayTracer &raytracer) const
+    Math::Vector3D PointLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
         Math::Vector3D lightDir = getPosition() - info.point;
 

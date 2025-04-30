@@ -25,7 +25,7 @@ namespace RayTracer {
             Math::Point3D getPosition() const;
             Math::Vector3D getColor() const;
             double getIntensity() const;
-            virtual Math::Vector3D computeDiffuseLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
+            virtual Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
         protected:
             Math::Point3D _position;
             Math::Vector3D _color;

@@ -21,7 +21,7 @@ namespace RayTracer
                 const Math::Vector3D& col,
                 double intensity) : ALights(pos, col, intensity) {};
             ~PointLight();
-            Math::Vector3D computeDiffuseLightingColor(HitInfo &info, const RayTracer &raytracer) const;
+            Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;
         protected:
         private:
     };
