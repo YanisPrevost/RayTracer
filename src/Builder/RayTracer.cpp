@@ -8,12 +8,10 @@
 #include "RayTracer.hpp"
 #include <iostream>
 #include <thread>
-// #include <dlfcn.h>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 #include "../Lights/PointLight/PointLight.hpp"
 #include "../Interfaces/ILights.hpp"
 #include <filesystem>
-
 
 namespace RayTracer {
 
@@ -192,7 +190,7 @@ namespace RayTracer {
             addPrimitive("Sphere", params);
         }
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
-        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(0, 30, 0), Math::Vector3D(1, 1.0, 1), 1));
+        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(100, 100, 14), Math::Vector3D(1, 1.0, 1), 1));
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
 
         const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();

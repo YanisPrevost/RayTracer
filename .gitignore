@@ -4,3 +4,4 @@ raytracer
 *.o
 *.so
 build
+*.cfg
