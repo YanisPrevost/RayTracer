@@ -16,6 +16,7 @@ namespace RayTracer {
 
     class DynamicLibrary {
         public:
+
             DynamicLibrary(std::string libName);
             ~DynamicLibrary();
 
