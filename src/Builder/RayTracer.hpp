@@ -61,8 +61,9 @@ namespace RayTracer {
             void waitForUpdate(int& lastLine);
             void renderLines(int startLine, int endLine);
             void renderLoop();
+            const std::vector<std::unique_ptr<IPrimitive>>& getPrimitives() const {return primitives; }
 
-            Math::Vector3D trace_ray(const Ray& ray, int depth) const;
+            Math::Vector3D trace_ray(const Ray& ray, int depth);
 
             bool saveImage(const std::string& filename) const;
             const Screen& getScreen() const { return screen; }

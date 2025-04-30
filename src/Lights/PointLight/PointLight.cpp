@@ -21,7 +21,7 @@ namespace RayTracer
         Math::Vector3D lightDir = getPosition() - info.point;
 
         Ray ray(info.point, lightDir);
-        HitInfo closestHit = raytracer.find_intersection(ray);
+        HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
         if (closestHit.hit) {
             Math::Vector3D shadowColor = info.color *= 0.1;
             return shadowColor;

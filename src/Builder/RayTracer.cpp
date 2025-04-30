@@ -139,7 +139,7 @@ namespace RayTracer {
         renderUpdate.notify_all();
     }
 
-    Math::Vector3D RayTracer::trace_ray(const Ray& ray, int depth) const
+    Math::Vector3D RayTracer::trace_ray(const Ray& ray, int depth)
     {
         if (depth <= 0) {
             return backgroundColor;
