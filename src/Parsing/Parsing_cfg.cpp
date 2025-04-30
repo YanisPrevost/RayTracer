@@ -79,24 +79,32 @@ namespace RayTracer
         libconfig::Setting& cones = cfg.lookup("primitives.cones");
         int numCones = cones.getLength();
         for (int i = 0; i < numCones; ++i) {
-            libconfig::Setting& cones = cones[i];
+            libconfig::Setting& cone = cones[i];
             Cones_Info conesInfo;
-            std::string axis;
-            int position;
-            double radius;
+            int x, y, z;
+            int radius;
             int _height;
             int r, g, b;
+            int d_x, d_y, d_z;
 
-            if (!(cones.lookupValue("axis", axis) &&
-            cones.lookupValue("position", position) &&
-            cones.lookupValue("heigth", _height) &&
-            cones.lookupValue("r", radius))) {
-                std::cerr << "Error: Missing axis or position parameters in the configuration file." << std::endl;
+            const libconfig::Setting& position = cone["position"];
+            if (!(position.lookupValue("x", x) && position.lookupValue("y", y) && position.lookupValue("z", z))) {
+                std::cerr << "Error: Missing position parameters (x, y, z) in the configuration file." << std::endl;
                 exit(84);
                 // EXCEPTION A FAIRE ICI
             }
-
-            const libconfig::Setting& color = cones["color"];
+            const libconfig::Setting& direction = cone["direction"];
+            if (!(direction.lookupValue("d_x", d_x) && direction.lookupValue("d_y", d_y) && direction.lookupValue("d_z", d_z))) {
+                std::cerr << "Error: Missing direction parameters (x, y, z) in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
+            if (!(cone.lookupValue("radius", radius) && cone.lookupValue("height", _height))) {
+                std::cerr << "Error: Missing radius or height parameter in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE I
+            }
+            const libconfig::Setting& color = cone["color"];
 
             if (!(color.lookupValue("r", r) &&
             color.lookupValue("g", g) &&
@@ -106,16 +114,6 @@ namespace RayTracer
                 // EXCEPTION A FAIRE ICI
             }
 
-            if (axis == "X") {
-                conesInfo.setPosition(Math::Point3D(position, 0, 0));
-            } else if (axis == "Y") {
-                conesInfo.setPosition(Math::Point3D(0, position, 0));
-            } else if (axis == "Z") {
-                conesInfo.setPosition(Math::Point3D(0, 0, position));
-            } else {
-                // EXCEPTION A FAIRE ICI
-            }
-            conesInfo.setAxis(axis);
             conesInfo.setHeight(_height);
             conesInfo.setRadius(radius);
             conesInfo.setColor(r, g, b);
@@ -252,7 +250,7 @@ namespace RayTracer
         if (cfg.exists("primitives")) {
             parseSpheres(cfg);
             parsePlanes(cfg);
-            // parseCones(cfg);
+            parseCones(cfg);
         }
         if (cfg.exists("lights")) {
             // parseLights(cfg);

@@ -208,6 +208,22 @@ namespace RayTracer {
             addPrimitive("Sphere", params);
         }
 
+        const std::vector<Cones_Info>& conesInfos = parser.getConesInfos();
+        for (const auto& coneInfo : conesInfos) {
+            std::vector<double> params = {
+                coneInfo.getPosition().X, coneInfo.getPosition().Y, coneInfo.getPosition().Z,
+                coneInfo.getRadius(),
+                static_cast<double>(coneInfo.getHeight()),
+                coneInfo.getDirection().X, coneInfo.getDirection().Y, coneInfo.getDirection().Z,
+                coneInfo.getR() / 255.0, coneInfo.getG() / 255.0, coneInfo.getB() / 255.0
+            };
+            addPrimitive("Cone", params);
+            std::cout << coneInfo.getPosition().X << " " << coneInfo.getPosition().Y << " " << coneInfo.getPosition().Z << std::endl;
+            std::cout << coneInfo.getRadius() << " " << static_cast<double>(coneInfo.getHeight()) << std::endl;
+            std::cout << coneInfo.getR() << " " << coneInfo.getG() << " " << coneInfo.getB() << std::endl;
+            std::cout << coneInfo.getHeight() << std::endl;
+        }
+
         const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
         for (const auto& planeInfo : planeInfos) {
             int axisValue = 2;
