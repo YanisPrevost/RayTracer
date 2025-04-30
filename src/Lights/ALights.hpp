@@ -5,13 +5,15 @@
 ** ALights
 */
 
-#ifndef ALIGHTS_HPP_
-#define ALIGHTS_HPP_
+#pragma once
+
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
 #include "../Interfaces/ILights.hpp"
 #include "../Interfaces/IPrimitive.hpp"
+
 namespace RayTracer {
+
     class ALights : public ILights {
         public:
             ALights(
@@ -30,5 +32,5 @@ namespace RayTracer {
             double _intensity;
         private:
     };
+
 }
-#endif /* !ALIGHTS_HPP_ */

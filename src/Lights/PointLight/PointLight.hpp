@@ -5,8 +5,8 @@
 ** PointLight
 */
 
-#ifndef POINTLIGHT_HPP_
-#define POINTLIGHT_HPP_
+#pragma once
+
 #include "../../Vectors/Vector.hpp"
 #include "../../Points/Points.hpp"
 #include "../ALights.hpp"
@@ -27,4 +27,3 @@ namespace RayTracer
     };
 }
 
-#endif /* !POINTLIGHT_HPP_ */
