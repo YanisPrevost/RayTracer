@@ -14,6 +14,7 @@
 #include "../Interfaces/ILights.hpp"
 // #include "Parsing/Parsing_cfg.hpp"
 
+
 namespace RayTracer {
 
     RayTracer::RayTracer(int width, int height)
