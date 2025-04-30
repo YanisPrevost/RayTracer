@@ -36,13 +36,13 @@ namespace RayTracer
     }
 }
 
-extern "C" {
-    std::unique_ptr<RayTracer::ILights> createLight(
-        const Math::Point3D& pos,
-        const Math::Vector3D& col,
-        double intensity,
-        std::unordered_map<std::string, std::string> &)
-    {
-        return  std::make_unique<RayTracer::PointLight>(pos, col, intensity);
-    }
-}
+// extern "C" {
+//     std::unique_ptr<RayTracer::ILights> createLight(
+//         const Math::Point3D& pos,
+//         const Math::Vector3D& col,
+//         double intensity,
+//         std::unordered_map<std::string, std::string> &)
+//     {
+//         return  std::make_unique<RayTracer::PointLight>(pos, col, intensity);
+//     }
+// }

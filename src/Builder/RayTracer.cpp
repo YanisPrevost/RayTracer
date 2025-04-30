@@ -10,6 +10,7 @@
 #include <thread>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 #include "../Lights/PointLight/PointLight.hpp"
+#include "../Lights/DirectionalLight/DirectionalLight.hpp"
 #include "../Interfaces/ILights.hpp"
 #include <filesystem>
 
@@ -86,7 +87,12 @@ namespace RayTracer {
 
     bool RayTracer::AddPointLights(const Light_Point& lightInfo)
     {
-        lights.push_back(std::make_unique<PointLight>(
+        // lights.push_back(std::make_unique<PointLight>(
+        //     Math::Point3D(lightInfo.getPosition().X, lightInfo.getPosition().Y, lightInfo.getPosition().Z),
+        //     Math::Vector3D(lightInfo.getR() / 255.0, lightInfo.getG() / 255.0, lightInfo.getB() / 255.0),
+        //     lightInfo.getDiffuse()
+        // ));
+        lights.push_back(std::make_unique<DirectionalLight>(
             Math::Point3D(lightInfo.getPosition().X, lightInfo.getPosition().Y, lightInfo.getPosition().Z),
             Math::Vector3D(lightInfo.getR() / 255.0, lightInfo.getG() / 255.0, lightInfo.getB() / 255.0),
             lightInfo.getDiffuse()
