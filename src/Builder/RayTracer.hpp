@@ -50,7 +50,9 @@ namespace RayTracer {
 
             bool loadPrimitiveLibrary();
             bool addPrimitive(const std::string& type, const std::vector<double>& params);
+            bool AddPointLights(const Light_Point& lightInfo);
             void clearPrimitives();
+            void clearLights();
 
             void BuildScene(const Parsing_cfg& parser);
 

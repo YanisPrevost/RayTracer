@@ -89,7 +89,7 @@ namespace RayTracer
 
             if (!(cones.lookupValue("axis", axis) &&
             cones.lookupValue("position", position) &&
-            cones.lookupValue("heigth", _height) && 
+            cones.lookupValue("heigth", _height) &&
             cones.lookupValue("r", radius))) {
                 std::cerr << "Error: Missing axis or position parameters in the configuration file." << std::endl;
                 exit(84);
@@ -160,7 +160,7 @@ namespace RayTracer
         }
     }
 
-    void Parsing_cfg::parseLight(libconfig::Config& cfg)
+    void Parsing_cfg::parseLights(libconfig::Config& cfg)
     {
         libconfig::Setting& lights = cfg.lookup("primitives.lights");
         int numLights = lights.getLength();
@@ -169,7 +169,7 @@ namespace RayTracer
             Light_Info lightInfo;
             Light_Direction lightDirection;
             Light_Point lightPoint;
-            
+
             double ambient, diffuse, intensity;
             int x, y, z;
             int r, g, b;
@@ -235,7 +235,7 @@ namespace RayTracer
             }
         }
     }
- 
+
     void Parsing_cfg::parse() {
 
         libconfig::Config cfg;
@@ -253,6 +253,9 @@ namespace RayTracer
             parseSpheres(cfg);
             parsePlanes(cfg);
             // parseCones(cfg);
+        }
+        if (cfg.exists("lights")) {
+            // parseLights(cfg);
         }
     }
 }

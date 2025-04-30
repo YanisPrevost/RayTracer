@@ -21,6 +21,8 @@ namespace RayTracer
             std::vector<Sphere_info> _sphereInfos;
             std::vector<Cones_Info> _conesInfos;
             std::vector<Plane_info> _planeInfos;
+            std::vector<Light_Point> _lightPointInfos;
+            std::vector<Light_Direction> _lightDirectionInfos;
 
         public:
             Parsing_cfg(const std::string& filename) : _filename(filename) {}
@@ -30,14 +32,14 @@ namespace RayTracer
             void parseSpheres(libconfig::Config& cfg);
             void parsePlanes(libconfig::Config& cfg);
             void parseCones(libconfig::Config& cfg);
+            void parseLights(libconfig::Config& cfg);
 
-
-            // Getters for camera info
+            // Getters
             const Cam_info& getCamInfo() const { return _camInfo; }
-
-            // Getters for primitives info
             const std::vector<Sphere_info>& getSphereInfos() const { return _sphereInfos; }
             const std::vector<Cones_Info>& getConesInfos() const { return _conesInfos; }
             const std::vector<Plane_info>& getPlaneInfos() const { return _planeInfos; }
+            const std::vector<Light_Point>& getLightPointInfos() const { return _lightPointInfos; }
+            const std::vector<Light_Direction>& getLightDirectionInfos() const { return _lightDirectionInfos; }
     };
 }

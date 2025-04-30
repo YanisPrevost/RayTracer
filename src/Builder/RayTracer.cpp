@@ -25,6 +25,7 @@ namespace RayTracer {
     {
         stopRendering();
         clearPrimitives();
+        clearLights();
         libraryHandles.clear();
     }
 
@@ -76,6 +77,22 @@ namespace RayTracer {
     void RayTracer::clearPrimitives()
     {
         primitives.clear();
+    }
+
+    void RayTracer::clearLights()
+    {
+        lights.clear();
+    }
+
+    bool RayTracer::AddPointLights(const Light_Point& lightInfo)
+    {
+        lights.push_back(std::make_unique<PointLight>(
+            Math::Point3D(lightInfo.getPosition().X, lightInfo.getPosition().Y, lightInfo.getPosition().Z),
+            Math::Vector3D(lightInfo.getR() / 255.0, lightInfo.getG() / 255.0, lightInfo.getB() / 255.0),
+            lightInfo.getDiffuse()
+        ));
+        std::cout << "Lumière ponctuelle ajoutée avec succès." << std::endl;
+        return true;
     }
 
     void RayTracer::start_rendering()
@@ -180,6 +197,7 @@ namespace RayTracer {
 
     void RayTracer::BuildScene(const Parsing_cfg& parser)
     {
+        primitives.clear();
         const std::vector<Sphere_info>& sphereInfos = parser.getSphereInfos();
         for (const auto& sphereInfo : sphereInfos) {
             std::vector<double> params = {
@@ -189,9 +207,6 @@ namespace RayTracer {
             };
             addPrimitive("Sphere", params);
         }
-        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
-        this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(100, 100, 14), Math::Vector3D(1, 1.0, 1), 1));
-        // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
 
         const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
         for (const auto& planeInfo : planeInfos) {
@@ -214,6 +229,27 @@ namespace RayTracer {
             };
             addPrimitive("Plane", params);
         }
+
+        this->lights.push_back(std::make_unique<PointLight>(
+            Math::Point3D(15, 10, 12),
+            Math::Vector3D(1.0, 1.0, 1.0),
+            1.0
+        ));
+
+        // for (const auto& Light_Info : parser.getLightPointInfos()) {
+            // Light_Point lightInfo;
+            // lightInfo.setPosition(Math::Point3D(4.0, 6, 4));
+            // lightInfo.setColor(1.0, 1.0, 1.0);
+            // lightInfo.setLightInfo(1, 1.0);
+            // AddPointLights(lightInfo);
+        // }
+        // for (const auto& Light_Info : parser.getLightDirectionInfos()) {
+        //     Light_Direction lightInfo;
+        //     lightInfo.setDirection(Light_Info.getDirection());
+        //     lightInfo.setColor(Light_Info.getR(), Light_Info.getG(), Light_Info.getB());
+        //     lightInfo.setLightInfo(0.2, 1.0);
+        //     AddPointLights(lightInfo);
+        // }
     }
 
 }
