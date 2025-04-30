@@ -14,10 +14,13 @@ namespace RayTracer
     {
         int x, y, z;
         if (cfg.exists("camera")) {
-            cfg.lookupValue("camera.fieldOfView", _camInfo._fov);
-            cfg.lookupValue("camera.resolution.width", _camInfo._width);
-            cfg.lookupValue("camera.resolution.height", _camInfo._height);
-
+            if (!(cfg.lookupValue("camera.fieldOfView", _camInfo._fov) &&
+            cfg.lookupValue("camera.resolution.width", _camInfo._width) &&
+            cfg.lookupValue("camera.resolution.height", _camInfo._height))) {
+                std::cerr << "Error: Missing camera parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
             if (cfg.lookupValue("camera.position.x", x) && cfg.lookupValue("camera.position.y", y) && cfg.lookupValue("camera.position.z", z))
                 _camInfo._position = Math::Point3D(x, y, z);
 
@@ -25,6 +28,7 @@ namespace RayTracer
                 _camInfo._rotation = Math::Point3D(x, y, z);
             else
                 _camInfo._rotation = Math::Point3D(0, 0, 0);
+                // EXCEPTION A FAIRE ICI
         }
     }
 
@@ -39,13 +43,22 @@ namespace RayTracer
             int position;
             int r, g, b;
 
-            plane.lookupValue("axis", axis);
-            plane.lookupValue("position", position);
+            if (!(plane.lookupValue("axis", axis) &&
+            plane.lookupValue("position", position))) {
+                std::cerr << "Error: Missing axis or position parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
 
             const libconfig::Setting& color = plane["color"];
-            color.lookupValue("r", r);
-            color.lookupValue("g", g);
-            color.lookupValue("b", b);
+
+            if (!(color.lookupValue("r", r) &&
+            color.lookupValue("g", g) &&
+            color.lookupValue("b", b))) {
+                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
 
             if (axis == "X") {
                 planeInfo.setPosition(Math::Point3D(position, 0, 0));
@@ -74,15 +87,24 @@ namespace RayTracer
             int _height;
             int r, g, b;
 
-            cones.lookupValue("axis", axis);
-            cones.lookupValue("position", position);
-            cones.lookupValue("hength", _height);
-            cones.lookupValue("r", radius);
+            if (!(cones.lookupValue("axis", axis) &&
+            cones.lookupValue("position", position) &&
+            cones.lookupValue("heigth", _height) && 
+            cones.lookupValue("r", radius))) {
+                std::cerr << "Error: Missing axis or position parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
 
             const libconfig::Setting& color = cones["color"];
-            color.lookupValue("r", r);
-            color.lookupValue("g", g);
-            color.lookupValue("b", b);
+
+            if (!(color.lookupValue("r", r) &&
+            color.lookupValue("g", g) &&
+            color.lookupValue("b", b))) {
+                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
 
             if (axis == "X") {
                 conesInfo.setPosition(Math::Point3D(position, 0, 0));
@@ -111,14 +133,26 @@ namespace RayTracer
             int x, y, z;
             int radius = 0;
             int r, g, b;
-            sphere.lookupValue("x", x);
-            sphere.lookupValue("y", y);
-            sphere.lookupValue("z", z);
-            sphere.lookupValue("r", radius);
+
+            if (!(sphere.lookupValue("x", x) &&
+            sphere.lookupValue("y", y) &&
+            sphere.lookupValue("z", z) &&
+            sphere.lookupValue("r", radius)))
+            {
+                std::cerr << "Error: Missing x, y, z or radius parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
+
             const libconfig::Setting& color = sphere["color"];
-            color.lookupValue("r", r);
-            color.lookupValue("g", g);
-            color.lookupValue("b", b);
+
+            if (!(color.lookupValue("r", r) &&
+            color.lookupValue("g", g) &&
+            color.lookupValue("b", b))) {
+                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
+                exit(84);
+                // EXCEPTION A FAIRE ICI
+            }
             sphereInfo.setPosition(Math::Point3D(x, y, z));
             sphereInfo.setRadius(radius);
             sphereInfo.setColor(r, g, b);
@@ -141,7 +175,7 @@ namespace RayTracer
 
         if (cfg.exists("primitives")) {
             parseSpheres(cfg);
-            // parsePlanes(cfg);
+            parsePlanes(cfg);
             // parseCones(cfg);
         }
     }

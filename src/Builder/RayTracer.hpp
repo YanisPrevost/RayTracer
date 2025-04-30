@@ -48,7 +48,7 @@ namespace RayTracer {
             void setSamplesPerPixel(int samples) { samplesPerPixel = samples; }
             void setBackgroundColor(const Math::Vector3D& color) { backgroundColor = color; }
 
-            bool loadPrimitiveLibrary(const std::string& libPath, const std::string& name);
+            bool loadPrimitiveLibrary();
             bool addPrimitive(const std::string& type, const std::vector<double>& params);
             void clearPrimitives();
 

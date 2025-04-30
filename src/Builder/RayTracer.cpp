@@ -12,7 +12,7 @@
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 #include "../Lights/PointLight/PointLight.hpp"
 #include "../Interfaces/ILights.hpp"
-// #include "Parsing/Parsing_cfg.hpp"
+#include <filesystem>
 
 
 namespace RayTracer {
@@ -40,12 +40,24 @@ namespace RayTracer {
         screen = Screen(width, height);
     }
 
-    bool RayTracer::loadPrimitiveLibrary(const std::string& libPath, const std::string& name)
+    bool RayTracer::loadPrimitiveLibrary()
     {
-        std::string fullPath = libPath;
+        std::filesystem::path libPath = "Plugins/Primitives/";
 
-        libraryHandles[name] = std::make_unique<DynamicLibrary>(fullPath);
-        std::cout << "Bibliothèque " << name << " chargée avec succès." << std::endl;
+        for (const auto& entry : std::filesystem::directory_iterator(libPath)) {
+            if (entry.path().extension() == ".so") {
+                std::string libName = entry.path().filename().string();
+                std::cout << "Chargement de la bibliothèque: " << libName << std::endl;
+                std::string typeName = libName;
+                if (typeName.substr(0, 3) == "lib") {
+                    typeName = typeName.substr(3);
+                }
+                if (typeName.size() > 3 && typeName.substr(typeName.size() - 3) == ".so") {
+                    typeName = typeName.substr(0, typeName.size() - 3);
+                }
+                libraryHandles[typeName] = std::make_unique<DynamicLibrary>(libPath / libName);
+            }
+        }
         return true;
     }
 
@@ -182,6 +194,28 @@ namespace RayTracer {
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(50, -20, 10), Math::Vector3D(1, 1, 1), 1));
         this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(0, 30, 0), Math::Vector3D(1, 1.0, 1), 1));
         // this->lights.push_back(std::make_unique<PointLight>(Math::Point3D(-20, 10, 0), Math::Vector3D(1, 1, 1), 0.5));
+
+        const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
+        for (const auto& planeInfo : planeInfos) {
+            int axisValue = 2;
+            if (planeInfo.getPosition().X != 0) {
+                axisValue = 0;
+            } else if (planeInfo.getPosition().Y != 0) {
+                axisValue = 1;
+            }
+            double position = 0;
+            switch (axisValue) {
+                case 0: position = planeInfo.getPosition().X; break;
+                case 1: position = planeInfo.getPosition().Y; break;
+                case 2: position = planeInfo.getPosition().Z; break;
+            }
+            std::vector<double> params = {
+                static_cast<double>(axisValue),
+                position,
+                planeInfo.getR() / 255.0, planeInfo.getG() / 255.0, planeInfo.getB() / 255.0
+            };
+            addPrimitive("Plane", params);
+        }
     }
 
 }
