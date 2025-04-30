@@ -63,7 +63,6 @@ namespace RayTracer {
             void renderLoop();
 
             Math::Vector3D trace_ray(const Ray& ray, int depth) const;
-            HitInfo find_intersection(const Ray& ray) const;
 
             bool saveImage(const std::string& filename) const;
             const Screen& getScreen() const { return screen; }

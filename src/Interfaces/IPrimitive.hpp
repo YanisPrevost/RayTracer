@@ -22,6 +22,19 @@ namespace RayTracer {
 
             Ray() = default;
             Ray(const Math::Point3D& o, const Math::Vector3D& d) : origin(o), direction(d) {}
+            HitInfo find_intersection(std::vector<std::unique_ptr<IPrimitive>> &primitives) const
+            {
+                HitInfo closestHit;
+                closestHit.hit = false;
+                closestHit.distance = std::numeric_limits<double>::max();
+                for (const auto& element : primitives) {
+                    HitInfo hitInfo = element->intersect(*this);
+                    if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
+                        closestHit = hitInfo;
+                    }
+                }
+                return closestHit;
+            }
     };
 
     class HitInfo {

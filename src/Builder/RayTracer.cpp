@@ -143,7 +143,7 @@ namespace RayTracer {
         if (depth <= 0) {
             return backgroundColor;
         }
-        HitInfo closestHit = find_intersection(ray);
+        HitInfo closestHit = ray.find_intersection(primitives);
         if (!closestHit.hit) {
             return backgroundColor;
         }
@@ -162,20 +162,20 @@ namespace RayTracer {
         return color;
     }
 
-    HitInfo RayTracer::find_intersection(const Ray& ray) const
-    {
-        HitInfo closestHit;
+    // HitInfo RayTracer::find_intersection(const Ray& ray) const
+    // {
+    //     HitInfo closestHit;
 
-        closestHit.hit = false;
-        closestHit.distance = std::numeric_limits<double>::max();
-        for (const auto& primitive : primitives) {
-            HitInfo hitInfo = primitive->intersect(ray);
-            if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
-                closestHit = hitInfo;
-            }
-        }
-        return closestHit;
-    }
+    //     closestHit.hit = false;
+    //     closestHit.distance = std::numeric_limits<double>::max();
+    //     for (const auto& primitive : primitives) {
+    //         HitInfo hitInfo = primitive->intersect(ray);
+    //         if (hitInfo.hit && hitInfo.distance < closestHit.distance && hitInfo.distance > 1e-6) {
+    //             closestHit = hitInfo;
+    //         }
+    //     }
+    //     return closestHit;
+    // }
 
     bool RayTracer::saveImage(const std::string& filename) const
     {
