@@ -116,6 +116,8 @@ namespace RayTracer
 
             conesInfo.setHeight(_height);
             conesInfo.setRadius(radius);
+            conesInfo.setPosition(Math::Point3D(x, y, z));
+            conesInfo.setDirection(Math::Point3D(d_x, d_y, d_z));
             conesInfo.setColor(r, g, b);
             _conesInfos.push_back(conesInfo);
         }

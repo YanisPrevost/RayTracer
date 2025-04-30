@@ -15,13 +15,14 @@ namespace RayTracer {
         : position(position), radius(radius), height(height),
           direction(direction.normalize()), color(color), reflection(reflection) {}
 
-    Cone::Cone(const std::vector<double>& params)
-        : position(params[0], params[1], params[2]),
-          radius(params[3]),
-          height(params[4]),
-          direction(0, -1, 0),
-          color(params[5], params[6], params[7]),
-          reflection(params.size() > 8 ? params[8] : 0.0) {}
+    Cone::Cone(const std::vector<double>& params) {
+        position = Math::Point3D(params[0], params[1], params[2]);
+        radius = params[3];
+        height = params[4];
+        direction = Math::Vector3D(params[5], params[6], params[7]).normalize();
+        color = Math::Vector3D(params[8], params[9], params[10]);
+        reflection = params[11];
+    }
 
     HitInfo Cone::intersect(const Ray& ray) const
     {
@@ -67,15 +68,16 @@ namespace RayTracer {
 
     std::unique_ptr<IPrimitive> Cone::create(const std::vector<double>& params)
     {
-        if (params.size() >= 8) {
+        if (params.size() >= 11) {
             Math::Point3D position(params[0], params[1], params[2]);
             double radius = params[3];
             double height = params[4];
-            Math::Vector3D color(params[5], params[6], params[7]);
-            double reflection = (params.size() > 8) ? params[8] : 0.0;
-            return std::make_unique<Cone>(position, radius, height, Math::Vector3D(0, -1, 0), color, reflection);
+            Math::Vector3D direction(params[5], params[6], params[7]);
+            Math::Vector3D color(params[8], params[9], params[10]);
+            double reflection = (params.size() > 11) ? params[11] : 0.0;
+            return std::make_unique<Cone>(position, radius, height, direction, color, reflection);
         }
-        return std::make_unique<Cone>();
+        return std::make_unique<Cone>(params);
     }
 
     extern "C" {

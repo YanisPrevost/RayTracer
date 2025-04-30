@@ -70,6 +70,11 @@ namespace RayTracer {
 
         std::unique_ptr<IPrimitive> configuredPrimitive = it->second->getModule<IPrimitive>("createPrimitive", params);
         primitives.push_back(std::move(configuredPrimitive));
+        // std::cout << "Ajout de la primitive: " << type << " avec les paramètres: ";
+        // for (const auto& param : params) {
+        //     std::cout << param << " ";
+        // }
+        // std::cout << std::endl;
         std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
         return true;
     }
@@ -218,10 +223,6 @@ namespace RayTracer {
                 coneInfo.getR() / 255.0, coneInfo.getG() / 255.0, coneInfo.getB() / 255.0
             };
             addPrimitive("Cone", params);
-            std::cout << coneInfo.getPosition().X << " " << coneInfo.getPosition().Y << " " << coneInfo.getPosition().Z << std::endl;
-            std::cout << coneInfo.getRadius() << " " << static_cast<double>(coneInfo.getHeight()) << std::endl;
-            std::cout << coneInfo.getR() << " " << coneInfo.getG() << " " << coneInfo.getB() << std::endl;
-            std::cout << coneInfo.getHeight() << std::endl;
         }
 
         const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
