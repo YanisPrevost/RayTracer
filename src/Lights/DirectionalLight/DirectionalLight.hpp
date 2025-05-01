@@ -12,18 +12,21 @@
 #include "../ALights.hpp"
 #include "../../Interfaces/IPrimitive.hpp"
 #include "../../Builder/RayTracer.hpp"
+#include "../../Parsing/ArgumentMap.hpp"
 namespace RayTracer
 {
     class DirectionalLight : public ALights {
         public:
             DirectionalLight(
-                const Math::Point3D& pos,
+                const Math::Vector3D& direction,
                 const Math::Vector3D& col,
-                double intensity) : ALights(pos, col, intensity) {};
+                double intensity) : ALights(col, intensity), _direction(direction){};
+            DirectionalLight(ArgumentMap params);
             ~DirectionalLight();
             Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;
         protected:
         private:
+            Math::Vector3D _direction;
     };
 }
 

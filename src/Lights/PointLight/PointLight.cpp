@@ -9,6 +9,7 @@
 #include "../../Interfaces/ILights.hpp"
 #include <unordered_map>
 #include "../../Builder/RayTracer.hpp"
+#include "../../Parsing/ArgumentMap.hpp"
 #include "../../Interfaces/HitInfo.hpp"
 namespace RayTracer
 {
@@ -19,7 +20,7 @@ namespace RayTracer
 
     Math::Vector3D PointLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
-        Math::Vector3D lightDir = getPosition() - info.point;
+        Math::Vector3D lightDir = position - info.point;
 
         Ray ray(info.point, lightDir);
         HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
@@ -36,13 +37,12 @@ namespace RayTracer
     }
 }
 
-// extern "C" {
-//     std::unique_ptr<RayTracer::ILights> createLight(
-//         const Math::Point3D& pos,
-//         const Math::Vector3D& col,
-//         double intensity,
-//         std::unordered_map<std::string, std::string> &)
-//     {
-//         return  std::make_unique<RayTracer::PointLight>(pos, col, intensity);
-//     }
-// }
+extern "C" {
+    const char *getLightName() {
+        return "point";
+    }
+    std::unique_ptr<RayTracer::ILights> createLight(RayTracer::ArgumentMap params)
+    {
+        return  std::make_unique<RayTracer::PointLight>(params);
+    }
+}

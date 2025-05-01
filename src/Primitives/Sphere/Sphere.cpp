@@ -7,6 +7,7 @@
 
 #include "Sphere.hpp"
 #include <cmath>
+#include "../../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
@@ -17,6 +18,12 @@ namespace RayTracer {
     radius(params[3]),
     color(params[4], params[5], params[6]), reflection(reflection) {
         double reflection = (params.size() > 7) ? params[7] : 0.0;
+    }
+    Sphere::Sphere(ArgumentMap params)
+    {
+        center = Math::Point3D(params["x"].as<int>(), params["y"].as<int>(), params["z"].as<int>());
+        radius = params["r"].as<int>();
+        color = params["color"].as<Math::Vector3D>();
     }
 
     HitInfo Sphere::intersect(const Ray& ray) const
@@ -67,7 +74,10 @@ namespace RayTracer {
     }
 
     extern "C" {
-        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params) {
+        const char *getPrimitiveName() {
+            return "spheres";
+        }
+        std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap params) {
             return  std::make_unique<Sphere>(params);
         }
     }

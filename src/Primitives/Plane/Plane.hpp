@@ -30,6 +30,7 @@ namespace RayTracer {
                   const Math::Vector3D& color = Math::Vector3D(1, 1, 1),
                   double reflection = 0.0);
             Plane(const std::vector<double>& params);
+            Plane(ArgumentMap map);
             HitInfo intersect(const Ray& ray) const override;
             std::string getName() const override;
             std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;

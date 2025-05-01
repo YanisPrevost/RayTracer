@@ -10,8 +10,20 @@
 #include <unordered_map>
 #include "../../Builder/RayTracer.hpp"
 #include "../../Interfaces/HitInfo.hpp"
+#include "../../Parsing/ArgumentMap.hpp"
 namespace RayTracer
 {
+
+    DirectionalLight::DirectionalLight(ArgumentMap params) : ALights(
+    params["color"].as<Math::Vector3D>(),
+    params["intensity"].as<double>())
+    {
+        _direction = Math::Vector3D(
+            params["direction"].as<ArgumentMap>()["x"].as<int>(),
+            params["direction"].as<ArgumentMap>()["y"].as<int>(),
+            params["direction"].as<ArgumentMap>()["z"].as<int>()
+        );
+    }
 
     DirectionalLight::~DirectionalLight()
     {
@@ -19,7 +31,7 @@ namespace RayTracer
 
     Math::Vector3D DirectionalLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
-        Math::Vector3D lightDir = Math::Vector3D(-getPosition().X, -getPosition().Y, -getPosition().Z);
+        Math::Vector3D lightDir = _direction;
 
         Ray ray(info.point, lightDir);
         HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
@@ -37,12 +49,11 @@ namespace RayTracer
 }
 
 extern "C" {
-    std::unique_ptr<RayTracer::ILights> createLight(
-        const Math::Point3D& pos,
-        const Math::Vector3D& col,
-        double intensity,
-        std::unordered_map<std::string, std::string> &)
+    const char *getLightName() {
+        return "directional";
+    }
+    std::unique_ptr<RayTracer::ILights> createLight(RayTracer::ArgumentMap params)
     {
-        return  std::make_unique<RayTracer::DirectionalLight>(pos, col, intensity);
+        return  std::make_unique<RayTracer::DirectionalLight>(params);
     }
 }

@@ -6,8 +6,8 @@
 
 namespace RayTracer {
 
-    PpmViewer::PpmViewer(const std::string& ppmFile, const Cam_info& camInfo)
-        : windowWidth(camInfo._width), windowHeight(camInfo._height), raytracer(nullptr), lastRenderedLine(0), displayActive(false)
+    PpmViewer::PpmViewer(const std::string& ppmFile, int width, int height)
+        : windowWidth(width), windowHeight(height), raytracer(nullptr), lastRenderedLine(0), displayActive(false)
     {
         if (!ppmFile.empty()) {
             loadPpmFile(ppmFile);

@@ -20,20 +20,25 @@ namespace RayTracer {
             DynamicLibrary(std::string libName);
             ~DynamicLibrary();
 
-            template <typename Module, typename... Args>
-            std::unique_ptr<Module> getModule(std::string functionName, Args&&... args)
+            template <typename Module, typename ...Args>
+            using ConstructorFunction = std::unique_ptr<Module> (*)(Args...);
+
+            template <typename Module, typename ...Args>
+            ConstructorFunction<Module, Args...> getConstructor(std::string functionName)
             {
                 void (*symbol)() = (void (*)())dlsym(this->library, functionName.c_str());
 
                 if (!symbol)
                     throw (DynamicLibraryError("Unable to find symbol: " + std::string(dlerror())));
                 std::unique_ptr<Module> (*constructor)(Args...) = reinterpret_cast<std::unique_ptr<Module>(*)(Args...)> (symbol);
-
-                if (!constructor)
-                    throw(DynamicLibraryError("Wrongly Formatted Module: "));
-                std::unique_ptr<Module> res = constructor(std::forward<Args>(args)...);
-                return res;
+                return constructor;
             }
+
+            template <typename Module, typename... Args>
+            std::unique_ptr<Module> getModule(std::string functionName, Args&&... args);
+
+            std::string getName(std::string functionName);
+
             void changeLibrary(std::string library);
 
         private:
@@ -47,5 +52,6 @@ namespace RayTracer {
                     std::string msg;
             };
             void *library;
+            std::string _name = "";
     };
 }

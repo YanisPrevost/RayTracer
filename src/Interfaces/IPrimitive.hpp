@@ -15,7 +15,7 @@
 #include "../Points/Points.hpp"
 #include "../Interfaces/HitInfo.hpp"
 #include "../Ray/Ray.hpp"
-
+#include "../Parsing/ArgumentMap.hpp"
 namespace RayTracer {
 
     class IPrimitive {
@@ -27,7 +27,8 @@ namespace RayTracer {
     };
 
     extern "C" {
-        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params);
+        const char *getPrimitiveName();
+        std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap);
     }
 
 }
