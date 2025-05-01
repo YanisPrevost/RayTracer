@@ -23,7 +23,7 @@ namespace RayTracer
                     info.lookupValue("r", r);
                     info.lookupValue("g", g);
                     info.lookupValue("b", b);
-                    map[name] = Math::Vector3D(r, g, b);
+                    map[name] = Math::Vector3D(r / 255.0, g / 255.0, b / 255.0);
                     continue;
                 }
                 map[name] = generateMap(info);
