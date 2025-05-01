@@ -267,7 +267,7 @@ namespace RayTracer
             parseCones(cfg);
         }
         if (cfg.exists("lights")) {
-            // parseLights(cfg);
+            parseLights(cfg);
         }
     }
 }
