@@ -244,7 +244,7 @@ namespace RayTracer
             LightDirection.setAmbient(ambient);
             LightDirection.setDiffuse(diffuse);
             LightDirection.setIntensity(intensity);
-            // _lightPointInfos.push_back(lightPoint);
+            _lightDirectionInfos.push_back(LightDirection);
         }
     }
 
