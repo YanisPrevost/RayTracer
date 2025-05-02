@@ -5,8 +5,8 @@
 ** ArgumentMap
 */
 
-#ifndef ARGUMENTMAP_HPP_
-#define ARGUMENTMAP_HPP_
+#pragma once
+
 #include <unordered_map>
 #include <any>
 #include <iostream>
@@ -40,4 +40,3 @@ namespace RayTracer {
 
     };
 }
-#endif /* !ARGUMENTMAP_HPP_ */

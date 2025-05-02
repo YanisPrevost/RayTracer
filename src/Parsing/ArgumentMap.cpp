@@ -21,15 +21,4 @@ namespace RayTracer {
     {
         return Assigner(_map[key]);
     }
-    // template <typename T>
-    // T &ArgumentMap::Assigner::as() {
-    //     return (std::any_cast<T&> (_val));
-    // }
-
-    // template<typename T>
-    // ArgumentMap::Assigner &ArgumentMap::Assigner::operator=(T val)
-    // {
-    //     _val = val;
-    //     return *this;
-    // }
 }

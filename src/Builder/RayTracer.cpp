@@ -82,20 +82,6 @@ namespace RayTracer {
         }
     }
 
-    // bool RayTracer::addPrimitive(const std::string& type, const std::vector<double>& params)
-    // {
-    //     auto it = libraryHandles.find(type);
-    //     if (it == libraryHandles.end()) {
-    //         std::cerr << "Type de primitive inconnu: " << type << std::endl;
-    //         return false;
-    //     }
-
-    //     std::unique_ptr<IPrimitive> configuredPrimitive = it->second->getModule<IPrimitive>("createPrimitive", params);
-    //     _primitives.push_back(std::move(configuredPrimitive));
-    //     std::cout << "Primitive " << type << " ajoutée avec succès." << std::endl;
-    //     return true;
-    // }
-
     void RayTracer::clearPrimitives()
     {
         _primitives.clear();
@@ -105,22 +91,6 @@ namespace RayTracer {
     {
         _lights.clear();
     }
-
-    // bool RayTracer::AddPointLights(const Light_Point& lightInfo)
-    // {
-        // lights.push_back(std::make_unique<PointLight>(
-        //     Math::Point3D(lightInfo.getPosition().X, lightInfo.getPosition().Y, lightInfo.getPosition().Z),
-        //     Math::Vector3D(lightInfo.getR() / 255.0, lightInfo.getG() / 255.0, lightInfo.getB() / 255.0),
-        //     lightInfo.getDiffuse()
-        // ));
-        // lights.push_back(std::make_unique<DirectionalLight>(
-        //     Math::Point3D(lightInfo.getPosition().X, lightInfo.getPosition().Y, lightInfo.getPosition().Z),
-        //     Math::Vector3D(lightInfo.getR() / 255.0, lightInfo.getG() / 255.0, lightInfo.getB() / 255.0),
-        //     lightInfo.getDiffuse()
-        // ));
-    //     std::cout << "Lumière ponctuelle ajoutée avec succès." << std::endl;
-    //     return true;
-    // }
 
     void RayTracer::start_rendering()
     {
@@ -257,49 +227,8 @@ namespace RayTracer {
                 _primitives.push_back(constructor(params));
             }
         }
+
         const std::unordered_map<std::string, std::vector<ArgumentMap>> &lightsInfo = parser.getLightsInfo();
-        // for (const auto &light : lightsInfo) {
-        //     std::unique_ptr<DynamicLibrary> &currentLight = getCurrentLightLibrary(light.first, "getLightName");
-
-        //     auto constructor = currentLight->getConstructor<ILights, ArgumentMap>("createLight");
-
-        //     for (auto params : light.second) {
-        //         _lights.push_back(constructor(params));
-        //     }
-        // }
-
-        // const std::vector<Sphere_info>& sphereInfos = parser.getSphereInfos();
-        // for (const auto& sphereInfo : sphereInfos) {
-        //     std::vector<double> params = {
-        //         sphereInfo.getPosition().X, sphereInfo.getPosition().Y, sphereInfo.getPosition().Z,
-        //         sphereInfo.getRadius(),
-        //         sphereInfo.getR() / 255.0, sphereInfo.getG() / 255.0, sphereInfo.getB() / 255.0
-        //     };
-        //     addPrimitive("Sphere", params);
-        // }
-
-        // const std::vector<Plane_info>& planeInfos = parser.getPlaneInfos();
-        // for (const auto& planeInfo : planeInfos) {
-        //     int axisValue = 2;
-        //     if (planeInfo.getPosition().X != 0) {
-        //         axisValue = 0;
-        //     } else if (planeInfo.getPosition().Y != 0) {
-        //         axisValue = 1;
-        //     }
-        //     double position = 0;
-        //     switch (axisValue) {
-        //         case 0: position = planeInfo.getPosition().X; break;
-        //         case 1: position = planeInfo.getPosition().Y; break;
-        //         case 2: position = planeInfo.getPosition().Z; break;
-        //     }
-        //     std::vector<double> params = {
-        //         static_cast<double>(axisValue),
-        //         position,
-        //         planeInfo.getR() / 255.0, planeInfo.getG() / 255.0, planeInfo.getB() / 255.0
-        //     };
-        //     addPrimitive("Plane", params);
-        // }
-
         ArgumentMap lightArg;
         ArgumentMap argPosition;
         argPosition["x"] = (int)0;
@@ -311,21 +240,6 @@ namespace RayTracer {
         this->_lights.push_back(std::make_unique<DirectionalLight>(
             lightArg
         ));
-
-    //     for (const auto& Light_Info : parser.getLightPointInfos()) {
-    //         Light_Point lightInfo;
-    //         lightInfo.setPosition(Math::Point3D(4.0, 6, 4));
-    //         lightInfo.setColor(1.0, 1.0, 1.0);
-    //         lightInfo.setLightInfo(1, 1.0);
-    //         AddPointLights(lightInfo);
-    //     }
-    //     for (const auto& Light_Info : parser.getLightDirectionInfos()) {
-    //         Light_Direction lightInfo;
-    //         lightInfo.setDirection(Light_Info.getDirection());
-    //         lightInfo.setColor(Light_Info.getR(), Light_Info.getG(), Light_Info.getB());
-    //         lightInfo.setLightInfo(0.2, 1.0);
-    //         AddPointLights(lightInfo);
-    //     }
     }
 
 }
