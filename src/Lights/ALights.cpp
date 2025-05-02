@@ -6,11 +6,9 @@
 */
 
 #include "./ALights.hpp"
+
 namespace RayTracer
 {
-    // ALights::ALights()
-    // {
-    // }
 
     ALights::~ALights()
     {
@@ -24,6 +22,5 @@ namespace RayTracer
     {
         return _intensity;
     }
-
 
 }
