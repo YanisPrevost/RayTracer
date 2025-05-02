@@ -31,7 +31,7 @@ namespace RayTracer {
         radius = params["radius"].as<double>();
         height = params["height"].as<double>();
         ArgumentMap directionMap = params["direction"].as<ArgumentMap>();
-        direction = Math::Vector3D(directionMap["x"].as<double>(), directionMap["y"].as<double>(), directionMap["z"].as<double>());
+        direction = Math::Vector3D(directionMap["x"].as<int>(), directionMap["y"].as<int>(), directionMap["z"].as<int>());
         color = params["color"].as<Math::Vector3D>();
         reflection = 0;
     }

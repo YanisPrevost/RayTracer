@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     RayTracer::Camera camera(
         pos,
         rota,
-        Math::Vector3D(0, 1, 0),
+        Math::Vector3D(0, 1, 0), // Up vector
         cameraInfo["fieldOfView"].as<double>()
     );
     raytracer.setCamera(camera);
