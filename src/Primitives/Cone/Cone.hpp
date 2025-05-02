@@ -22,12 +22,9 @@ namespace RayTracer {
             Math::Vector3D color;
             double reflection;
         public:
-            Cone(const Math::Point3D& position = Math::Point3D(0, 0, 0),
-                double radius = 1.0,
-                double height = 1.0,
+            Cone(const Math::Point3D& position = Math::Point3D(0, 0, 0), double radius = 1.0, double height = 1.0,
                 const Math::Vector3D& direction = Math::Vector3D(0, -1, 0),
-                const Math::Vector3D& color = Math::Vector3D(1, 1, 1),
-                double reflection = 0.0);
+                const Math::Vector3D& color = Math::Vector3D(1, 1, 1), double reflection = 0.0);
             Cone(const std::vector<double>& params);
             Cone(ArgumentMap params);
             HitInfo intersect(const Ray& ray) const override;

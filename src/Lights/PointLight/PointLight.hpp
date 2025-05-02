@@ -39,7 +39,6 @@ namespace RayTracer
                 }
             ~PointLight();
             Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;
-        protected:
         private:
             Math::Point3D position;
     };

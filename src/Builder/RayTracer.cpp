@@ -200,7 +200,7 @@ namespace RayTracer {
                 return library;
             }
         }
-    throw std::runtime_error("Couldn't find primitive" + libName);
+        throw std::runtime_error("Couldn't find primitive" + libName);
     }
 
     std::unique_ptr<DynamicLibrary> &RayTracer::getCurrentLightLibrary(std::string libName, std::string functionName)
@@ -211,7 +211,7 @@ namespace RayTracer {
                 return library;
             }
         }
-    throw std::runtime_error("Couldn't find primitive" + libName);
+        throw std::runtime_error("Couldn't find light " + libName);
     }
 
     void RayTracer::BuildScene(const Parsing_cfg& parser)
@@ -238,16 +238,5 @@ namespace RayTracer {
                 _lights.push_back(constructor(params));
             }
         }
-        // ArgumentMap lightArg;
-        // ArgumentMap argPosition;
-        // argPosition["x"] = (int)1;
-        // argPosition["y"] = (int)1;
-        // argPosition["z"] = (int)1;
-        // lightArg["position"] = argPosition;
-        // lightArg["intensity"] = 1.0;
-        // lightArg["color"] = Math::Vector3D(1.0, 1.0, 1.0);
-        // this->_lights.push_back(std::make_unique<PointLight>(
-        //     lightArg
-        // ));
     }
 }
