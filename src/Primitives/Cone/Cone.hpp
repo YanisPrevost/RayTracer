@@ -9,6 +9,7 @@
 
 #include "../../Interfaces/IPrimitive.hpp"
 #include <memory>
+#include "../../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
@@ -28,6 +29,7 @@ namespace RayTracer {
                 const Math::Vector3D& color = Math::Vector3D(1, 1, 1),
                 double reflection = 0.0);
             Cone(const std::vector<double>& params);
+            Cone(ArgumentMap params);
             HitInfo intersect(const Ray& ray) const override;
             std::string getName() const override;
             std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;

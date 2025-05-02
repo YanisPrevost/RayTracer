@@ -7,7 +7,7 @@
 
 #include "Cone.hpp"
 #include <cmath>
-
+#include "../../Parsing/ArgumentMap.hpp"
 namespace RayTracer {
 
     Cone::Cone(const Math::Point3D& position, double radius, double height,
@@ -22,6 +22,19 @@ namespace RayTracer {
         direction = Math::Vector3D(params[5], params[6], params[7]).normalize();
         color = Math::Vector3D(params[8], params[9], params[10]);
         reflection = params[11];
+    }
+
+    Cone::Cone(ArgumentMap params)
+    {
+        ArgumentMap pos = params["position"].as<ArgumentMap>();
+        position = Math::Point3D(pos["x"].as<int>(), pos["y"].as<int>(), pos["z"].as<int>());
+        radius = params["radius"].as<int>();
+        height = params["height"].as<int>();
+        radius = params["radius"].as<int>();
+        ArgumentMap directionMap = params["direction"].as<ArgumentMap>();
+        direction = Math::Vector3D(directionMap["x"].as<int>(), directionMap["y"].as<int>(), directionMap["z"].as<int>());
+        color = params["color"].as<Math::Vector3D>();
+        reflection = 0;
     }
 
     HitInfo Cone::intersect(const Ray& ray) const
@@ -81,7 +94,10 @@ namespace RayTracer {
     }
 
     extern "C" {
-        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params) {
+        const char *getPrimitiveName() {
+            return "cones";
+        }
+        std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap params) {
             return std::make_unique<Cone>(params);
         }
     }
