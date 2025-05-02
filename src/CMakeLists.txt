@@ -9,7 +9,7 @@ file(GLOB_RECURSE RAYTRACER_SOURCES
 
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Plane/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Sphere/.*")
-list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Lights/.*")
+# list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Lights/.*")
 
 
 find_package(PkgConfig REQUIRED)
@@ -32,5 +32,5 @@ target_link_libraries(raytracer ${LIBCONFIGPP_LIBRARIES})
 
 add_subdirectory(Primitives/Plane)
 add_subdirectory(Primitives/Sphere)
-add_subdirectory(Lights/PointLight)
-add_subdirectory(Lights/DirectionalLight)
+# add_subdirectory(Lights/PointLight)
+# add_subdirectory(Lights/DirectionalLight)

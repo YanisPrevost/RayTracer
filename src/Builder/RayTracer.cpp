@@ -258,15 +258,15 @@ namespace RayTracer {
             }
         }
         const std::unordered_map<std::string, std::vector<ArgumentMap>> &lightsInfo = parser.getLightsInfo();
-        for (const auto &light : lightsInfo) {
-            std::unique_ptr<DynamicLibrary> &currentLight = getCurrentLightLibrary(light.first, "getLightName");
+        // for (const auto &light : lightsInfo) {
+        //     std::unique_ptr<DynamicLibrary> &currentLight = getCurrentLightLibrary(light.first, "getLightName");
 
-            auto constructor = currentLight->getConstructor<ILights, ArgumentMap>("createLight");
+        //     auto constructor = currentLight->getConstructor<ILights, ArgumentMap>("createLight");
 
-            for (auto params : light.second) {
-                _lights.push_back(constructor(params));
-            }
-        }
+        //     for (auto params : light.second) {
+        //         _lights.push_back(constructor(params));
+        //     }
+        // }
 
         // const std::vector<Sphere_info>& sphereInfos = parser.getSphereInfos();
         // for (const auto& sphereInfo : sphereInfos) {
@@ -300,11 +300,17 @@ namespace RayTracer {
         //     addPrimitive("Plane", params);
         // }
 
-        // this->_lights.push_back(std::make_unique<DirectionalLight>(
-        //     Math::Point3D(0, 0, 0),
-        //     Math::Vector3D(1.0, 1.0, 1.0),
-        //     0.1
-        // ));
+        ArgumentMap lightArg;
+        ArgumentMap argPosition;
+        argPosition["x"] = (int)0;
+        argPosition["y"] = (int)1;
+        argPosition["z"] = (int)0;
+        lightArg["direction"] = argPosition;
+        lightArg["intensity"] = 1.0;
+        lightArg["color"] = Math::Vector3D(1.0, 1.0, 1.0);
+        this->_lights.push_back(std::make_unique<DirectionalLight>(
+            lightArg
+        ));
 
     //     for (const auto& Light_Info : parser.getLightPointInfos()) {
     //         Light_Point lightInfo;

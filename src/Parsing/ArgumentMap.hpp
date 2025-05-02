@@ -33,6 +33,7 @@ namespace RayTracer {
                     std::any &_val;
             };
             Assigner operator[](std::string key);
+            std::unordered_map<std::string, std::any> getMap() {return _map;};
         protected:
         private:
         std::unordered_map<std::string, std::any> _map;
