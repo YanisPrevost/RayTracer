@@ -29,22 +29,21 @@ namespace RayTracer {
                 map[name] = generateMap(info);
                 continue;
             }
-            switch (info.getType())
-            {
-            case libconfig::Setting::Type::TypeFloat:
-                map[name] = static_cast<double>(info);
-                break;
-            case libconfig::Setting::Type::TypeString:
-                map[name] = static_cast<std::string>(info);
-                break;
-            case libconfig::Setting::Type::TypeBoolean :
-                map[name] = static_cast<bool>(info);
-                break;
-            case libconfig::Setting::Type::TypeInt :
-                map[name] = static_cast<int>(info);
-                break;
-            default:
-                break;
+            switch (info.getType()) {
+                case libconfig::Setting::Type::TypeFloat:
+                    map[name] = static_cast<double>(info);
+                    break;
+                case libconfig::Setting::Type::TypeString:
+                    map[name] = static_cast<std::string>(info);
+                    break;
+                case libconfig::Setting::Type::TypeBoolean :
+                    map[name] = static_cast<bool>(info);
+                    break;
+                case libconfig::Setting::Type::TypeInt :
+                    map[name] = static_cast<int>(info);
+                    break;
+                default:
+                    break;
             }
         }
         return map;

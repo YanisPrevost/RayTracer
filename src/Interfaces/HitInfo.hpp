@@ -5,8 +5,8 @@
 ** HitInfo
 */
 
-#ifndef HITINFO_HPP_
-#define HITINFO_HPP_
+#pragma once
+
 #include "../Vectors/Vector.hpp"
 #include "../Points/Points.hpp"
 
@@ -19,6 +19,7 @@ namespace RayTracer {
             Math::Vector3D normal;
             Math::Vector3D color;
             double reflection;
+
+            HitInfo() : hit(false), distance(0.0), point(), normal(), color(), reflection(0.0) {}
     };
 }
-#endif /* !HITINFO_HPP_ */
