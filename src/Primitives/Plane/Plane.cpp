@@ -1,22 +1,9 @@
 /*
 ** EPITECH PROJECT, 2024
 ** RayTracer
-** File description:        // Calculate the distance to the intersection point
-        double d = 0;
-        switch (axis) {
-            case Axis::X:
-                d = (position - ray.origin.X) / ray.direction.X;
-                break;
-            case Axis::Y:
-                d = (position - ray.origin.Y) / ray.direction.Y;
-                break;
-            case Axis::Z:
-                d = (position - ray.origin.Z) / ray.direction.Z;
-                break;
-        }
+** File description:
+** Plane.cpp
 */
-
-
 
 #include "Plane.hpp"
 #include <cmath>
@@ -42,10 +29,6 @@ namespace RayTracer {
     }
 
     Plane::Plane(const std::vector<double>& params) {
-        // params[0] = Axis as int (0 = X, 1 = Y, 2 = Z)
-        // params[1] = Position
-        // params[2, 3, 4] = RGB color
-        // params[5] (optional) = Reflection
         if (params.size() >= 5) {
             axis = static_cast<Axis>(static_cast<int>(params[0]));
             position = params[1];
@@ -62,11 +45,9 @@ namespace RayTracer {
     HitInfo Plane::intersect(const Ray& ray) const {
         HitInfo info;
         info.hit = false;
-        
         double normalComponent = 0;
         Math::Vector3D normal;
 
-        // Set normal based on the axis
         switch (axis) {
             case Axis::X:
                 normal = Math::Vector3D(1, 0, 0);
@@ -82,11 +63,9 @@ namespace RayTracer {
                 break;
         }
 
-        // Check if ray is parallel to the plane
         if (std::fabs(normalComponent) < 1e-8)
             return info;
 
-        // Calculate the distance to the intersection point
         double d = 0;
         switch (axis) {
             case Axis::X:

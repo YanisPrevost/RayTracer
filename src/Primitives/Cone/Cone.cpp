@@ -7,7 +7,7 @@
 
 #include "Cone.hpp"
 #include <cmath>
-#include "../../Parsing/ArgumentMap.hpp"
+
 namespace RayTracer {
 
     Cone::Cone(const Math::Point3D& position, double radius, double height,
