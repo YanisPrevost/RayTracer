@@ -9,9 +9,7 @@
 #include <iostream>
 #include <thread>
 #include "../DynamicLibrary/DynamicLibrary.hpp"
-#include "../Lights/PointLight/PointLight.hpp"
-#include "../Lights/DirectionalLight/DirectionalLight.hpp"
-#include "../Interfaces/ILights.hpp"
+#include "ILights.hpp"
 #include <filesystem>
 #include "../Parsing/ArgumentMap.hpp"
 

@@ -6,7 +6,7 @@
 */
 
 #pragma once
-#include "../Interfaces/IPrimitive.hpp"
+#include "IPrimitive.hpp"
 #include <memory>
 
 namespace RayTracer {

@@ -12,7 +12,6 @@
 #include <cstring>
 #include <thread>
 #include <chrono>
-#include <dlfcn.h>
 #include "Builder/RayTracer.hpp"
 #include "Visualization/PpmViewer.hpp"
 

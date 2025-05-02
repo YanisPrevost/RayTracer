@@ -15,8 +15,8 @@
 #include <condition_variable>
 #include "../Camera/Camera.hpp"
 #include "../Rectangle3D/Screen.hpp"
-#include "../Interfaces/IPrimitive.hpp"
-#include "../Interfaces/ILights.hpp"
+#include "IPrimitive.hpp"
+#include "ILights.hpp"
 #include "../Parsing/Parsing_cfg.hpp"
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 

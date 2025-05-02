@@ -1,22 +1,8 @@
 /*
 ** EPITECH PROJECT, 2024
 ** RayTracer
-** File description:        // Calculate the distance to the intersection point
-        double d = 0;
-        switch (axis) {
-            case Axis::X:
-                d = (position - ray.origin.X) / ray.direction.X;
-                break;
-            case Axis::Y:
-                d = (position - ray.origin.Y) / ray.direction.Y;
-                break;
-            case Axis::Z:
-                d = (position - ray.origin.Z) / ray.direction.Z;
-                break;
-        }
+** File description:
 */
-
-
 
 #include "Plane.hpp"
 #include <cmath>
