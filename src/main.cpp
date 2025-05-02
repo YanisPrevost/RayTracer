@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     RayTracer::Parsing_cfg parser(configFile);
     parser.parse();
 
-    // const RayTracer::Cam_info& camInfo = parser.getCamInfo();
     RayTracer::ArgumentMap &cameraInfo = parser.getCamInfo();
     auto &resolution = cameraInfo["resolution"].as<RayTracer::ArgumentMap>();
     int width = resolution["width"].as<int>();
@@ -36,11 +35,13 @@ int main(int argc, char *argv[])
     raytracer.loadPrimitiveLibrary();
     raytracer.loadLightLibrary();
     auto &position = cameraInfo["position"].as<RayTracer::ArgumentMap>();
-    Math::Point3D pos = Math::Point3D(position["x"].as<int>(), position["y"].as<int>(), position["z"].as<int>());
+    Math::Point3D pos = Math::Point3D(position["x"].as<double>(), position["y"].as<double>(), position["z"].as<double>());
+    auto &rotation = cameraInfo["rotation"].as<RayTracer::ArgumentMap>();
+    Math::Vector3D rota = Math::Vector3D(rotation["x"].as<int>(), rotation["y"].as<int>(), rotation["z"].as<int>());
     RayTracer::Camera camera(
         pos,
-        Math::Vector3D(0, 0, -1),
-        Math::Vector3D(0, 1, 0),
+        rota,
+        Math::Vector3D(0, 1, 0), // Up vector
         cameraInfo["fieldOfView"].as<double>()
     );
     raytracer.setCamera(camera);

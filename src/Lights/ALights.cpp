@@ -6,15 +6,11 @@
 */
 
 #include "./ALights.hpp"
+
 namespace RayTracer
 {
-    // ALights::ALights()
-    // {
-    // }
 
-    ALights::~ALights()
-    {
-    }
+    ALights::~ALights() {}
 
     Math::Vector3D ALights::getColor() const
     {
@@ -24,6 +20,5 @@ namespace RayTracer
     {
         return _intensity;
     }
-
 
 }

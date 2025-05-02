@@ -21,4 +21,5 @@ namespace RayTracer {
     {
         return Assigner(_map[key]);
     }
+
 }

@@ -14,30 +14,20 @@
 namespace RayTracer
 {
 
-    DirectionalLight::DirectionalLight(ArgumentMap params) : ALights(
-    params["color"].as<Math::Vector3D>(),
-    params["intensity"].as<double>())
+    DirectionalLight::DirectionalLight(ArgumentMap params) : ALights(params["color"].as<Math::Vector3D>(), params["intensity"].as<double>())
     {
         _direction = Math::Vector3D(
             params["direction"].as<ArgumentMap>()["x"].as<int>(),
             params["direction"].as<ArgumentMap>()["y"].as<int>(),
             params["direction"].as<ArgumentMap>()["z"].as<int>()
         );
-        std::cout << "Creating directional light:\n";
-        std::cout << "direction: x = " << _direction.X
-        << " y = " << _direction.Y
-        << " z = " << _direction.Z
-        << "\ncolor: r = " <<params["color"].as<Math::Vector3D>().X
-        << " g = " <<params["color"].as<Math::Vector3D>().Y
-        << " b = " <<params["color"].as<Math::Vector3D>().X
-        << "\n intensity: "<< params["intensity"].as<double>() << std::endl;
     }
 
     DirectionalLight::~DirectionalLight()
     {
     }
 
-    Math::Vector3D DirectionalLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
+    Math::Vector3D DirectionalLight::computeLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
         Math::Vector3D lightDir = _direction;
 
