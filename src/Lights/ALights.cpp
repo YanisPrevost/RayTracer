@@ -16,10 +16,6 @@ namespace RayTracer
     {
     }
 
-    Math::Point3D ALights::getPosition() const
-    {
-        return _position;
-    }
     Math::Vector3D ALights::getColor() const
     {
         return _color;

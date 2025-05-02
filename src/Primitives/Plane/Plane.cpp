@@ -16,14 +16,30 @@
         }
 */
 
+
+
 #include "Plane.hpp"
 #include <cmath>
 #include <stdexcept>
+#include "../../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
     Plane::Plane(Axis axis, double position, const Math::Vector3D& color, double reflection)
         : axis(axis), position(position), color(color), reflection(reflection) {}
+
+    Plane::Plane(ArgumentMap map)
+    {
+        if (map["axis"].as<std::string>() == "Z")
+            axis = Axis::Z;
+        if (map["axis"].as<std::string>() == "X")
+            axis = Axis::X;
+        if (map["axis"].as<std::string>() == "Y")
+            axis = Axis::Y;
+        position = map["position"].as<int>();
+        color = map["color"].as<Math::Vector3D>();
+        reflection = 0.0;
+    }
 
     Plane::Plane(const std::vector<double>& params) {
         // params[0] = Axis as int (0 = X, 1 = Y, 2 = Z)
@@ -127,7 +143,10 @@ namespace RayTracer {
     }
 
     extern "C" {
-        std::unique_ptr<IPrimitive> createPrimitive(const std::vector<double>& params) {
+        const char *getPrimitiveName() {
+            return "planes";
+        }
+        std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap params) {
             return std::make_unique<Plane>(params);
         }
     }

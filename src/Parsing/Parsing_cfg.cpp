@@ -6,246 +6,56 @@
 */
 
 #include "Parsing_cfg.hpp"
+#include "ArgumentMap.hpp"
+#include "../Vectors/Vector.hpp"
+#include "../Points/Points.hpp"
 
-namespace RayTracer
-{
+namespace RayTracer {
+
+    ArgumentMap Parsing_cfg::generateMap(libconfig::Setting &settings)
+    {
+        ArgumentMap map;
+        for (auto &info : settings) {
+            std::string name = info.getName();
+            if (info.isGroup()) {
+                if (name == "color" && info.exists("r") && info.exists("g") && info.exists("b")) {
+                    int r, g, b;
+                    info.lookupValue("r", r);
+                    info.lookupValue("g", g);
+                    info.lookupValue("b", b);
+                    map[name] = Math::Vector3D(r / 255.0, g / 255.0, b / 255.0);
+                    continue;
+                }
+                map[name] = generateMap(info);
+                continue;
+            }
+            switch (info.getType()) {
+                case libconfig::Setting::Type::TypeFloat:
+                    map[name] = static_cast<double>(info);
+                    break;
+                case libconfig::Setting::Type::TypeString:
+                    map[name] = static_cast<std::string>(info);
+                    break;
+                case libconfig::Setting::Type::TypeBoolean :
+                    map[name] = static_cast<bool>(info);
+                    break;
+                case libconfig::Setting::Type::TypeInt :
+                    map[name] = static_cast<int>(info);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return map;
+    }
 
     void Parsing_cfg::parseCamera(libconfig::Config& cfg)
     {
-        int x, y, z;
-        if (cfg.exists("camera")) {
-            if (!(cfg.lookupValue("camera.fieldOfView", _camInfo._fov) &&
-            cfg.lookupValue("camera.resolution.width", _camInfo._width) &&
-            cfg.lookupValue("camera.resolution.height", _camInfo._height))) {
-                std::cerr << "Error: Missing camera parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            if (cfg.lookupValue("camera.position.x", x) && cfg.lookupValue("camera.position.y", y) && cfg.lookupValue("camera.position.z", z))
-                _camInfo._position = Math::Point3D(x, y, z);
-
-            if (cfg.lookupValue("camera.rotation.x", x) && cfg.lookupValue("camera.rotation.y", y) && cfg.lookupValue("camera.rotation.z", z))
-                _camInfo._rotation = Math::Point3D(x, y, z);
-            else
-                _camInfo._rotation = Math::Point3D(0, 0, 0);
-                // EXCEPTION A FAIRE ICI
+        if (!cfg.exists("camera")) {
+            throw ParseError("Couldn't find camera");
         }
-    }
-
-    void Parsing_cfg::parsePlanes(libconfig::Config& cfg)
-    {
-        libconfig::Setting& planes = cfg.lookup("primitives.planes");
-        int numPlanes = planes.getLength();
-        for (int i = 0; i < numPlanes; ++i) {
-            libconfig::Setting& plane = planes[i];
-            Plane_info planeInfo;
-            std::string axis;
-            int position;
-            int r, g, b;
-
-            if (!(plane.lookupValue("axis", axis) &&
-            plane.lookupValue("position", position))) {
-                std::cerr << "Error: Missing axis or position parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            const libconfig::Setting& color = plane["color"];
-
-            if (!(color.lookupValue("r", r) &&
-            color.lookupValue("g", g) &&
-            color.lookupValue("b", b))) {
-                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            if (axis == "X") {
-                planeInfo.setPosition(Math::Point3D(position, 0, 0));
-            } else if (axis == "Y") {
-                planeInfo.setPosition(Math::Point3D(0, position, 0));
-            } else if (axis == "Z") {
-                planeInfo.setPosition(Math::Point3D(0, 0, position));
-            } else {
-                // EXCEPTION A FAIRE ICI
-            }
-            planeInfo.setColor(r, g, b);
-            _planeInfos.push_back(planeInfo);
-        }
-    }
-
-    void Parsing_cfg::parseCones(libconfig::Config& cfg)
-    {
-        libconfig::Setting& cones = cfg.lookup("primitives.cones");
-        int numCones = cones.getLength();
-        for (int i = 0; i < numCones; ++i) {
-            libconfig::Setting& cone = cones[i];
-            Cones_Info conesInfo;
-            int x, y, z;
-            int radius;
-            int _height;
-            int r, g, b;
-            int d_x, d_y, d_z;
-
-            const libconfig::Setting& position = cone["position"];
-            if (!(position.lookupValue("x", x) && position.lookupValue("y", y) && position.lookupValue("z", z))) {
-                std::cerr << "Error: Missing position parameters (x, y, z) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            const libconfig::Setting& direction = cone["direction"];
-            if (!(direction.lookupValue("d_x", d_x) && direction.lookupValue("d_y", d_y) && direction.lookupValue("d_z", d_z))) {
-                std::cerr << "Error: Missing direction parameters (x, y, z) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            if (!(cone.lookupValue("radius", radius) && cone.lookupValue("height", _height))) {
-                std::cerr << "Error: Missing radius or height parameter in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE I
-            }
-            const libconfig::Setting& color = cone["color"];
-
-            if (!(color.lookupValue("r", r) &&
-            color.lookupValue("g", g) &&
-            color.lookupValue("b", b))) {
-                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            conesInfo.setHeight(_height);
-            conesInfo.setRadius(radius);
-            conesInfo.setPosition(Math::Point3D(x, y, z));
-            conesInfo.setDirection(Math::Point3D(d_x, d_y, d_z));
-            conesInfo.setColor(r, g, b);
-            _conesInfos.push_back(conesInfo);
-        }
-    }
-
-    void Parsing_cfg::parseSpheres(libconfig::Config& cfg)
-    {
-        libconfig::Setting& spheres = cfg.lookup("primitives.spheres");
-        int numSpheres = spheres.getLength();
-        for (int i = 0; i < numSpheres; ++i) {
-            libconfig::Setting& sphere = spheres[i];
-            Sphere_info sphereInfo;
-            int x, y, z;
-            int radius = 0;
-            int r, g, b;
-
-            if (!(sphere.lookupValue("x", x) &&
-            sphere.lookupValue("y", y) &&
-            sphere.lookupValue("z", z) &&
-            sphere.lookupValue("r", radius)))
-            {
-                std::cerr << "Error: Missing x, y, z or radius parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            const libconfig::Setting& color = sphere["color"];
-
-            if (!(color.lookupValue("r", r) &&
-            color.lookupValue("g", g) &&
-            color.lookupValue("b", b))) {
-                std::cerr << "Error: Missing color parameters in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            sphereInfo.setPosition(Math::Point3D(x, y, z));
-            sphereInfo.setRadius(radius);
-            sphereInfo.setColor(r, g, b);
-            _sphereInfos.push_back(sphereInfo);
-        }
-    }
-
-    void Parsing_cfg::parseLights(libconfig::Config& cfg)
-    {
-        if (cfg.exists("lights") == false) {
-            std::cerr << "Error: Missing lights section in the configuration file." << std::endl;
-            exit(84);
-            // EXCEPTION A FAIRE ICI
-        }
-
-
-        // PARTIE COMMUNE DES LIGHTS
-        double ambient, diffuse;
-        Light_Info lightInfo;
-        cfg.lookupValue("lights.ambient", ambient);
-        cfg.lookupValue("lights.diffuse", diffuse);
-        lightInfo.setAmbient(ambient);
-        lightInfo.setDiffuse(diffuse);
-        // _lightInfos.push_back(lightInfo);
-
-
-        // PARTIE LIGHT POINT
-        libconfig::Setting& lights = cfg.lookup("lights.point");
-        int numLights = lights.getLength();
-        for (int i = 0; i < numLights; ++i) {
-            libconfig::Setting& _lights = lights[i];
-            Light_Point lightPoint;
-
-            int x, y, z, r, g, b;
-            
-            const libconfig::Setting& position = _lights["position"];
-            const libconfig::Setting& color = _lights["color"];
-
-            if (!(position.lookupValue("x", x) && position.lookupValue("y", y) && position.lookupValue("z", z))) {
-                std::cerr << "Error: Missing position parameters (x, y, z) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            if (!(color.lookupValue("r", r) && color.lookupValue("g", g) && color.lookupValue("b", b))) {
-                std::cerr << "Error: Missing color parameters (r, g, b) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            lightPoint.setPosition(Math::Point3D(x, y, z));
-            lightPoint.setColor(r, g, b);
-            lightPoint.setAmbient(ambient);
-            lightPoint.setDiffuse(diffuse);
-            _lightPointInfos.push_back(lightPoint);
-        }
-
-        // PARTIE LIGHT DIRECTION
-
-        libconfig::Setting& directional_light = cfg.lookup("lights.directional");
-        int dir_numLights = directional_light.getLength();
-        for (int i = 0; i < dir_numLights; ++i) {
-            libconfig::Setting& _lights = directional_light[i];
-            Light_Direction LightDirection;
-
-            int x, y, z, r, g, b;
-            double intensity;
-            
-            const libconfig::Setting& position = _lights["direction"];
-            const libconfig::Setting& color = _lights["color"];
-
-            if (!(position.lookupValue("x", x) && position.lookupValue("y", y) && position.lookupValue("z", z))) {
-                std::cerr << "Error: Missing position parameters (x, y, z) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            if (!(color.lookupValue("r", r) && color.lookupValue("g", g) && color.lookupValue("b", b))) {
-                std::cerr << "Error: Missing color parameters (r, g, b) in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-            if (!(_lights.lookupValue("intensity", intensity))) {
-                std::cerr << "Error: Missing intensity parameter in the configuration file." << std::endl;
-                exit(84);
-                // EXCEPTION A FAIRE ICI
-            }
-
-            LightDirection.setDirection(Math::Point3D(x, y, z));
-            LightDirection.setColor(r, g, b);
-            LightDirection.setAmbient(ambient);
-            LightDirection.setDiffuse(diffuse);
-            LightDirection.setIntensity(intensity);
-            _lightDirectionInfos.push_back(LightDirection);
-        }
+        libconfig::Setting &cameraSettings = cfg.lookup("camera");
+        _cameraInfo = generateMap(cameraSettings);
     }
 
     void Parsing_cfg::parse() {
@@ -253,8 +63,7 @@ namespace RayTracer
         libconfig::Config cfg;
         std::fstream file(_filename.c_str());
         if (!file.is_open()) {
-            std::cerr << "Error: Unable to open file " << _filename << std::endl;
-            exit(84);
+            throw ParseError("Unable to open file");
         }
         file.close();
         cfg.readFile(_filename.c_str());
@@ -262,12 +71,23 @@ namespace RayTracer
         parseCamera(cfg);
 
         if (cfg.exists("primitives")) {
-            parseSpheres(cfg);
-            parsePlanes(cfg);
-            parseCones(cfg);
+            libconfig::Setting &primitives = cfg.lookup("primitives");
+            for (auto &primitive : primitives) {
+                std::string primitiveName = primitive.getName();
+                for (auto &primitiveObject : primitive) {
+                    (_primitivesInfo[primitiveName]).push_back(generateMap(primitiveObject));
+                }
+            }
+
         }
         if (cfg.exists("lights")) {
-            parseLights(cfg);
+            libconfig::Setting &lights = cfg.lookup("lights");
+            for (auto &light : lights) {
+                std::string lightName = light.getName();
+                for (auto &lightObject : light) {
+                    (_lightsInfo[lightName]).push_back(generateMap(lightObject));
+                }
+            }
         }
     }
 }

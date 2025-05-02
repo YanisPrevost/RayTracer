@@ -26,9 +26,10 @@ namespace RayTracer {
         private:
             Camera camera;
             Screen screen;
-            std::vector<std::unique_ptr<IPrimitive>> primitives;
-            std::vector<std::unique_ptr<ILights>> lights;
+            std::vector<std::unique_ptr<IPrimitive>> _primitives;
+            std::vector<std::unique_ptr<ILights>> _lights;
             std::map<std::string, std::unique_ptr<DynamicLibrary>> libraryHandles;
+            std::map<std::string, std::unique_ptr<DynamicLibrary>> lightLibraries;
             int maxDepth;
             int samplesPerPixel;
             Math::Vector3D backgroundColor;
@@ -49,11 +50,12 @@ namespace RayTracer {
             void setBackgroundColor(const Math::Vector3D& color) { backgroundColor = color; }
 
             bool loadPrimitiveLibrary();
-            bool addPrimitive(const std::string& type, const std::vector<double>& params);
-            bool AddPointLights(const Light_Point& lightInfo);
+            void loadLightLibrary();
             void clearPrimitives();
             void clearLights();
 
+            std::unique_ptr<DynamicLibrary> &getCurrentLibrary(std::string libName, std::string functionName);
+            std::unique_ptr<DynamicLibrary> &getCurrentLightLibrary(std::string libName, std::string functionName);
             void BuildScene(const Parsing_cfg& parser);
 
             void start_rendering();
@@ -63,10 +65,10 @@ namespace RayTracer {
             void waitForUpdate(int& lastLine);
             void renderLines(int startLine, int endLine);
             void renderLoop();
-            const std::vector<std::unique_ptr<IPrimitive>>& getPrimitives() const {return primitives; }
+
+            const std::vector<std::unique_ptr<IPrimitive>>& getPrimitives() const {return _primitives; }
 
             Math::Vector3D trace_ray(const Ray& ray, int depth);
-
             bool saveImage(const std::string& filename) const;
             const Screen& getScreen() const { return screen; }
     };

@@ -10,8 +10,7 @@ file(GLOB_RECURSE RAYTRACER_SOURCES
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Plane/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Sphere/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Cone/.*")
-# temporary
-# list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Lights/.*")
+list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Lights/.*")
 
 
 find_package(PkgConfig REQUIRED)
@@ -36,3 +35,4 @@ add_subdirectory(Primitives/Plane)
 add_subdirectory(Primitives/Sphere)
 add_subdirectory(Primitives/Cone)
 add_subdirectory(Lights/PointLight)
+add_subdirectory(Lights/DirectionalLight)

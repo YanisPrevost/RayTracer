@@ -11,8 +11,9 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include "../Parsing/Classes_infos.hpp"
+// #include "../Parsing/Classes_infos.hpp"
 #include "../Builder/RayTracer.hpp"
+#include "../Camera/Camera.hpp"
 
 namespace RayTracer {
 
@@ -33,7 +34,7 @@ namespace RayTracer {
             std::thread displayThread;
 
         public:
-            PpmViewer(const std::string& ppmFile = "", const Cam_info& camInfo = Cam_info());
+            PpmViewer(const std::string& ppmFile, int width, int height);
             ~PpmViewer();
 
             bool loadPpmFile(const std::string& filePath);

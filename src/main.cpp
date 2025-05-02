@@ -28,25 +28,30 @@ int main(int argc, char *argv[])
     RayTracer::Parsing_cfg parser(configFile);
     parser.parse();
 
-    const RayTracer::Cam_info& camInfo = parser.getCamInfo();
-    RayTracer::RayTracer raytracer(camInfo.getWidth(), camInfo.getHeight());
+    // const RayTracer::Cam_info& camInfo = parser.getCamInfo();
+    RayTracer::ArgumentMap &cameraInfo = parser.getCamInfo();
+    auto &resolution = cameraInfo["resolution"].as<RayTracer::ArgumentMap>();
+    int width = resolution["width"].as<int>();
+    int height = resolution["height"].as<int>();
+    RayTracer::RayTracer raytracer(width, height);
     raytracer.loadPrimitiveLibrary();
-
+    raytracer.loadLightLibrary();
+    auto &position = cameraInfo["position"].as<RayTracer::ArgumentMap>();
+    Math::Point3D pos = Math::Point3D(position["x"].as<int>(), position["y"].as<int>(), position["z"].as<int>());
     RayTracer::Camera camera(
-        camInfo.getPosition(),
+        pos,
         Math::Vector3D(0, 0, -1),
         Math::Vector3D(0, 1, 0),
-        camInfo.getFov()
+        cameraInfo["fieldOfView"].as<double>()
     );
     raytracer.setCamera(camera);
 
     raytracer.BuildScene(parser);
 
     std::cout << "Lancement du rendu..." << std::endl;
-    RayTracer::PpmViewer viewer("", parser.getCamInfo());
+    RayTracer::PpmViewer viewer("", width, height);
     viewer.start_rendering(&raytracer);
     raytracer.start_rendering();
-    int height = parser.getCamInfo().getHeight();
     while (raytracer.isRenderingActive() && raytracer.getCurrentLine() < height) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
