@@ -174,7 +174,7 @@ namespace RayTracer {
         }
         Math::Vector3D color(0, 0, 0);
         for (const auto &light : _lights) {
-            Math::Vector3D lightColor = light->computePointLightingColor(closestHit, *this);
+            Math::Vector3D lightColor = light->computeLightingColor(closestHit, *this);
             color += lightColor;
         }
         if (closestHit.reflection > 0 && depth > 1) {

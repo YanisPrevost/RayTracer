@@ -10,9 +10,7 @@
 namespace RayTracer
 {
 
-    ALights::~ALights()
-    {
-    }
+    ALights::~ALights() {}
 
     Math::Vector3D ALights::getColor() const
     {

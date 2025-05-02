@@ -16,13 +16,11 @@ namespace RayTracer {
 
     class ALights : public ILights {
         public:
-            ALights(const Math::Vector3D& col,
-                double intensity)
-                : _color(col), _intensity(intensity) {}
+            ALights(const Math::Vector3D& col, double intensity) : _color(col), _intensity(intensity) {}
             ~ALights();
             Math::Vector3D getColor() const;
             double getIntensity() const;
-            virtual Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
+            virtual Math::Vector3D computeLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
         protected:
             Math::Vector3D _color;
             double _intensity;

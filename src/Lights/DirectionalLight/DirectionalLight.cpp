@@ -21,14 +21,13 @@ namespace RayTracer
             params["direction"].as<ArgumentMap>()["y"].as<int>(),
             params["direction"].as<ArgumentMap>()["z"].as<int>()
         );
-
     }
 
     DirectionalLight::~DirectionalLight()
     {
     }
 
-    Math::Vector3D DirectionalLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
+    Math::Vector3D DirectionalLight::computeLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
         Math::Vector3D lightDir = _direction;
 

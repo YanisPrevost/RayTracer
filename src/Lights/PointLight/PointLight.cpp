@@ -18,14 +18,14 @@ namespace RayTracer
     {
     }
 
-    Math::Vector3D PointLight::computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const
+    Math::Vector3D PointLight::computeLightingColor(HitInfo &info, const RayTracer &raytracer) const
     {
         Math::Vector3D lightDir = position - info.point;
 
         Ray ray(info.point, lightDir);
         HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
         if (closestHit.hit) {
-            Math::Vector3D shadowColor = info.color *= 0.1;
+            Math::Vector3D shadowColor = info.color * 0.1;
             return shadowColor;
         }
         lightDir = lightDir.normalize();

@@ -20,7 +20,7 @@ namespace RayTracer
             DirectionalLight(const Math::Vector3D& direction, const Math::Vector3D& col, double intensity) : ALights(col, intensity), _direction(direction){};
             DirectionalLight(ArgumentMap params);
             ~DirectionalLight();
-            Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;
+            Math::Vector3D computeLightingColor(HitInfo &info, const RayTracer &raytracer) const;
         private:
             Math::Vector3D _direction;
     };

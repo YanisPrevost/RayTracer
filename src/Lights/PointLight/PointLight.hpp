@@ -16,29 +16,13 @@ namespace RayTracer
 {
     class PointLight : public ALights {
         public:
-            PointLight(
-                const Math::Point3D& pos,
-                const Math::Vector3D& col,
-                double intensity) : ALights(col, intensity) {};
-
-                PointLight(ArgumentMap params) : ALights(
-                params["color"].as<Math::Vector3D>(),
-                1.0), position(Math::Point3D(
-                    params["position"].as<ArgumentMap>()["x"].as<int>(),
-                    params["position"].as<ArgumentMap>()["y"].as<int>(),
-                    params["position"].as<ArgumentMap>()["z"].as<int>())
-                )
-                {
-                    std::cout << "Creating point light:\n";
-                    std::cout << "pos: x = " << params["position"].as<ArgumentMap>()["x"].as<int>()
-                    << " y = " << params["position"].as<ArgumentMap>()["y"].as<int>()
-                    << " z = " << params["position"].as<ArgumentMap>()["z"].as<int>()
-                    << "\ncolor: r = " <<params["color"].as<Math::Vector3D>().X
-                    << " g = " <<params["color"].as<Math::Vector3D>().Y
-                    << " b = " <<params["color"].as<Math::Vector3D>().X << std::endl;
-                }
+            PointLight(const Math::Point3D& pos, const Math::Vector3D& col, double intensity) : ALights(col, intensity) {};
+            PointLight(ArgumentMap params) : ALights(params["color"].as<Math::Vector3D>(), params["intensity"].as<double>()), position(Math::Point3D(
+                params["position"].as<ArgumentMap>()["x"].as<int>(),
+                params["position"].as<ArgumentMap>()["y"].as<int>(),
+                params["position"].as<ArgumentMap>()["z"].as<int>())) {}
             ~PointLight();
-            Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;
+            Math::Vector3D computeLightingColor(HitInfo &info, const RayTracer &raytracer) const;
         private:
             Math::Point3D position;
     };
