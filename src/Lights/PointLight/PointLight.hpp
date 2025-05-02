@@ -29,7 +29,13 @@ namespace RayTracer
                     params["position"].as<ArgumentMap>()["z"].as<int>())
                 )
                 {
-
+                    std::cout << "Creating point light:\n";
+                    std::cout << "pos: x = " << params["position"].as<ArgumentMap>()["x"].as<int>()
+                    << " y = " << params["position"].as<ArgumentMap>()["y"].as<int>()
+                    << " z = " << params["position"].as<ArgumentMap>()["z"].as<int>()
+                    << "\ncolor: r = " <<params["color"].as<Math::Vector3D>().X
+                    << " g = " <<params["color"].as<Math::Vector3D>().Y
+                    << " b = " <<params["color"].as<Math::Vector3D>().X << std::endl;
                 }
             ~PointLight();
             Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const;

@@ -23,6 +23,14 @@ namespace RayTracer
             params["direction"].as<ArgumentMap>()["y"].as<int>(),
             params["direction"].as<ArgumentMap>()["z"].as<int>()
         );
+        std::cout << "Creating directional light:\n";
+        std::cout << "direction: x = " << _direction.X
+        << " y = " << _direction.Y
+        << " z = " << _direction.Z
+        << "\ncolor: r = " <<params["color"].as<Math::Vector3D>().X
+        << " g = " <<params["color"].as<Math::Vector3D>().Y
+        << " b = " <<params["color"].as<Math::Vector3D>().X
+        << "\n intensity: "<< params["intensity"].as<double>() << std::endl;
     }
 
     DirectionalLight::~DirectionalLight()
