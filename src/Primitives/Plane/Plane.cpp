@@ -23,7 +23,7 @@ namespace RayTracer {
             axis = Axis::X;
         if (map["axis"].as<std::string>() == "Y")
             axis = Axis::Y;
-        position = map["position"].as<int>();
+        position = map["position"].as<double>();
         color = map["color"].as<Math::Vector3D>();
         reflection = 0.0;
     }

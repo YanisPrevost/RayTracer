@@ -21,8 +21,8 @@ namespace RayTracer {
     }
     Sphere::Sphere(ArgumentMap params)
     {
-        center = Math::Point3D(params["x"].as<int>(), params["y"].as<int>(), params["z"].as<int>());
-        radius = params["r"].as<int>();
+        center = Math::Point3D(params["x"].as<double>(), params["y"].as<double>(), params["z"].as<double>());
+        radius = params["r"].as<double>();
         color = params["color"].as<Math::Vector3D>();
     }
 

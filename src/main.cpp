@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     raytracer.loadPrimitiveLibrary();
     raytracer.loadLightLibrary();
     auto &position = cameraInfo["position"].as<RayTracer::ArgumentMap>();
-    Math::Point3D pos = Math::Point3D(position["x"].as<int>(), position["y"].as<int>(), position["z"].as<int>());
+    Math::Point3D pos = Math::Point3D(position["x"].as<double>(), position["y"].as<double>(), position["z"].as<double>());
     RayTracer::Camera camera(
         pos,
         Math::Vector3D(0, 0, -1),
