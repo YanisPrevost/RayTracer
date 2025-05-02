@@ -23,7 +23,7 @@ namespace RayTracer {
             Math::Vector3D getColor() const;
             double getIntensity() const;
             virtual Math::Vector3D computePointLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
-        private:
+        protected:
             Math::Vector3D _color;
             double _intensity;
     };
