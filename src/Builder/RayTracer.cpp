@@ -229,17 +229,15 @@ namespace RayTracer {
         }
 
         const std::unordered_map<std::string, std::vector<ArgumentMap>> &lightsInfo = parser.getLightsInfo();
-        ArgumentMap lightArg;
-        ArgumentMap argPosition;
-        argPosition["x"] = (int)0;
-        argPosition["y"] = (int)1;
-        argPosition["z"] = (int)0;
-        lightArg["direction"] = argPosition;
-        lightArg["intensity"] = 1.0;
-        lightArg["color"] = Math::Vector3D(1.0, 1.0, 1.0);
-        this->_lights.push_back(std::make_unique<DirectionalLight>(
-            lightArg
-        ));
+        for (const auto &light : lightsInfo) {
+            std::unique_ptr<DynamicLibrary> &currentLight = getCurrentLightLibrary(light.first, "getLightName");
+
+            auto constructor = currentLight->getConstructor<ILights, ArgumentMap>("createLight");
+
+            for (auto params : light.second) {
+                _lights.push_back(constructor(params));
+            }
+        }
     }
 
 }

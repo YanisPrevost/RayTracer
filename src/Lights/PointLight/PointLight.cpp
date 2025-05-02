@@ -38,11 +38,11 @@ namespace RayTracer
 }
 
 extern "C" {
-    // const char *getLightName() {
-    //     return "point";
-    // }
-    // std::unique_ptr<RayTracer::ILights> createLight(RayTracer::ArgumentMap params)
-    // {
-    //     return  std::make_unique<RayTracer::PointLight>(params);
-    // }
+    const char *getLightName() {
+        return "point";
+    }
+    std::unique_ptr<RayTracer::ILights> createLight(RayTracer::ArgumentMap params)
+    {
+        return  std::make_unique<RayTracer::PointLight>(params);
+    }
 }
