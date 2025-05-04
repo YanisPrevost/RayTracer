@@ -28,8 +28,7 @@ namespace RayTracer {
 
     Cylinder::Cylinder(ArgumentMap params)
     {
-        ArgumentMap pos = params["position"].as<ArgumentMap>();
-        position = Math::Point3D(pos["x"].as<double>(), pos["y"].as<double>(), pos["z"].as<double>());
+        position = params["position"].as<Math::Point3D>();
         radius = params["radius"].as<double>();
         height = params["height"].as<double>();
         ArgumentMap directionMap = params["direction"].as<ArgumentMap>();
