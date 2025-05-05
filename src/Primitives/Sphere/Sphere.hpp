@@ -18,7 +18,7 @@ namespace RayTracer {
             Math::Point3D center;
             double radius;
             Math::Vector3D color;
-            double reflection;
+            double reflection = -1.0;
 
         public:
             Sphere(const Math::Point3D& center = Math::Point3D(0, 0, 0),

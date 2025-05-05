@@ -20,14 +20,18 @@ namespace RayTracer {
             Triangle();
             Triangle(ArgumentMap params);
             ~Triangle();
-            HitInfo intersect(const Ray& ray) const = 0;
-            std::string getName() const = 0;
-            std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
+            HitInfo intersect(const Ray& ray) const;
+            std::string getName() const { return "Triangle"; }
+            std::unique_ptr<IPrimitive> create(const std::vector<double>& params)
+            {
+                return std::make_unique<Triangle>();
+            }
         protected:
         private:
             Math::Point3D vertex1;
             Math::Point3D vertex2;
             Math::Point3D vertex3;
+            Math::Vector3D _color;
     };
 }
 
