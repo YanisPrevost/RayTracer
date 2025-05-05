@@ -36,6 +36,7 @@ git clone [url-du-depot]
 cd RayTracer
 
 # Construire le projet
+chmod +x build.sh
 ./build.sh
 ```
 
