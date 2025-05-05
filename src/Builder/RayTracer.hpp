@@ -22,10 +22,10 @@
 
 namespace RayTracer {
 
-    class RayTracer {
+    class RayCaster {
         private:
-            Camera camera;
-            Screen screen;
+            Camera _camera;
+            Screen _screen;
             std::vector<std::unique_ptr<IPrimitive>> _primitives;
             std::vector<std::unique_ptr<ILights>> _lights;
             std::map<std::string, std::unique_ptr<DynamicLibrary>> libraryHandles;
@@ -38,10 +38,19 @@ namespace RayTracer {
             std::atomic<bool> renderingActive;
             std::atomic<int> currentLine;
             std::condition_variable renderUpdate;
+            class RayTracerError : public std::exception {
+                public:
+                    RayTracerError(const std::string message) : msg(message) {}
+                    const char* what() const noexcept override {
+                        return msg.c_str();
+                    }
+                private:
+                    std::string msg;
+            };
 
         public:
-            RayTracer(int width = 800, int height = 600);
-            ~RayTracer();
+            RayCaster(Camera camera, Screen screen);
+            ~RayCaster();
 
             void setCamera(const Camera& camera);
             void setResolution(int width, int height);
@@ -60,6 +69,7 @@ namespace RayTracer {
 
             void start_rendering();
             void stopRendering();
+            bool isRaytracingDone() const { return !(renderingActive && getCurrentLine() < _screen.getHeight()); }
             bool isRenderingActive() const { return renderingActive; }
             int getCurrentLine() const { return currentLine; }
             void waitForUpdate(int& lastLine);
@@ -70,7 +80,7 @@ namespace RayTracer {
 
             Math::Vector3D trace_ray(const Ray& ray, int depth);
             bool saveImage(const std::string& filename) const;
-            const Screen& getScreen() const { return screen; }
+            const Screen& getScreen() const { return _screen; }
     };
 
 }

@@ -7,12 +7,26 @@
 
 #include "Camera.hpp"
 #include <cmath>
+#include "../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
     Camera::Camera(const Math::Point3D& position, const Math::Vector3D& direction, const Math::Vector3D& up, double fov, double aspectRatio)
         : position(position), direction(direction.normalize()), up(up.normalize()), fov(fov), aspectRatio(aspectRatio)
     {
+    }
+
+    Camera::Camera(ArgumentMap params)
+    {
+        position = params["position"].as<Math::Point3D>();
+        direction = Math::Vector3D(
+            params["rotation"].as<ArgumentMap>()["x"].as<int>(),
+            params["rotation"].as<ArgumentMap>()["y"].as<int>(),
+            params["rotation"].as<ArgumentMap>()["z"].as<int>()
+        );
+        up = Math::Vector3D(0, 1, 0);
+        fov = params["fieldOfView"].as<double>();
+        aspectRatio = 16.0/9.0;
     }
 
     Ray Camera::generate_ray(double u, double v) const
