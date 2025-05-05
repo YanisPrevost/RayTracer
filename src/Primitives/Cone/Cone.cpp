@@ -26,7 +26,6 @@ namespace RayTracer {
 
     Cone::Cone(ArgumentMap params)
     {
-        // ArgumentMap pos = params["position"].as<ArgumentMap>();
         position = params["position"].as<Math::Point3D>();
         radius = params["radius"].as<double>();
         height = params["height"].as<double>();

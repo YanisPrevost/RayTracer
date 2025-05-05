@@ -99,7 +99,7 @@ namespace RayTracer {
 
     std::string Cylinder::getName() const
     {
-        return "cylinder";
+        return "Cylinder";
     }
 
     std::unique_ptr<IPrimitive> Cylinder::create(const std::vector<double>& params)
