@@ -34,14 +34,13 @@ namespace RayTracer
         Ray ray(info.point, lightDir);
         HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
         if (closestHit.hit) {
-            Math::Vector3D shadowColor = info.color *= 0.1;
+            Math::Vector3D shadowColor(0, 0, 0);
             return shadowColor;
         }
         lightDir = lightDir.normalize();
         double diffuse = std::max(info.normal.dot(lightDir), 0.0);
         diffuse *= _intensity;
-        diffuse = std::max(diffuse, 0.1);
-        Math::Vector3D color =  (info.color * diffuse) * this->_color;
+        Math::Vector3D color =  info.color * this->_color * diffuse;
         return color;
     }
 }

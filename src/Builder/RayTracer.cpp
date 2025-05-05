@@ -170,7 +170,8 @@ namespace RayTracer {
         if (!closestHit.hit) {
             return backgroundColor;
         }
-        Math::Vector3D color(0, 0, 0);
+        float diffusionLight = 0.1;
+        Math::Vector3D color = (closestHit.color * diffusionLight);
         for (const auto &light : _lights) {
             Math::Vector3D lightColor = light->computeLightingColor(closestHit, *this);
             color += lightColor;

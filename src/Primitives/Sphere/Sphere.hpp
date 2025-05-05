@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../../Interfaces/IPrimitive.hpp"
+#include "IPrimitive.hpp"
 #include <memory>
 #include "../../Parsing/ArgumentMap.hpp"
 
