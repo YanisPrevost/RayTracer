@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "../Vectors/Vector.hpp"
-#include "../Points/Points.hpp"
+#include "Vector.hpp"
+#include "Points.hpp"
 #include "../Rectangle3D/Screen.hpp"
-#include "../Interfaces/IPrimitive.hpp"
+#include "IPrimitive.hpp"
 
 namespace RayTracer {
 

@@ -1,5 +1,8 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/
+${CMAKE_SOURCE_DIR}/src/Vectors/
+${CMAKE_SOURCE_DIR}/src/Points/
+${CMAKE_SOURCE_DIR}/src/Interfaces/)
 
 file(GLOB_RECURSE RAYTRACER_SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.cpp

@@ -12,7 +12,6 @@
 #include <cstring>
 #include <thread>
 #include <chrono>
-#include <dlfcn.h>
 #include "Builder/RayTracer.hpp"
 #include "Visualization/PpmViewer.hpp"
 
@@ -35,8 +34,7 @@ int main(int argc, char *argv[])
     RayTracer::RayTracer raytracer(width, height);
     raytracer.loadPrimitiveLibrary();
     raytracer.loadLightLibrary();
-    auto &position = cameraInfo["position"].as<RayTracer::ArgumentMap>();
-    Math::Point3D pos = Math::Point3D(position["x"].as<double>(), position["y"].as<double>(), position["z"].as<double>());
+    Math::Point3D pos = cameraInfo["position"].as<Math::Point3D>();
     auto &rotation = cameraInfo["rotation"].as<RayTracer::ArgumentMap>();
     Math::Vector3D rota = Math::Vector3D(rotation["x"].as<int>(), rotation["y"].as<int>(), rotation["z"].as<int>());
     RayTracer::Camera camera(

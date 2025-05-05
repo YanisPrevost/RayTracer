@@ -6,8 +6,8 @@
 */
 
 #include "Ray.hpp"
-#include "../Interfaces/HitInfo.hpp"
-#include "../Interfaces/IPrimitive.hpp"
+#include "HitInfo.hpp"
+#include "IPrimitive.hpp"
 
 namespace RayTracer
 {

@@ -11,7 +11,6 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
-// #include "../Parsing/Classes_infos.hpp"
 #include "../Builder/RayTracer.hpp"
 #include "../Camera/Camera.hpp"
 

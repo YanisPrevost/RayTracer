@@ -10,7 +10,6 @@
 #include <fstream>
 #include <vector>
 #include <libconfig.h++>
-// #include "Classes_infos.hpp"
 #include "ArgumentMap.hpp"
 
 namespace RayTracer

@@ -22,16 +22,19 @@ namespace RayTracer
     {
         Math::Vector3D lightDir = position - info.point;
 
-        Ray ray(info.point, lightDir);
+        double distance = lightDir.length();
+        lightDir = lightDir.normalize();
+        const double bias = 1e-4;
+        Ray ray(info.point + info.normal * bias, lightDir);
         HitInfo closestHit = ray.find_intersection(raytracer.getPrimitives());
-        if (closestHit.hit) {
-            Math::Vector3D shadowColor = info.color * 0.1;
+        if (closestHit.hit && closestHit.distance < distance) {
+            Math::Vector3D shadowColor(0, 0, 0);
             return shadowColor;
         }
-        lightDir = lightDir.normalize();
         double diffuse = std::max(info.normal.dot(lightDir), 0.0);
         diffuse *= _intensity;
-        diffuse = std::max(diffuse, 0.1);
+        double attenuation = 1.0 / (1.0 + 0.09 * distance + 0.032 * distance * distance);;
+        diffuse *= attenuation;
         Math::Vector3D color =  (info.color * diffuse) * this->_color;
         return color;
     }

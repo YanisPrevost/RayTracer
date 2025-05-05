@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../Vectors/Vector.hpp"
-#include "../Points/Points.hpp"
+#include "Vector.hpp"
+#include "Points.hpp"
 
 namespace RayTracer {
     class HitInfo {

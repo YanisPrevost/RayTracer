@@ -7,8 +7,8 @@
 
 #include "Parsing_cfg.hpp"
 #include "ArgumentMap.hpp"
-#include "../Vectors/Vector.hpp"
-#include "../Points/Points.hpp"
+#include "Vector.hpp"
+#include "Points.hpp"
 
 namespace RayTracer {
 
@@ -24,6 +24,14 @@ namespace RayTracer {
                     info.lookupValue("g", g);
                     info.lookupValue("b", b);
                     map[name] = Math::Vector3D(r / 255.0, g / 255.0, b / 255.0);
+                    continue;
+                }
+                if (name == "position" && info.exists("x") && info.exists("y") && info.exists("z")) {
+                    double x, y, z;
+                    info.lookupValue("x", x);
+                    info.lookupValue("y", y);
+                    info.lookupValue("z", z);
+                    map[name] = Math::Point3D(x, y, z);
                     continue;
                 }
                 map[name] = generateMap(info);
