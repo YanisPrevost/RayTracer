@@ -210,7 +210,7 @@ namespace RayTracer {
 
     extern "C" {
         const char *getPrimitiveName() {
-            return "donut";
+            return "donuts";
         }
         std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap params) {
             return std::make_unique<Donut>(params);
