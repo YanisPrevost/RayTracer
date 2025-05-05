@@ -11,6 +11,7 @@
 #include "Points.hpp"
 #include "../Rectangle3D/Screen.hpp"
 #include "IPrimitive.hpp"
+#include "../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
@@ -28,6 +29,8 @@ class Camera {
             const Math::Vector3D& up = Math::Vector3D(0, 1, 0),
             double fov = 90.0,
             double aspectRatio = 16.0/9.0);
+        
+        Camera(ArgumentMap params);
 
         Ray generate_ray(double u, double v) const;
 

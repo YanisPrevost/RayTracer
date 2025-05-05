@@ -14,6 +14,7 @@
 #include <chrono>
 #include "Builder/RayTracer.hpp"
 #include "Visualization/PpmViewer.hpp"
+#include "../Rectangle3D/Screen.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -21,45 +22,30 @@ int main(int argc, char *argv[])
         std::cerr << "Usage: " << argv[0] << " <config_file.cfg>" << std::endl;
         return 1;
     }
+    try {
+        std::string configFile = argv[1];
+        RayTracer::Parsing_cfg parser(configFile);
 
-    std::string configFile = argv[1];
-    std::cout << "Analyse du fichier de configuration: " << configFile << std::endl;
-    RayTracer::Parsing_cfg parser(configFile);
-    parser.parse();
+        RayTracer::RayTracer raytracer(
+            RayTracer::Camera(parser.getCamInfo()),
+            RayTracer::Screen(parser.getCamInfo()["resolution"].as<RayTracer::ArgumentMap>())
+        );
+        raytracer.BuildScene(parser);
 
-    RayTracer::ArgumentMap &cameraInfo = parser.getCamInfo();
-    auto &resolution = cameraInfo["resolution"].as<RayTracer::ArgumentMap>();
-    int width = resolution["width"].as<int>();
-    int height = resolution["height"].as<int>();
-    RayTracer::RayTracer raytracer(width, height);
-    raytracer.loadPrimitiveLibrary();
-    raytracer.loadLightLibrary();
-    Math::Point3D pos = cameraInfo["position"].as<Math::Point3D>();
-    auto &rotation = cameraInfo["rotation"].as<RayTracer::ArgumentMap>();
-    Math::Vector3D rota = Math::Vector3D(rotation["x"].as<int>(), rotation["y"].as<int>(), rotation["z"].as<int>());
-    RayTracer::Camera camera(
-        pos,
-        rota,
-        Math::Vector3D(0, 1, 0), // Up vector
-        cameraInfo["fieldOfView"].as<double>()
-    );
-    raytracer.setCamera(camera);
-
-    raytracer.BuildScene(parser);
-
-    std::cout << "Lancement du rendu..." << std::endl;
-    RayTracer::PpmViewer viewer("", width, height);
-    viewer.start_rendering(&raytracer);
-    raytracer.start_rendering();
-    while (raytracer.isRenderingActive() && raytracer.getCurrentLine() < height) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    std::string outputFile = "output.ppm";
-    std::cout << "Sauvegarde de l'image dans " << outputFile << std::endl;
-    raytracer.saveImage(outputFile);
-    std::cout << "Rendu terminé !" << std::endl;
-    while (viewer.isDisplayActive()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        RayTracer::PpmViewer viewer("", raytracer, raytracer.getScreen().getWidth(), raytracer.getScreen().getHeight());
+        viewer.start_rendering();
+        raytracer.start_rendering();
+        while (!raytracer.isRaytracingDone()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        std::string outputFile = "output.ppm";
+        raytracer.saveImage(outputFile);
+        while (viewer.isDisplayActive()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
     }
     return 0;
 }

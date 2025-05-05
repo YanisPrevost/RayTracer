@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include "../Vectors/Vector.hpp"
-#include "../Points/Points.hpp"
+#include "Vector.hpp"
+#include "Points.hpp"
 #include <vector>
 #include <string>
+#include "../Parsing/ArgumentMap.hpp"
 
 namespace RayTracer {
 
@@ -21,7 +22,7 @@ namespace RayTracer {
             std::vector<Math::Vector3D> pixels;
         public:
             Screen(int width = 800, int height = 600);
-
+            Screen(ArgumentMap params);
             int getWidth() const { return width; }
             int getHeight() const { return height; }
             Math::Vector3D getPixel(int x, int y) const;

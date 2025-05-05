@@ -17,6 +17,11 @@ namespace RayTracer {
         pixels.resize(width * height, Math::Vector3D(0, 0, 0));
     }
 
+    Screen::Screen(ArgumentMap params) : width(params["width"].as<int>()), height(params["height"].as<int>())
+    {
+        pixels.resize(width * height, Math::Vector3D(0, 0, 0));
+    }
+
     Math::Vector3D Screen::getPixel(int x, int y) const
     {
         if (x < 0 || x >= width || y < 0 || y >= height)

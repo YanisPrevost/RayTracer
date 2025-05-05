@@ -15,10 +15,12 @@
 
 namespace RayTracer {
 
-    RayTracer::RayTracer(int width, int height)
-        : screen(width, height), maxDepth(5), samplesPerPixel(1), backgroundColor(0.2, 0.2, 0.2),
-          renderingActive(false), currentLine(0)
+    RayTracer::RayTracer(Camera camera, Screen screen)
+        : _screen(screen), maxDepth(5), samplesPerPixel(1), backgroundColor(0.2, 0.2, 0.2),
+          renderingActive(false), currentLine(0), _camera(camera)
     {
+        loadPrimitiveLibrary();
+        loadLightLibrary();
     }
 
     RayTracer::~RayTracer()
@@ -31,12 +33,12 @@ namespace RayTracer {
 
     void RayTracer::setCamera(const Camera& camera)
     {
-        this->camera = camera;
+        this->_camera = camera;
     }
 
     void RayTracer::setResolution(int width, int height)
     {
-        screen = Screen(width, height);
+        _screen = Screen(width, height);
     }
 
     bool RayTracer::loadPrimitiveLibrary()
@@ -121,22 +123,22 @@ namespace RayTracer {
 
     void RayTracer::renderLines(int startLine, int endLine)
     {
-        int width = screen.getWidth();
-        int height = screen.getHeight();
+        int width = _screen.getWidth();
+        int height = _screen.getHeight();
 
         for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
             for (int x = 0; x < width && renderingActive.load(); x++) {
                 Math::Vector3D color(0, 0, 0);
                 for (int s = 0; s < samplesPerPixel; s++) {
                     double u, v;
-                    screen.getUV(x, y, u, v);
+                    _screen.getUV(x, y, u, v);
                     if (samplesPerPixel > 1) {
                         double du = 1.0 / width;
                         double dv = 1.0 / height;
                         u += du * (rand() / static_cast<double>(RAND_MAX) - 0.5);
                         v += dv * (rand() / static_cast<double>(RAND_MAX) - 0.5);
                     }
-                    Ray ray = camera.generate_ray(u, v);
+                    Ray ray = _camera.generate_ray(u, v);
                     color += trace_ray(ray, maxDepth);
                 }
                 if (samplesPerPixel > 1) {
@@ -147,7 +149,7 @@ namespace RayTracer {
                     sqrt(color.Y),
                     sqrt(color.Z)
                 );
-                screen.setPixel(x, y, color);
+                _screen.setPixel(x, y, color);
             }
             currentLine.store(y + 1);
         }
@@ -156,7 +158,7 @@ namespace RayTracer {
 
     void RayTracer::renderLoop()
     {
-        int height = screen.getHeight();
+        int height = _screen.getHeight();
         renderLines(0, height);
         renderUpdate.notify_all();
     }
@@ -188,7 +190,9 @@ namespace RayTracer {
 
     bool RayTracer::saveImage(const std::string& filename) const
     {
-        return screen.saveToPPM(filename);
+        std::cout << "Saving image in " << filename << std::endl;
+        return _screen.saveToPPM(filename);
+        std::cout << "Rendering done !" << std::endl;
     }
 
     std::unique_ptr<DynamicLibrary> &RayTracer::getCurrentLibrary(std::string libName, std::string functionName)
@@ -199,7 +203,7 @@ namespace RayTracer {
                 return library;
             }
         }
-        throw std::runtime_error("Couldn't find primitive" + libName);
+        throw (RayTracerError("Couldn't find primitive" + libName));
     }
 
     std::unique_ptr<DynamicLibrary> &RayTracer::getCurrentLightLibrary(std::string libName, std::string functionName)
@@ -210,7 +214,7 @@ namespace RayTracer {
                 return library;
             }
         }
-        throw std::runtime_error("Couldn't find light " + libName);
+        throw RayTracerError("Couldn't find light " + libName);
     }
 
     void RayTracer::BuildScene(const Parsing_cfg& parser)

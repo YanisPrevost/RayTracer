@@ -23,7 +23,9 @@ namespace RayTracer
             std::unordered_map<std::string, std::vector<ArgumentMap>> _lightsInfo;
 
         public:
-            Parsing_cfg(const std::string& filename) : _filename(filename) {}
+            Parsing_cfg(const std::string& filename) : _filename(filename) {
+                parse();
+            }
             ~Parsing_cfg() = default;
             ArgumentMap generateMap(libconfig::Setting &settings);
             void parse();
@@ -33,7 +35,7 @@ namespace RayTracer
             ArgumentMap& getCamInfo() { return _cameraInfo; }
             const std::unordered_map<std::string, std::vector<ArgumentMap>> &getPrimitiveInfo() const {return _primitivesInfo;}
             const std::unordered_map<std::string, std::vector<ArgumentMap>> &getLightsInfo() const {return _lightsInfo;}
-            class ParseError : std::exception {
+            class ParseError : public std::exception {
                 public:
                 ParseError(std::string errorMessage) : _errorMessage(errorMessage){}
                 const char* what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW {

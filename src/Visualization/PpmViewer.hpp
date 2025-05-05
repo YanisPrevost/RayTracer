@@ -27,19 +27,19 @@ namespace RayTracer {
             int windowHeight;
 
             std::mutex displayMutex;
-            RayTracer* raytracer;
+            RayTracer &_raytracer;
             int lastRenderedLine;
             std::atomic<bool> displayActive;
             std::thread displayThread;
 
         public:
-            PpmViewer(const std::string& ppmFile, int width, int height);
+            PpmViewer(const std::string& ppmFile, RayTracer &raytracer, int width, int height);
             ~PpmViewer();
 
             bool loadPpmFile(const std::string& filePath);
             bool parsePpm();
 
-            void start_rendering(RayTracer* raytracer);
+            void start_rendering();
             void stopDisplay();
             void displayLoop();
             void updateTexture();
