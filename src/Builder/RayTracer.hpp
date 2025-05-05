@@ -22,7 +22,7 @@
 
 namespace RayTracer {
 
-    class RayTracer {
+    class RayCaster {
         private:
             Camera _camera;
             Screen _screen;
@@ -49,8 +49,8 @@ namespace RayTracer {
             };
 
         public:
-            RayTracer(Camera camera, Screen screen);
-            ~RayTracer();
+            RayCaster(Camera camera, Screen screen);
+            ~RayCaster();
 
             void setCamera(const Camera& camera);
             void setResolution(int width, int height);
@@ -81,7 +81,6 @@ namespace RayTracer {
             Math::Vector3D trace_ray(const Ray& ray, int depth);
             bool saveImage(const std::string& filename) const;
             const Screen& getScreen() const { return _screen; }
-            
     };
 
 }

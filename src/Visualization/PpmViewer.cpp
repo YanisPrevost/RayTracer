@@ -6,8 +6,8 @@
 
 namespace RayTracer {
 
-    PpmViewer::PpmViewer(const std::string& ppmFile, RayTracer &raytracer, int width, int height)
-        : windowWidth(width), windowHeight(height), _raytracer(raytracer), lastRenderedLine(0), displayActive(false)
+    PpmViewer::PpmViewer(const std::string& ppmFile, RayCaster &raytracer, int width, int height)
+        : windowWidth(width), windowHeight(height), _raycaster(raytracer), lastRenderedLine(0), displayActive(false)
     {
         if (!ppmFile.empty()) {
             loadPpmFile(ppmFile);
@@ -121,10 +121,10 @@ namespace RayTracer {
             return;
         }
 
-        const Screen& screen = _raytracer.getScreen();
+        const Screen& screen = _raycaster.getScreen();
         int width = screen.getWidth();
         int height = screen.getHeight();
-        int currentLine = _raytracer.getCurrentLine();
+        int currentLine = _raycaster.getCurrentLine();
 
         {
             std::lock_guard<std::mutex> lock(displayMutex);

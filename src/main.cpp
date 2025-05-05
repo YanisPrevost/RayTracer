@@ -26,20 +26,20 @@ int main(int argc, char *argv[])
         std::string configFile = argv[1];
         RayTracer::Parsing_cfg parser(configFile);
 
-        RayTracer::RayTracer raytracer(
+        RayTracer::RayCaster raycaster(
             RayTracer::Camera(parser.getCamInfo()),
             RayTracer::Screen(parser.getCamInfo()["resolution"].as<RayTracer::ArgumentMap>())
         );
-        raytracer.BuildScene(parser);
+        raycaster.BuildScene(parser);
 
-        RayTracer::PpmViewer viewer("", raytracer, raytracer.getScreen().getWidth(), raytracer.getScreen().getHeight());
+        RayTracer::PpmViewer viewer("", raycaster, raycaster.getScreen().getWidth(), raycaster.getScreen().getHeight());
         viewer.start_rendering();
-        raytracer.start_rendering();
-        while (!raytracer.isRaytracingDone()) {
+        raycaster.start_rendering();
+        while (!raycaster.isRaytracingDone()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         std::string outputFile = "output.ppm";
-        raytracer.saveImage(outputFile);
+        raycaster.saveImage(outputFile);
         while (viewer.isDisplayActive()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }

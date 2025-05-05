@@ -15,7 +15,7 @@
 
 namespace RayTracer {
 
-    RayTracer::RayTracer(Camera camera, Screen screen)
+    RayCaster::RayCaster(Camera camera, Screen screen)
         : _screen(screen), maxDepth(5), samplesPerPixel(1), backgroundColor(0.2, 0.2, 0.2),
           renderingActive(false), currentLine(0), _camera(camera)
     {
@@ -23,7 +23,7 @@ namespace RayTracer {
         loadLightLibrary();
     }
 
-    RayTracer::~RayTracer()
+    RayCaster::~RayCaster()
     {
         stopRendering();
         clearPrimitives();
@@ -31,17 +31,17 @@ namespace RayTracer {
         libraryHandles.clear();
     }
 
-    void RayTracer::setCamera(const Camera& camera)
+    void RayCaster::setCamera(const Camera& camera)
     {
         this->_camera = camera;
     }
 
-    void RayTracer::setResolution(int width, int height)
+    void RayCaster::setResolution(int width, int height)
     {
         _screen = Screen(width, height);
     }
 
-    bool RayTracer::loadPrimitiveLibrary()
+    bool RayCaster::loadPrimitiveLibrary()
     {
         std::filesystem::path libPath = "Plugins/Primitives/";
 
@@ -62,7 +62,7 @@ namespace RayTracer {
         return true;
     }
 
-    void RayTracer::loadLightLibrary()
+    void RayCaster::loadLightLibrary()
     {
         std::filesystem::path libPath = "Plugins/Lights/";
 
@@ -82,28 +82,28 @@ namespace RayTracer {
         }
     }
 
-    void RayTracer::clearPrimitives()
+    void RayCaster::clearPrimitives()
     {
         _primitives.clear();
     }
 
-    void RayTracer::clearLights()
+    void RayCaster::clearLights()
     {
         _lights.clear();
     }
 
-    void RayTracer::start_rendering()
+    void RayCaster::start_rendering()
     {
         if (renderingActive.load()) {
             return;
         }
         currentLine.store(0);
         renderingActive.store(true);
-        std::thread renderThread(&RayTracer::renderLoop, this);
+        std::thread renderThread(&RayCaster::renderLoop, this);
         renderThread.detach();
     }
 
-    void RayTracer::stopRendering()
+    void RayCaster::stopRendering()
     {
         if (!renderingActive.load())
             return;
@@ -112,7 +112,7 @@ namespace RayTracer {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    void RayTracer::waitForUpdate(int& lastLine)
+    void RayCaster::waitForUpdate(int& lastLine)
     {
         std::unique_lock<std::mutex> lock(renderMutex);
         renderUpdate.wait_for(lock, std::chrono::milliseconds(100), [&]() {
@@ -121,7 +121,7 @@ namespace RayTracer {
         lastLine = currentLine;
     }
 
-    void RayTracer::renderLines(int startLine, int endLine)
+    void RayCaster::renderLines(int startLine, int endLine)
     {
         int width = _screen.getWidth();
         int height = _screen.getHeight();
@@ -156,14 +156,14 @@ namespace RayTracer {
         renderUpdate.notify_all();
     }
 
-    void RayTracer::renderLoop()
+    void RayCaster::renderLoop()
     {
         int height = _screen.getHeight();
         renderLines(0, height);
         renderUpdate.notify_all();
     }
 
-    Math::Vector3D RayTracer::trace_ray(const Ray& ray, int depth)
+    Math::Vector3D RayCaster::trace_ray(const Ray& ray, int depth)
     {
         if (depth <= 0) {
             return backgroundColor;
@@ -188,14 +188,14 @@ namespace RayTracer {
         return color;
     }
 
-    bool RayTracer::saveImage(const std::string& filename) const
+    bool RayCaster::saveImage(const std::string& filename) const
     {
         std::cout << "Saving image in " << filename << std::endl;
         return _screen.saveToPPM(filename);
         std::cout << "Rendering done !" << std::endl;
     }
 
-    std::unique_ptr<DynamicLibrary> &RayTracer::getCurrentLibrary(std::string libName, std::string functionName)
+    std::unique_ptr<DynamicLibrary> &RayCaster::getCurrentLibrary(std::string libName, std::string functionName)
     {
         for (auto &lib : libraryHandles) {
             if (libName == lib.second->getName(functionName)) {
@@ -206,7 +206,7 @@ namespace RayTracer {
         throw (RayTracerError("Couldn't find primitive" + libName));
     }
 
-    std::unique_ptr<DynamicLibrary> &RayTracer::getCurrentLightLibrary(std::string libName, std::string functionName)
+    std::unique_ptr<DynamicLibrary> &RayCaster::getCurrentLightLibrary(std::string libName, std::string functionName)
     {
         for (auto &lib : lightLibraries) {
             if (libName == lib.second->getName(functionName)) {
@@ -217,7 +217,7 @@ namespace RayTracer {
         throw RayTracerError("Couldn't find light " + libName);
     }
 
-    void RayTracer::BuildScene(const Parsing_cfg& parser)
+    void RayCaster::BuildScene(const Parsing_cfg& parser)
     {
         _primitives.clear();
         const std::unordered_map<std::string, std::vector<ArgumentMap>> &primitivesInfo = parser.getPrimitiveInfo();

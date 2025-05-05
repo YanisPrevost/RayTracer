@@ -11,7 +11,7 @@
 #include "Points.hpp"
 #include "IPrimitive.hpp"
 namespace RayTracer {
-    class RayTracer;
+    class RayCaster;
     class HitInfo;
     class ILights {
         private:
@@ -22,7 +22,7 @@ namespace RayTracer {
 
             virtual Math::Vector3D getColor() const = 0;
             virtual double getIntensity() const = 0;
-            virtual Math::Vector3D computeLightingColor(HitInfo &info, const RayTracer &raytracer) const = 0;
+            virtual Math::Vector3D computeLightingColor(HitInfo &info, const RayCaster &raytracer) const = 0;
     };
 
 }

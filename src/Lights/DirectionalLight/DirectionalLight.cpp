@@ -27,7 +27,7 @@ namespace RayTracer
     {
     }
 
-    Math::Vector3D DirectionalLight::computeLightingColor(HitInfo &info, const RayTracer &raytracer) const
+    Math::Vector3D DirectionalLight::computeLightingColor(HitInfo &info, const RayCaster &raytracer) const
     {
         Math::Vector3D lightDir = _direction;
 

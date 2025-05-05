@@ -20,7 +20,7 @@ namespace RayTracer
             PointLight(ArgumentMap params) : ALights(params["color"].as<Math::Vector3D>(), params["intensity"].as<double>()), position(Math::Point3D(
                 params["position"].as<Math::Point3D>())) {}
             ~PointLight();
-            Math::Vector3D computeLightingColor(HitInfo &info, const RayTracer &raytracer) const;
+            Math::Vector3D computeLightingColor(HitInfo &info, const RayCaster &raytracer) const;
         private:
             Math::Point3D position;
     };
