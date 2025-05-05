@@ -64,17 +64,20 @@ camera = {
 };
 
 primitives = {
-    spheres = ( 
+    spheres = (
         { x = 0.0; y = 0.0; z = 0.0; r = 1.0; color = { r = 255; g = 0; b = 0; }; }
     );
     # Autres primitives...
 };
 
 lights = {
-    point = ( 
-        { x = 5.0; y = 5.0; z = 5.0; intensity = 0.8; }
+    point = (
+        {
+            position = { x = 0.0; y = 30.0; z = 40.0; };
+            intensity = 0.7;
+            color = { r = 255; g = 255; b = 255; };
+        }
     );
-    # Autres sources de lumière...
 };
 ```
 
