@@ -27,6 +27,7 @@ namespace RayTracer {
             int getHeight() const { return height; }
             Math::Vector3D getPixel(int x, int y) const;
             void setPixel(int x, int y, const Math::Vector3D& color);
+            void setPixel(int n, const Math::Vector3D& color);
             void getUV(int x, int y, double& u, double& v) const;
             bool saveToPPM(const std::string& filename) const;
         };

@@ -35,6 +35,10 @@ namespace RayTracer {
             Math::Vector3D backgroundColor;
             // Trgead
             std::mutex renderMutex;
+            std::mutex screenMutex;
+            std::mutex currentLineMutex;
+            std::atomic<int> lineToRender = 0;
+            std::condition_variable currentLineCV;
             std::atomic<bool> renderingActive;
             std::atomic<int> currentLine;
             std::condition_variable renderUpdate;
@@ -60,9 +64,8 @@ namespace RayTracer {
 
             bool loadPrimitiveLibrary();
             void loadLightLibrary();
-            void clearPrimitives();
-            void clearLights();
             Math::Vector3D renderPixel(int x, int y);
+            void renderLine(int y);
 
             std::unique_ptr<DynamicLibrary> &getCurrentLibrary(std::string libName, std::string functionName);
             std::unique_ptr<DynamicLibrary> &getCurrentLightLibrary(std::string libName, std::string functionName);
@@ -74,7 +77,7 @@ namespace RayTracer {
             bool isRenderingActive() const { return renderingActive; }
             int getCurrentLine() const { return currentLine; }
             void waitForUpdate(int& lastLine);
-            void renderLines(int startLine, int endLine);
+            void renderLines();
             void renderLoop();
 
             const std::vector<std::unique_ptr<IPrimitive>>& getPrimitives() const {return _primitives; }

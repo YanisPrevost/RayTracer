@@ -26,8 +26,8 @@ namespace RayTracer {
     RayCaster::~RayCaster()
     {
         stopRendering();
-        clearPrimitives();
-        clearLights();
+        _primitives.clear();
+        _lights.clear();
         libraryHandles.clear();
     }
 
@@ -80,16 +80,6 @@ namespace RayTracer {
                 lightLibraries[typeName] = std::make_unique<DynamicLibrary>(libPath / libName);
             }
         }
-    }
-
-    void RayCaster::clearPrimitives()
-    {
-        _primitives.clear();
-    }
-
-    void RayCaster::clearLights()
-    {
-        _lights.clear();
     }
 
     void RayCaster::start_rendering()
@@ -147,25 +137,64 @@ namespace RayTracer {
         return color;
     }
 
-    void RayCaster::renderLines(int startLine, int endLine)
+    void RayCaster::renderLine(int y)
     {
         int width = _screen.getWidth();
-        int height = _screen.getHeight();
-
-        for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
-            for (int x = 0; x < width && renderingActive.load(); x++) {
-                Math::Vector3D color = renderPixel(x, y);
-                _screen.setPixel(x, y, color);
+        std::vector<Math::Vector3D> lineColors(width);
+        for (int x = 0; x < width && renderingActive.load(); x++) {
+            Math::Vector3D color = renderPixel(x, y);
+            lineColors[x] = color;
+        }
+        {
+            std::lock_guard<std::mutex> lock(screenMutex);
+            for (int x = 0; x < width; x++) {
+                _screen.setPixel(x, y, lineColors[x]);
             }
+        }
+        {
+            std::unique_lock<std::mutex> lock(currentLineMutex);
+            currentLineCV.wait(lock, [&]() {
+                return currentLine == y;
+            });
             currentLine.store(y + 1);
         }
-        renderUpdate.notify_all();
+        currentLineCV.notify_all();
     }
+
+    void RayCaster::renderLines()
+    {
+        int y;
+        int height = _screen.getHeight();
+    
+        while ((y = lineToRender.fetch_add(1)) < height) {
+            renderLine(y);
+        }
+    }
+
+    // void RayCaster::renderLines(int startLine, int endLine)
+    // {
+    //     int height = _screen.getHeight();
+
+    //     for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
+    //         renderLine(y);
+    //     }
+    //     renderUpdate.notify_all();
+    // }
 
     void RayCaster::renderLoop()
     {
-        int height = _screen.getHeight();
-        renderLines(0, height);
+        lineToRender.store(0);
+
+        std::vector<std::thread> threads;
+        int numThreads = std::thread::hardware_concurrency() - 2;
+
+        for (int i = 0; i < numThreads; ++i) {
+            threads.emplace_back(&RayCaster::renderLines, this);
+        }
+
+        for (auto& t : threads) {
+            t.join();
+        }
         renderUpdate.notify_all();
     }
 

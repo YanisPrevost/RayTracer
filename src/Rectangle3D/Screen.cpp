@@ -39,6 +39,16 @@ namespace RayTracer {
         pixels[y * width + x] = Math::Vector3D(r, g, b);
     }
 
+    void Screen::setPixel(int n, const Math::Vector3D& color)
+    {
+        if (n < 0 || n >= height * width)
+            return;
+        double r = std::max(0.0, std::min(1.0, color.X));
+        double g = std::max(0.0, std::min(1.0, color.Y));
+        double b = std::max(0.0, std::min(1.0, color.Z));
+        pixels[n] = Math::Vector3D(r, g, b);
+    }
+
     void Screen::getUV(int x, int y, double& u, double& v) const
     {
         u = static_cast<double>(x) / (width - 1);
