@@ -60,51 +60,24 @@ namespace RayTracer {
         }
         std::string buffer;
         while (std::getline(file, buffer)) {
-            if (buffer[0] == 'g')
-                break;
-        }
-        while (std::getline(file, buffer)) {
-            if (buffer[0] == 'v')
-                break;
-        }
-        char c = 'v';
-        double x, y, z;
-        std::stringstream bufferStream = std::stringstream(buffer);
-        bufferStream >> c >> x >> y >> z;
-        vertices.push_back(Math::Point3D(x, y, z));
-        while (std::getline(file, buffer)) {
-            bufferStream = std::stringstream(buffer);
-            bufferStream >> c;
-            if (c == 'v') {
+            if (buffer[0] == 'v') {
+                double x, y, z;
+                std::stringstream bufferStream(buffer.substr(1));
                 bufferStream >> x >> y >> z;
                 vertices.push_back(Math::Point3D(x, y, z));
-            } else {
-                break;
             }
-        }
-        while (std::getline(file, buffer)) {
-            if (buffer[0] == 'f')
-                break;
-        }
-        int v1, v2, v3;
-        bufferStream = std::stringstream(buffer);
-        bufferStream >> c >> v1 >> v2 >> v3;
-        _sides.push_back(std::vector<int>({v1, v2, v3}));
-        while (std::getline(file, buffer)) {
-            bufferStream = std::stringstream(buffer);
-            bufferStream >> c;
-            if (c == 'f') {
-                bufferStream >> v1 >> v2 >> v3;
+            if (buffer[0] == 'f') {
+                int v1, v2, v3;
+                std::stringstream bufferStream = std::stringstream(buffer.substr(1));
+                bufferStream  >> v1 >> v2 >> v3;
                 _sides.push_back(std::vector<int>({v1, v2, v3}));
-            } else {
-                break;
             }
         }
         file.close();
         for (auto &i : vertices)
-            std::cout << i.X << ' ' << i.Y << ' ' << i.Z << std::endl;
+            std::cout << "point: X:" << i.X << " Y:" << i.Y << " Z:" << i.Z << std::endl;
         for (auto &i : _sides)
-        std::cout << i[0] << ' ' << i[1] << ' ' << i[2] << std::endl;
+            std::cout << "side: 1:" << i[0] << " 2: " << i[1] << " 3:" << i[2] << std::endl;
     }
 
     HitInfo ObjFile::intersect(const Ray& ray) const
