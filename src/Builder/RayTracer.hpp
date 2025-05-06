@@ -62,6 +62,7 @@ namespace RayTracer {
             void loadLightLibrary();
             void clearPrimitives();
             void clearLights();
+            Math::Vector3D renderPixel(int x, int y);
 
             std::unique_ptr<DynamicLibrary> &getCurrentLibrary(std::string libName, std::string functionName);
             std::unique_ptr<DynamicLibrary> &getCurrentLightLibrary(std::string libName, std::string functionName);

@@ -121,6 +121,32 @@ namespace RayTracer {
         lastLine = currentLine;
     }
 
+    Math::Vector3D RayCaster::renderPixel(int x, int y)
+    {
+        Math::Vector3D color(0, 0, 0);
+        double u, v;
+        _screen.getUV(x, y, u, v);
+        for (int s = 0; s < samplesPerPixel; s++) {
+            if (samplesPerPixel > 1) {
+                double du = 1.0 / _screen.getWidth();
+                double dv = 1.0 / _screen.getHeight();
+                u += du * (rand() / static_cast<double>(RAND_MAX) - 0.5);
+                v += dv * (rand() / static_cast<double>(RAND_MAX) - 0.5);
+            }
+            Ray ray = _camera.generate_ray(u, v);
+            color += trace_ray(ray, maxDepth);
+        }
+        if (samplesPerPixel > 1) {
+            color = color / static_cast<double>(samplesPerPixel);
+        }
+        color = Math::Vector3D(
+            sqrt(color.X),
+            sqrt(color.Y),
+            sqrt(color.Z)
+        );
+        return color;
+    }
+
     void RayCaster::renderLines(int startLine, int endLine)
     {
         int width = _screen.getWidth();
@@ -128,27 +154,7 @@ namespace RayTracer {
 
         for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
             for (int x = 0; x < width && renderingActive.load(); x++) {
-                Math::Vector3D color(0, 0, 0);
-                for (int s = 0; s < samplesPerPixel; s++) {
-                    double u, v;
-                    _screen.getUV(x, y, u, v);
-                    if (samplesPerPixel > 1) {
-                        double du = 1.0 / width;
-                        double dv = 1.0 / height;
-                        u += du * (rand() / static_cast<double>(RAND_MAX) - 0.5);
-                        v += dv * (rand() / static_cast<double>(RAND_MAX) - 0.5);
-                    }
-                    Ray ray = _camera.generate_ray(u, v);
-                    color += trace_ray(ray, maxDepth);
-                }
-                if (samplesPerPixel > 1) {
-                    color = color / static_cast<double>(samplesPerPixel);
-                }
-                color = Math::Vector3D(
-                    sqrt(color.X),
-                    sqrt(color.Y),
-                    sqrt(color.Z)
-                );
+                Math::Vector3D color = renderPixel(x, y);
                 _screen.setPixel(x, y, color);
             }
             currentLine.store(y + 1);
