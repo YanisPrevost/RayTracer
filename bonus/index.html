@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>RayTracer - Générateur de Configuration</h1>
-        </header>
+    <header>
+        <h1>RayTracer - Générateur de Configuration</h1>
+    </header>
 
-        <div class="main-content">
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="main-content">
             <div class="sidebar">
                 <button class="section-btn" data-section="camera">Caméra</button>
                 <button class="section-btn" data-section="primitives">Primitives</button>
@@ -63,11 +64,9 @@
                             <option value="cone">Cône</option>
                             <option value="triangle">Triangle</option>
                             <option value="donut">Donut</option>
-                            <option value="objfile">Fichier OBJ</option>
                         </select>
                     </div>
                     <div id="primitives-list">
-                        <!-- Les primitives seront ajoutées ici dynamiquement -->
                     </div>
                 </div>
 
@@ -81,26 +80,22 @@
                         </select>
                     </div>
                     <div id="lights-list">
-                        <!-- Les lumières seront ajoutées ici dynamiquement -->
                     </div>
                 </div>
             </div>
         </div>
 
+        </div>
         <div class="preview-panel">
             <h2>Aperçu de la configuration</h2>
+            <div class="preview-header">
+                <button id="copy-config" class="copy-btn" title="Copier la configuration">
+                    <span class="copy-icon">📋</span>
+                </button>
+            </div>
             <pre id="config-preview"></pre>
         </div>
-
-        <div class="generation-panel">
-            <div class="form-group">
-                <label for="config-name">Nom du fichier de configuration:</label>
-                <input type="text" id="config-name" value="scene">
-                <span>.cfg</span>
-            </div>
-            <button id="generate-config">Générer la configuration</button>
-            <div id="generation-message"></div>
-        </div>
+    </div>
     </div>
 
     <script src="script.js"></script>

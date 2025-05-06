@@ -5,7 +5,7 @@ let lights = [];
 document.addEventListener('DOMContentLoaded', () => {
     initializeSectionButtons();
     initializeAddButtons();
-    initializeGenerateButton();
+    initializeCopyButton();
     updateConfigPreview();
 });
 
@@ -509,7 +509,34 @@ function updateConfigPreview() {
     configPreview.textContent = configText;
 }
 
+function initializeCopyButton() {
+    const copyConfigButton = document.getElementById('copy-config');
+    if (!copyConfigButton) return;
+    
+    copyConfigButton.addEventListener('click', () => {
+        const configContent = document.getElementById('config-preview').textContent;
+        
+        // Copier le texte dans le presse-papiers
+        navigator.clipboard.writeText(configContent).then(() => {
+            // Effet visuel pour indiquer que la copie a réussi
+            const copyBtn = document.querySelector('.copy-btn');
+            copyBtn.classList.add('copy-success');
+            copyBtn.querySelector('.copy-icon').textContent = '✓';
+            
+            // Remettre l'icône d'origine après un délai
+            setTimeout(() => {
+                copyBtn.classList.remove('copy-success');
+                copyBtn.querySelector('.copy-icon').textContent = '📋';
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur lors de la copie: ', err);
+            alert('Impossible de copier le texte. Votre navigateur ne semble pas prendre en charge cette fonctionnalité.');
+        });
+    });
+}
+
 function generateConfig() {
+    // Cette fonction n'est plus utilisée mais conservée pour référence
     const configPreview = document.getElementById('config-preview').textContent;
     const configName = document.getElementById('config-name').value;
     if (!configName) {
