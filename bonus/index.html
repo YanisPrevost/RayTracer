@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RayTracer Configuration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RayTracer - Générateur de Configuration</h1>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <button class="section-btn" data-section="camera">Caméra</button>
+                <button class="section-btn" data-section="primitives">Primitives</button>
+                <button class="section-btn" data-section="lights">Lumières</button>
+            </div>
+
+            <div class="editor">
+                <div class="section" id="camera-section">
+                    <h2>Configuration de la Caméra</h2>
+                    <div class="form-group">
+                        <label for="camera-position">Position (x y z):</label>
+                        <div class="vector-inputs">
+                            <input type="number" id="camera-position-x" step="0.1" value="0">
+                            <input type="number" id="camera-position-y" step="0.1" value="0">
+                            <input type="number" id="camera-position-z" step="0.1" value="-1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-rotation">Rotation (x y z):</label>
+                        <div class="vector-inputs">
+                            <input type="number" id="camera-rotation-x" step="0.1" value="0">
+                            <input type="number" id="camera-rotation-y" step="0.1" value="0">
+                            <input type="number" id="camera-rotation-z" step="0.1" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-fov">Champ de vision:</label>
+                        <input type="number" id="camera-fov" min="1" max="179" value="90">
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-resolution">Résolution (largeur x hauteur):</label>
+                        <div class="resolution-inputs">
+                            <input type="number" id="camera-resolution-width" min="1" value="800">
+                            <span>x</span>
+                            <input type="number" id="camera-resolution-height" min="1" value="600">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section hidden" id="primitives-section">
+                    <h2>Configuration des Primitives</h2>
+                    <div class="primitive-controls">
+                        <button id="add-primitive">Ajouter une primitive</button>
+                        <select id="primitive-type">
+                            <option value="sphere">Sphère</option>
+                            <option value="plane">Plan</option>
+                            <option value="cylinder">Cylindre</option>
+                            <option value="cone">Cône</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="donut">Donut</option>
+                            <option value="objfile">Fichier OBJ</option>
+                        </select>
+                    </div>
+                    <div id="primitives-list">
+                        <!-- Les primitives seront ajoutées ici dynamiquement -->
+                    </div>
+                </div>
+
+                <div class="section hidden" id="lights-section">
+                    <h2>Configuration des Lumières</h2>
+                    <div class="light-controls">
+                        <button id="add-light">Ajouter une lumière</button>
+                        <select id="light-type">
+                            <option value="point">Point</option>
+                            <option value="directional">Directionnelle</option>
+                        </select>
+                    </div>
+                    <div id="lights-list">
+                        <!-- Les lumières seront ajoutées ici dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <h2>Aperçu de la configuration</h2>
+            <pre id="config-preview"></pre>
+        </div>
+
+        <div class="generation-panel">
+            <div class="form-group">
+                <label for="config-name">Nom du fichier de configuration:</label>
+                <input type="text" id="config-name" value="scene">
+                <span>.cfg</span>
+            </div>
+            <button id="generate-config">Générer la configuration</button>
+            <div id="generation-message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
