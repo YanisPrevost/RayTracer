@@ -57,7 +57,7 @@ RayTracer::HitInfo RayTracer::Triangle::intersect(const RayTracer::Ray& ray) con
     if (v < 0 || u + v > 1)
         return info;
     double hitDistance = f * (edge2.dot(Q));
-    if (hitDistance < 0)
+    if (hitDistance < 1e-8f)
         return info;
     Math::Vector3D normal = edge1.cross(edge2);
     info.hit = true;

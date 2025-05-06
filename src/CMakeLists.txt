@@ -2,7 +2,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/src/
 ${CMAKE_SOURCE_DIR}/src/Vectors/
 ${CMAKE_SOURCE_DIR}/src/Points/
-${CMAKE_SOURCE_DIR}/src/Interfaces/)
+${CMAKE_SOURCE_DIR}/src/Interfaces/
+${CMAKE_SOURCE_DIR}/src/Parsing)
 
 file(GLOB_RECURSE RAYTRACER_SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.cpp
@@ -19,6 +20,8 @@ list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Donut/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/PointLight/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/DirectionalLight/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Triangle/.*")
+list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/ObjFile/.*")
+
 
 
 find_package(PkgConfig REQUIRED)
@@ -45,5 +48,6 @@ add_subdirectory(Primitives/Cone)
 add_subdirectory(Primitives/Cylinder)
 add_subdirectory(Primitives/Donut)
 add_subdirectory(Primitives/Triangle)
+add_subdirectory(Primitives/ObjFile)
 add_subdirectory(Lights/PointLight)
 add_subdirectory(Lights/DirectionalLight)
