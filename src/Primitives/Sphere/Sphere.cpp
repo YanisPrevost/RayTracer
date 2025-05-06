@@ -17,7 +17,7 @@ namespace RayTracer {
     center(params[0], params[1], params[2]),
     radius(params[3]),
     color(params[4], params[5], params[6]), reflection(reflection) {
-        double reflection = (params.size() > 7) ? params[7] : 0.0;
+        double reflection = 0.0;
     }
     Sphere::Sphere(ArgumentMap params)
     {

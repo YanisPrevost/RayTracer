@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
         std::cerr << "Usage: " << argv[0] << " <config_file.cfg>" << std::endl;
         return 1;
     }
-    try {
         std::string configFile = argv[1];
         RayTracer::Parsing_cfg parser(configFile);
 
@@ -43,9 +42,5 @@ int main(int argc, char *argv[])
         while (viewer.isDisplayActive()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
     return 0;
 }
