@@ -67,7 +67,6 @@ namespace RayTracer {
     }
 
     void Parsing_cfg::parse() {
-        std::cout << "Analysing configuration file: " << _filename << std::endl;
         libconfig::Config cfg;
         std::fstream file(_filename.c_str());
         if (!file.is_open()) {
