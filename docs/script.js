@@ -79,11 +79,6 @@ function addPrimitive(type) {
             primitive.radius = 1;
             primitive.height = 2;
             break;
-        case 'triangle':
-            primitive.point1 = { x: -1, y: -1, z: 0 };
-            primitive.point2 = { x: 1, y: -1, z: 0 };
-            primitive.point3 = { x: 0, y: 1, z: 0 };
-            break;
         case 'donut':
             primitive.innerRadius = 0.5;
             primitive.outerRadius = 1;
@@ -172,43 +167,6 @@ function renderPrimitive(primitive) {
                     <label>Hauteur:</label>
                     <input type="number" min="0.1" step="0.1" value="${primitive.height}"
                            onchange="updatePrimitiveProperty(${primitive.id}, 'height', null, this.value)">
-                </div>
-            `;
-            break;
-        case 'triangle':
-            html += `
-                <div class="form-group">
-                    <label>Point 1 (x y z):</label>
-                    <div class="vector-inputs">
-                        <input type="number" step="0.1" value="${primitive.point1.x}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point1', 'x', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point1.y}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point1', 'y', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point1.z}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point1', 'z', this.value)">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Point 2 (x y z):</label>
-                    <div class="vector-inputs">
-                        <input type="number" step="0.1" value="${primitive.point2.x}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point2', 'x', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point2.y}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point2', 'y', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point2.z}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point2', 'z', this.value)">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Point 3 (x y z):</label>
-                    <div class="vector-inputs">
-                        <input type="number" step="0.1" value="${primitive.point3.x}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point3', 'x', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point3.y}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point3', 'y', this.value)">
-                        <input type="number" step="0.1" value="${primitive.point3.z}"
-                               onchange="updatePrimitiveProperty(${primitive.id}, 'point3', 'z', this.value)">
-                    </div>
                 </div>
             `;
             break;
@@ -397,7 +355,6 @@ function updateConfigPreview() {
         const planes = primitives.filter(p => p.type === 'plane');
         const cylinders = primitives.filter(p => p.type === 'cylinder');
         const cones = primitives.filter(p => p.type === 'cone');
-        const triangles = primitives.filter(p => p.type === 'triangle');
         const donuts = primitives.filter(p => p.type === 'donut');
 
         // Sphères
@@ -454,21 +411,6 @@ function updateConfigPreview() {
             });
             configText += `    );\n`;
         }
-
-        // Triangles
-        if (triangles.length > 0) {
-            configText += `    triangles = (\n`;
-            triangles.forEach((triangle, index) => {
-                configText += `        {\n`;
-                configText += `            point1 = { x = ${toFloat(triangle.point1.x)}; y = ${toFloat(triangle.point1.y)}; z = ${toFloat(triangle.point1.z)}; };\n`;
-                configText += `            point2 = { x = ${toFloat(triangle.point2.x)}; y = ${toFloat(triangle.point2.y)}; z = ${toFloat(triangle.point2.z)}; };\n`;
-                configText += `            point3 = { x = ${toFloat(triangle.point3.x)}; y = ${toFloat(triangle.point3.y)}; z = ${toFloat(triangle.point3.z)}; };\n`;
-                configText += `            color = { r = ${triangle.color.r}; g = ${triangle.color.g}; b = ${triangle.color.b}; };\n`;
-                configText += `        }${index < triangles.length - 1 ? ',' : ''}\n`;
-            });
-            configText += `    );\n`;
-        }
-
         // Donuts
         if (donuts.length > 0) {
             configText += `    donuts = (\n`;
