@@ -620,7 +620,6 @@ button:hover {
 .plane-icon::before { content: "▬"; }
 .cylinder-icon::before { content: "⌭"; }
 .cone-icon::before { content: "▼"; }
-.triangle-icon::before { content: "△"; }
 .donut-icon::before { content: "◎"; }
 .point-light-icon::before { content: "☀"; }
 .directional-light-icon::before { content: "→"; }
