@@ -16,6 +16,8 @@ namespace RayTracer {
     ObjFile::ObjFile(ArgumentMap params) : triangleLib("./Plugins/Primitives/libTriangle.so")
     {
         fileName = params["filename"].as<std::string>();
+        _color = params["color"].as<Math::Vector3D>();
+        _position = params["position"].as<Math::Point3D>();
         parseObjFile(fileName);
         generateTriangles();
     }
@@ -33,21 +35,21 @@ namespace RayTracer {
             auto vertex3 = vertices[indices[2] - 1];
             ArgumentMap params;
             ArgumentMap vertexParam;
-            vertexParam["x"] = vertex1.X;
-            vertexParam["y"] = vertex1.Y;
-            vertexParam["z"] = vertex1.Z;
+            vertexParam["x"] = vertex1.X + _position.X;
+            vertexParam["y"] = vertex1.Y + _position.Y;
+            vertexParam["z"] = vertex1.Z + _position.Z;
             params["vertex1"] = vertexParam;
             ArgumentMap vertexParam2;
-            vertexParam2["x"] = vertex2.X;
-            vertexParam2["y"] = vertex2.Y;
-            vertexParam2["z"] = vertex2.Z;
+            vertexParam2["x"] = vertex2.X + _position.X;
+            vertexParam2["y"] = vertex2.Y + _position.Y;
+            vertexParam2["z"] = vertex2.Z + _position.Z;
             params["vertex2"] = vertexParam2;
             ArgumentMap vertexParam3;
-            vertexParam3["x"] = vertex3.X;
-            vertexParam3["y"] = vertex3.Y;
-            vertexParam3["z"] = vertex3.Z;
+            vertexParam3["x"] = vertex3.X + _position.X;
+            vertexParam3["y"] = vertex3.Y + _position.Y;
+            vertexParam3["z"] = vertex3.Z + _position.Z;
             params["vertex3"] = vertexParam3;
-            params["color"] = Math::Vector3D(0, 0, 1);
+            params["color"] = _color;
             triangles.push_back(constructor(params));
         }
     }

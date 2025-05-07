@@ -37,6 +37,8 @@ namespace RayTracer {
             std::vector<Math::Point3D>vertices;
             std::vector<std::vector<int>> _sides;
             std::vector<std::unique_ptr<IPrimitive>> triangles;
+            Math::Vector3D _color;
+            Math::Point3D _position;
     };
 }
 #endif /* !OBJFILE_HPP_ */
