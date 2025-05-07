@@ -18,8 +18,8 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
 
 <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Cow"</h3>
-    <img src="Images/cow.png" alt="Rendu: Vache" style="max-width: 100%; height: auto;">
+    <h3>Scène "Basique"</h3>
+    <img src="Images/basic.png" alt="Rendu: Basique" style="max-width: 100%; height: auto;">
   </div>
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
     <h3>Scène "Forêt"</h3>
@@ -30,7 +30,7 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
     <img src="Images/spiral.png" alt="Rendu: Spirale" style="max-width: 100%; height: auto;">
   </div>
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Spirale"</h3>
+    <h3>Scène "Saturne"</h3>
     <img src="Images/saturn.png" alt="Rendu: Saturne" style="max-width: 100%; height: auto;">
   </div>
 </div>
