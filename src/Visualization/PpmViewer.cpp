@@ -140,10 +140,6 @@ namespace RayTracer {
                     displayImage.setPixel(x, y, pixelColor);
                 }
             }
-            if (_raycaster.getScreen().getCompletedLines()[currentLine]) {
-                _raycaster.setCurrentLine(_raycaster.getCurrentLine() + 1);
-                // currentLine = _raycaster.getCurrentLine();
-            }
             if (lastRenderedLine < currentLine) {
                 texture.update(displayImage);
                 lastRenderedLine = currentLine;
@@ -168,11 +164,14 @@ namespace RayTracer {
             }
 
             updateTexture();
+            while (_raycaster.getScreen().getCompletedLines()[_raycaster.getCurrentLine()]) {
+                _raycaster.setCurrentLine(_raycaster.getCurrentLine() + 1);
+            }
             window.clear(sf::Color::Black);
             window.draw(sprite);
             window.display();
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
         }
     }
 
