@@ -140,6 +140,10 @@ namespace RayTracer {
                     displayImage.setPixel(x, y, pixelColor);
                 }
             }
+            if (_raycaster.getScreen().getCompletedLines()[currentLine]) {
+                _raycaster.setCurrentLine(_raycaster.getCurrentLine() + 1);
+                // currentLine = _raycaster.getCurrentLine();
+            }
             if (lastRenderedLine < currentLine) {
                 texture.update(displayImage);
                 lastRenderedLine = currentLine;

@@ -106,9 +106,10 @@ namespace RayTracer {
     {
         std::unique_lock<std::mutex> lock(renderMutex);
         renderUpdate.wait_for(lock, std::chrono::milliseconds(100), [&]() {
-            return currentLine > lastLine || !renderingActive.load();
+            return _screen.getCompletedLines()[lastLine] || !renderingActive.load();
         });
-        lastLine = currentLine;
+        lastLine++;
+        // lastLine = currentLine;
     }
 
     Math::Vector3D RayCaster::renderPixel(int x, int y)
@@ -150,15 +151,17 @@ namespace RayTracer {
             for (int x = 0; x < width; x++) {
                 _screen.setPixel(x, y, lineColors[x]);
             }
+            // currentLine++;
+            _screen.setLineCompleted(y);
         }
-        {
-            std::unique_lock<std::mutex> lock(currentLineMutex);
-            currentLineCV.wait(lock, [&]() {
-                return currentLine == y;
-            });
-            currentLine.store(y + 1);
-        }
-        currentLineCV.notify_all();
+        // {
+        //     std::unique_lock<std::mutex> lock(currentLineMutex);
+        //     currentLineCV.wait(lock, [&]() {
+        //         return currentLine == y;
+        //     });
+        //     currentLine.store(y + 1);
+        // }
+        // currentLineCV.notify_all();
     }
 
     void RayCaster::renderLines()

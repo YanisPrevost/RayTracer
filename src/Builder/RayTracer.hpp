@@ -76,6 +76,7 @@ namespace RayTracer {
             bool isRaytracingDone() const { return !(renderingActive && getCurrentLine() < _screen.getHeight()); }
             bool isRenderingActive() const { return renderingActive; }
             int getCurrentLine() const { return currentLine; }
+            void setCurrentLine(int y) {currentLine = y;};
             void waitForUpdate(int& lastLine);
             void renderLines();
             void renderLoop();
