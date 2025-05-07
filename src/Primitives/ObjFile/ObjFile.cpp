@@ -74,10 +74,6 @@ namespace RayTracer {
             }
         }
         file.close();
-        for (auto &i : vertices)
-            std::cout << "point: X:" << i.X << " Y:" << i.Y << " Z:" << i.Z << std::endl;
-        for (auto &i : _sides)
-            std::cout << "side: 1:" << i[0] << " 2: " << i[1] << " 3:" << i[2] << std::endl;
     }
 
     HitInfo ObjFile::intersect(const Ray& ray) const
