@@ -20,6 +20,7 @@ namespace RayTracer {
     Screen::Screen(ArgumentMap params) : width(params["width"].as<int>()), height(params["height"].as<int>())
     {
         pixels.resize(width * height, Math::Vector3D(0, 0, 0));
+        completedLines.resize(height, false);
     }
 
     Math::Vector3D Screen::getPixel(int x, int y) const
@@ -37,6 +38,16 @@ namespace RayTracer {
         double g = std::max(0.0, std::min(1.0, color.Y));
         double b = std::max(0.0, std::min(1.0, color.Z));
         pixels[y * width + x] = Math::Vector3D(r, g, b);
+    }
+
+    void Screen::setPixel(int n, const Math::Vector3D& color)
+    {
+        if (n < 0 || n >= height * width)
+            return;
+        double r = std::max(0.0, std::min(1.0, color.X));
+        double g = std::max(0.0, std::min(1.0, color.Y));
+        double b = std::max(0.0, std::min(1.0, color.Z));
+        pixels[n] = Math::Vector3D(r, g, b);
     }
 
     void Screen::getUV(int x, int y, double& u, double& v) const

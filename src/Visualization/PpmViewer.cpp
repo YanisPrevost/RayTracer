@@ -164,11 +164,14 @@ namespace RayTracer {
             }
 
             updateTexture();
+            while (_raycaster.getScreen().getCompletedLines()[_raycaster.getCurrentLine()]) {
+                _raycaster.setCurrentLine(_raycaster.getCurrentLine() + 1);
+            }
             window.clear(sf::Color::Black);
             window.draw(sprite);
             window.display();
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
         }
     }
 

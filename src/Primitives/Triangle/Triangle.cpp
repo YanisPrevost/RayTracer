@@ -30,6 +30,9 @@ RayTracer::Triangle::Triangle(ArgumentMap params)
         vertexParam3["y"].as<double>(),
         vertexParam3["z"].as<double>());
     _color = Math::Vector3D(params["color"].as<Math::Vector3D>());
+    edge1 = vertex2 - vertex1;
+    edge2 = vertex3 - vertex1;
+    normal = edge1.cross(edge2).normalize();
 }
 
 RayTracer::Triangle::~Triangle()
@@ -40,11 +43,12 @@ RayTracer::HitInfo RayTracer::Triangle::intersect(const RayTracer::Ray& ray) con
 {
     HitInfo info;
     info.hit = false;
-    Math::Vector3D edge1 = vertex2 - vertex1;
-    Math::Vector3D edge2 = vertex3 - vertex1;
+
     Math::Vector3D P = ray.direction.cross(edge2);
     auto det = edge1.dot(P);
-    if (abs(det) < 1e-8f) {
+    // if (det < 0)               // ray hitting the back side
+    // return info;
+    if (std::fabs(det) < 1e-8f) {
         return info;
     }
     double f = 1 / det;
@@ -59,11 +63,10 @@ RayTracer::HitInfo RayTracer::Triangle::intersect(const RayTracer::Ray& ray) con
     double hitDistance = f * (edge2.dot(Q));
     if (hitDistance < 1e-8f)
         return info;
-    Math::Vector3D normal = edge1.cross(edge2);
     info.hit = true;
     info.color = _color;
     info.distance = hitDistance;
-    info.normal = normal.normalize();
+    info.normal = normal;
     info.point = ray.origin + ray.direction * hitDistance;
     info.reflection = 0.0;
     return info;

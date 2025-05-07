@@ -26,8 +26,8 @@ namespace RayTracer {
     RayCaster::~RayCaster()
     {
         stopRendering();
-        clearPrimitives();
-        clearLights();
+        _primitives.clear();
+        _lights.clear();
         libraryHandles.clear();
     }
 
@@ -82,16 +82,6 @@ namespace RayTracer {
         }
     }
 
-    void RayCaster::clearPrimitives()
-    {
-        _primitives.clear();
-    }
-
-    void RayCaster::clearLights()
-    {
-        _lights.clear();
-    }
-
     void RayCaster::start_rendering()
     {
         if (renderingActive.load()) {
@@ -116,50 +106,98 @@ namespace RayTracer {
     {
         std::unique_lock<std::mutex> lock(renderMutex);
         renderUpdate.wait_for(lock, std::chrono::milliseconds(100), [&]() {
-            return currentLine > lastLine || !renderingActive.load();
+            return _screen.getCompletedLines()[lastLine] || !renderingActive.load();
         });
-        lastLine = currentLine;
+        lastLine++;
+        // lastLine = currentLine;
     }
 
-    void RayCaster::renderLines(int startLine, int endLine)
+    Math::Vector3D RayCaster::renderPixel(int x, int y)
+    {
+        Math::Vector3D color(0, 0, 0);
+        double u, v;
+        _screen.getUV(x, y, u, v);
+        for (int s = 0; s < samplesPerPixel; s++) {
+            if (samplesPerPixel > 1) {
+                double du = 1.0 / _screen.getWidth();
+                double dv = 1.0 / _screen.getHeight();
+                u += du * (rand() / static_cast<double>(RAND_MAX) - 0.5);
+                v += dv * (rand() / static_cast<double>(RAND_MAX) - 0.5);
+            }
+            Ray ray = _camera.generate_ray(u, v);
+            color += trace_ray(ray, maxDepth);
+        }
+        if (samplesPerPixel > 1) {
+            color = color / static_cast<double>(samplesPerPixel);
+        }
+        color = Math::Vector3D(
+            sqrt(color.X),
+            sqrt(color.Y),
+            sqrt(color.Z)
+        );
+        return color;
+    }
+
+    void RayCaster::renderLine(int y)
     {
         int width = _screen.getWidth();
-        int height = _screen.getHeight();
-
-        for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
-            for (int x = 0; x < width && renderingActive.load(); x++) {
-                Math::Vector3D color(0, 0, 0);
-                for (int s = 0; s < samplesPerPixel; s++) {
-                    double u, v;
-                    _screen.getUV(x, y, u, v);
-                    if (samplesPerPixel > 1) {
-                        double du = 1.0 / width;
-                        double dv = 1.0 / height;
-                        u += du * (rand() / static_cast<double>(RAND_MAX) - 0.5);
-                        v += dv * (rand() / static_cast<double>(RAND_MAX) - 0.5);
-                    }
-                    Ray ray = _camera.generate_ray(u, v);
-                    color += trace_ray(ray, maxDepth);
-                }
-                if (samplesPerPixel > 1) {
-                    color = color / static_cast<double>(samplesPerPixel);
-                }
-                color = Math::Vector3D(
-                    sqrt(color.X),
-                    sqrt(color.Y),
-                    sqrt(color.Z)
-                );
-                _screen.setPixel(x, y, color);
-            }
-            currentLine.store(y + 1);
+        std::vector<Math::Vector3D> lineColors(width);
+        for (int x = 0; x < width && renderingActive.load(); x++) {
+            Math::Vector3D color = renderPixel(x, y);
+            lineColors[x] = color;
         }
-        renderUpdate.notify_all();
+        {
+            std::lock_guard<std::mutex> lock(screenMutex);
+            for (int x = 0; x < width; x++) {
+                _screen.setPixel(x, y, lineColors[x]);
+            }
+            // currentLine++;
+            _screen.setLineCompleted(y);
+        }
+        // {
+        //     std::unique_lock<std::mutex> lock(currentLineMutex);
+        //     currentLineCV.wait(lock, [&]() {
+        //         return currentLine == y;
+        //     });
+        //     currentLine.store(y + 1);
+        // }
+        // currentLineCV.notify_all();
     }
+
+    void RayCaster::renderLines()
+    {
+        int y;
+        int height = _screen.getHeight();
+    
+        while ((y = lineToRender.fetch_add(1)) < height) {
+            renderLine(y);
+        }
+    }
+
+    // void RayCaster::renderLines(int startLine, int endLine)
+    // {
+    //     int height = _screen.getHeight();
+
+    //     for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
+    //         renderLine(y);
+    //     }
+    //     renderUpdate.notify_all();
+    // }
 
     void RayCaster::renderLoop()
     {
-        int height = _screen.getHeight();
-        renderLines(0, height);
+        lineToRender.store(0);
+
+        std::vector<std::thread> threads;
+        int numThreads = std::thread::hardware_concurrency() - 2;
+
+        for (int i = 0; i < numThreads; ++i) {
+            threads.emplace_back(&RayCaster::renderLines, this);
+        }
+
+        for (auto& t : threads) {
+            t.join();
+        }
         renderUpdate.notify_all();
     }
 

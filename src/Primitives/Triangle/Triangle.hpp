@@ -32,6 +32,9 @@ namespace RayTracer {
             Math::Point3D vertex2;
             Math::Point3D vertex3;
             Math::Vector3D _color;
+            Math::Vector3D edge1;
+            Math::Vector3D edge2;
+            Math::Vector3D normal;
     };
 }
 
