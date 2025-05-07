@@ -17,7 +17,7 @@ namespace RayTracer {
 
     RayCaster::RayCaster(Camera camera, Screen screen)
         : _screen(screen), maxDepth(5), samplesPerPixel(1), backgroundColor(0.2, 0.2, 0.2),
-          renderingActive(false), currentLine(0), _camera(camera)
+            renderingActive(false), currentLine(0), _camera(camera)
     {
         loadPrimitiveLibrary();
         loadLightLibrary();
