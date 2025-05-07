@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSectionButtons();
     initializeAddButtons();
     initializeCopyButton();
+    initializeCameraInputs();
     updateConfigPreview();
 });
 
@@ -44,6 +45,19 @@ function initializeGenerateButton() {
     document.querySelectorAll('input').forEach(input => {
         input.addEventListener('change', updateConfigPreview);
     });
+}
+
+function initializeCameraInputs() {
+    // Ajouter des écouteurs d'événements à tous les champs de la caméra
+    document.getElementById('camera-position-x').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-position-y').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-position-z').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-rotation-x').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-rotation-y').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-rotation-z').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-fov').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-resolution-width').addEventListener('input', updateConfigPreview);
+    document.getElementById('camera-resolution-height').addEventListener('input', updateConfigPreview);
 }
 
 function addPrimitive(type) {
