@@ -10,13 +10,16 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
 - **Système d'éclairage** : Sources de lumière directionnelles et ponctuelles
 - **Chargement dynamique** : Plugins pour ajouter facilement de nouvelles primitives et sources de lumière
 - **Configuration flexible** : Descriptions de scènes personnalisables via des fichiers de configuration
+- **Multi-threading** : Accélération du rendu grâce au calcul parallèle
+- **Import de modèles 3D** : Support des fichiers .obj pour intégrer des modèles 3D complexes
+- **Générateur de configuration web** : Interface web pour créer et éditer facilement des fichiers de configuration
 
 ## 🖼️ Exemples de rendu
 
 <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Cow"</h3>
-    <img src="Images/cow.png" alt="Rendu: Vache" style="max-width: 100%; height: auto;">
+    <h3>Scène "Basique"</h3>
+    <img src="Images/basic.png" alt="Rendu: Basique" style="max-width: 100%; height: auto;">
   </div>
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
     <h3>Scène "Forêt"</h3>
@@ -27,7 +30,7 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
     <img src="Images/spiral.png" alt="Rendu: Spirale" style="max-width: 100%; height: auto;">
   </div>
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Spirale"</h3>
+    <h3>Scène "Saturne"</h3>
     <img src="Images/saturn.png" alt="Rendu: Saturne" style="max-width: 100%; height: auto;">
   </div>
 </div>
@@ -70,7 +73,10 @@ camera = {
 
 primitives = {
     spheres = (
-        { x = 0.0; y = 0.0; z = 0.0; r = 1.0; color = { r = 255; g = 0; b = 0; }; }
+        {
+          x = 0.0; y = 0.0; z = 0.0; r = 1.0;
+          color = { r = 255; g = 0; b = 0; };
+        }
     );
     # Autres primitives...
 };
@@ -86,6 +92,21 @@ lights = {
 };
 ```
 
+## 🌐 Générateur de Configuration Web
+
+Pour faciliter la création et l'édition des fichiers de configuration, nous avons développé une interface web intuitive accessible dans le dossier `docs/`:
+
+```bash
+# Ouvrir le générateur de configuration dans votre navigateur
+https://yanisprevost.github.io/RayTracer/
+# Puis copié collé votre configuration dans un fichier .cfg
+```
+
+Cette interface permet de:
+- Configurer visuellement tous les paramètres de la scène
+- Prévisualiser la disposition des éléments
+- Générer automatiquement le fichier de configuration (.cfg)
+
 ## 🧩 Architecture du projet
 
 Le projet est organisé selon une architecture modulaire:
@@ -96,5 +117,32 @@ Le projet est organisé selon une architecture modulaire:
 - **Parsing**: Analyse des fichiers de configuration
 - **Visualisation**: Sortie des images au format PPM
 
+## 🚀 Performances et Optimisations
+
+### Multi-threading
+Le RayTracer utilise le multi-threading pour accélérer considérablement les calculs de rendu:
+- Parallélisation du calcul des pixels pour un rendu plus rapide
+- Répartition optimale de la charge sur tous les cœurs du processeur
+- Possibilité d'ajuster le nombre de threads pour s'adapter à différentes configurations matérielles
+
+### Modèles 3D complexes
+Le moteur prend en charge l'import de fichiers 3D au format .obj:
+- Rendu de modèles 3D complexes créés dans des logiciels tiers comme Blender
+- Support des normales et textures des objets
+- Optimisation de la mémoire pour les modèles volumineux
+
+```bash
+# Exemple d'utilisation avec un fichier 3D
+./raytracer Config/simpleObjFile.cfg
+```
+
+## 🔧 Options avancées
+
+Le RayTracer offre plusieurs options avancées:
+- Réglage de la profondeur de réflexion et de réfraction
+- Contrôle de l'antialiasing pour améliorer la qualité de l'image
+- Configuration des matériaux (brillance, transparence, réfraction)
+- Possibilité d'ajouter de nouvelles primitives ou sources de lumière via le système de plugins
+
 ## 👥 Contributeurs
-- Yanis Prevost, Raphaël Grissonnanche, Anthony Colombani-Gailleur, Maxime Finaud
+- Yanis Prevost, Raphaël Grissonnanche, Anthony Colombani-Gailleur
