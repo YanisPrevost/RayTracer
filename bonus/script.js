@@ -271,9 +271,9 @@ function addLight(type) {
     };
 
     if (type === 'point') {
-        light.position = { x: 0, y: 0, z: 5 };
+        light.position = { x: 0, y: 0, z: 0 };
     } else {
-        light.direction = { x: 0, y: 0, z: -1 };
+        light.direction = { x: 0, y: 0, z: 0 };
     }
 
     lights.push(light);
