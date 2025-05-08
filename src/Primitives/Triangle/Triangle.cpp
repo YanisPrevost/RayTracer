@@ -72,6 +72,22 @@ RayTracer::HitInfo RayTracer::Triangle::intersect(const RayTracer::Ray& ray) con
     return info;
 }
 
+RayTracer::AABB RayTracer::Triangle::getBoundingBox()
+{
+    if (boundingBox.has_value())
+        return boundingBox.value();
+    double minX = std::min(std::min(vertex1.X, vertex2.X), vertex3.X);
+    double minY = std::min(std::min(vertex1.Y, vertex2.Y), vertex3.Y);
+    double minZ = std::min(std::min(vertex1.Z, vertex2.Z), vertex3.Z);
+    Math::Point3D minPoint(minX, minY, minZ);
+    double maxX = std::max(std::max(vertex1.X, vertex2.X), vertex3.X);
+    double maxY = std::max(std::max(vertex1.Y, vertex2.Y), vertex3.Y);
+    double maxZ = std::max(std::max(vertex1.Z, vertex2.Z), vertex3.Z);
+    Math::Point3D maxPoint(maxX, maxY, maxZ);
+    boundingBox = AABB(minPoint, maxPoint);
+    return (boundingBox.value());
+}
+
 extern "C" {
     const char *getPrimitiveName() {
         return "triangles";

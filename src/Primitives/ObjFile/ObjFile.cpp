@@ -13,21 +13,24 @@
 #include <iostream>
 
 namespace RayTracer {
-    ObjFile::ObjFile(ArgumentMap params) : triangleLib("./Plugins/Primitives/libTriangle.so")
+    ObjFile::ObjFile(ArgumentMap params) : triangleLib("./Plugins/Primitives/libTriangle.so"), fileName(params["filename"].as<std::string>())
     {
-        fileName = params["filename"].as<std::string>();
+    
+        parseObjFile(fileName);
         _color = params["color"].as<Math::Vector3D>();
         _position = params["position"].as<Math::Point3D>();
-        parseObjFile(fileName);
-        generateTriangles();
+        auto res =  generateTriangles();
+        // Node node(std::move(res));
+        tree = std::make_unique<RayTracer::Node>(std::move(res));
     }
 
     ObjFile::~ObjFile()
     {
     }
 
-    void ObjFile::generateTriangles()
+    std::vector<std::unique_ptr<RayTracer::IPrimitive>> ObjFile::generateTriangles()
     {
+        std::vector<std::unique_ptr<RayTracer::IPrimitive>> triangles;
         auto constructor = triangleLib.getConstructor<IPrimitive, ArgumentMap>("createPrimitive");
         for (auto &indices : this->_sides) {
             auto vertex1 = vertices[indices[0] - 1];
@@ -52,6 +55,7 @@ namespace RayTracer {
             params["color"] = _color;
             triangles.push_back(constructor(params));
         }
+        return triangles;
     }
 
     void ObjFile::parseObjFile(std::string fileName)
@@ -82,12 +86,13 @@ namespace RayTracer {
     {
         HitInfo closestHit;
         closestHit.hit = false;
-        for (auto &triangle : triangles) {
-            auto hit = triangle->intersect(ray);
-            if (hit.hit && (!closestHit.hit || hit.distance < closestHit.distance)) {
-                closestHit = hit;
-            }
-        }
+        closestHit = tree->intersects(ray);
+        // for (auto &triangle : triangles) {
+        //     auto hit = triangle->intersect(ray);
+        //     if (hit.hit && (!closestHit.hit || hit.distance < closestHit.distance)) {
+        //         closestHit = hit;
+        //     }
+        // }
         return closestHit;
     }
 }

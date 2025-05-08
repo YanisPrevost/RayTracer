@@ -16,6 +16,7 @@
 #include "../Interfaces/HitInfo.hpp"
 #include "../Ray/Ray.hpp"
 #include "../Parsing/ArgumentMap.hpp"
+#include "../BVHBuilder/AABB.hpp"
 namespace RayTracer {
 
     class IPrimitive {
@@ -23,6 +24,7 @@ namespace RayTracer {
             virtual ~IPrimitive() = default;
             virtual HitInfo intersect(const Ray& ray) const = 0;
             virtual std::string getName() const = 0;
+            virtual AABB getBoundingBox() = 0;
             virtual std::unique_ptr<IPrimitive> create(const std::vector<double>& params) = 0;
     };
 

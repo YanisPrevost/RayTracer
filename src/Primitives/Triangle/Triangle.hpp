@@ -13,6 +13,8 @@
 #include "Vector.hpp"
 #include "Points.hpp"
 #include "../Parsing/ArgumentMap.hpp"
+#include "../BVHBuilder/AABB.hpp"
+#include <optional>
 
 namespace RayTracer {
     class Triangle : public IPrimitive {
@@ -26,6 +28,7 @@ namespace RayTracer {
             {
                 return std::make_unique<Triangle>();
             }
+            AABB getBoundingBox();
         protected:
         private:
             Math::Point3D vertex1;
@@ -35,6 +38,7 @@ namespace RayTracer {
             Math::Vector3D edge1;
             Math::Vector3D edge2;
             Math::Vector3D normal;
+            std::optional<AABB> boundingBox;
     };
 }
 

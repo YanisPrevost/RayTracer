@@ -33,6 +33,9 @@ namespace RayTracer {
             HitInfo intersect(const Ray& ray) const override;
             std::string getName() const override;
             std::unique_ptr<IPrimitive> create(const std::vector<double>& params) override;
+            AABB getBoundingBox() {
+                return AABB();
+            }
 
             // Getters
             Math::Point3D getPosition() const { return position; }

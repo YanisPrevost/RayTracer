@@ -14,6 +14,11 @@ namespace Math {
         return Point3D(X + vec.X, Y + vec.Y, Z + vec.Z);
     }
 
+    Point3D Point3D::operator+(const Point3D vec) const
+    {
+        return Point3D(X + vec.X, Y + vec.Y, Z + vec.Z);
+    }
+
     Point3D& Point3D::operator+=(const Vector3D& vec)
     {
         X += vec.X;
@@ -25,5 +30,15 @@ namespace Math {
     Vector3D Point3D::operator-(const Point3D& other) const
     {
         return Vector3D(X - other.X, Y - other.Y, Z - other.Z);
+    }
+
+    Point3D Point3D::operator*(const int val) const
+    {
+        return Point3D(X * val, Y * val, Z * val);
+    }
+
+    Point3D Point3D::operator/(const int val) const
+    {
+        return Point3D(X / val, Y / val, Z / val);
     }
 }

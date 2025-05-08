@@ -22,7 +22,10 @@ namespace Math {
             Point3D(double x, double y, double z) : X(x), Y(y), Z(z) {}
 
             Point3D operator+(const Vector3D& vec) const;
+            Point3D operator+(const Point3D vec) const;
             Point3D& operator+=(const Vector3D& vec);
             Vector3D operator-(const Point3D& other) const;
+            Point3D operator*(const int val) const;
+            Point3D operator/(const int val) const;
     };
 }
