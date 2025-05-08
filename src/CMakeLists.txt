@@ -21,7 +21,7 @@ list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/PointLight/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/DirectionalLight/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/Triangle/.*")
 list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/ObjFile/.*")
-
+list(FILTER RAYTRACER_SOURCES EXCLUDE REGEX ".*/BoundingBox/.*")
 
 
 find_package(PkgConfig REQUIRED)
@@ -49,5 +49,6 @@ add_subdirectory(Primitives/Cylinder)
 add_subdirectory(Primitives/Donut)
 add_subdirectory(Primitives/Triangle)
 add_subdirectory(Primitives/ObjFile)
+add_subdirectory(Primitives/BoundingBox)
 add_subdirectory(Lights/PointLight)
 add_subdirectory(Lights/DirectionalLight)

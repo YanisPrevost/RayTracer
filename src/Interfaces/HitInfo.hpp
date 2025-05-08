@@ -13,7 +13,7 @@
 namespace RayTracer {
     class HitInfo {
         public:
-            bool hit;
+            bool hit = false;
             double distance;
             Math::Point3D point;
             Math::Vector3D normal;
