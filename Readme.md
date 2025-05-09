@@ -17,11 +17,13 @@ RayTracer est un moteur de rendu 3D hautes performances basé sur la technique d
 
 ## 🖼️ Exemples de rendu
 
-| Scène "Mario" | Scène "Spirale" |
-|:-------------:|:---------------:|
-| ![Rendu: Mario](Images/mario.png) | ![Rendu: Spirale](Images/spiral.png) |
-| **Scène "Saturne"** | |
-| ![Rendu: Saturne](Images/saturn.png) | |
+<p align="center">
+  <img src="Images/mario.png" alt="Rendu: Mario" width="45%">
+  <img src="Images/spiral.png" alt="Rendu: Spirale" width="45%">
+</p>
+<p align="center">
+  <img src="Images/saturn.png" alt="Rendu: Saturne" width="45%">
+</p>
 
 ## 🛠️ Installation
 
