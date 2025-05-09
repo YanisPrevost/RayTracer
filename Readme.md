@@ -2,7 +2,7 @@
 
 ## 📝 Description
 
-RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. Cette technique simule le comportement de la lumière en traçant des rayons depuis la caméra à travers chaque pixel de l'écran virtuel jusque dans la scène 3D, permettant ainsi de créer des images réalistes avec des effets d'ombrage, de réflexion et de réfraction.
+RayTracer est un moteur de rendu 3D hautes performances basé sur la technique du lancer de rayons. Cette technique simule le comportement de la lumière en traçant des rayons depuis la caméra à travers chaque pixel de l'écran virtuel jusque dans la scène 3D, permettant ainsi de créer des images réalistes avec des effets d'ombrage, de réflexion et de réfraction. Grâce à ses optimisations avancées, la génération des scènes est quasi instantanée, même pour des modèles complexes.
 
 ## 🌟 Fonctionnalités
 
@@ -10,7 +10,8 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
 - **Système d'éclairage** : Sources de lumière directionnelles et ponctuelles
 - **Chargement dynamique** : Plugins pour ajouter facilement de nouvelles primitives et sources de lumière
 - **Configuration flexible** : Descriptions de scènes personnalisables via des fichiers de configuration
-- **Multi-threading** : Accélération du rendu grâce au calcul parallèle
+- **Multi-threading CPU** : Accélération du rendu grâce au calcul parallèle sur tous les cœurs disponibles
+- **Structure BVH** : Optimisation avancée par Bounding Volume Hierarchy pour un rendu quasi instantané
 - **Import de modèles 3D** : Support des fichiers .obj pour intégrer des modèles 3D complexes
 - **Générateur de configuration web** : Interface web pour créer et éditer facilement des fichiers de configuration
 
@@ -18,12 +19,8 @@ RayTracer est un moteur de rendu 3D basé sur la technique du lancer de rayons. 
 
 <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Basique"</h3>
-    <img src="Images/basic.png" alt="Rendu: Basique" style="max-width: 100%; height: auto;">
-  </div>
-  <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
-    <h3>Scène "Forêt"</h3>
-    <img src="Images/foret.png" alt="Rendu: Forêt" style="max-width: 100%; height: auto;">
+    <h3>Scène "Mario"</h3>
+    <img src="Images/mario.png" alt="Rendu: Mario" style="max-width: 100%; height: auto;">
   </div>
   <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
     <h3>Scène "Spirale"</h3>
@@ -58,6 +55,20 @@ chmod +x build.sh
 ./raytracer Config/foret.cfg
 ./raytracer Config/spirale.cfg
 ```
+
+## ⚡ Performances et Optimisations
+
+### Génération de Scènes Quasi Instantanée
+
+Notre RayTracer se distingue par sa capacité à générer des scènes complexes en quelques millisecondes, grâce à sa structure d'optimisation avancée :
+
+#### Structure BVH (Bounding Volume Hierarchy)
+
+Le moteur utilise une structure d'arbre binaire hiérarchique qui organise les objets de la scène dans des boîtes englobantes (AABB - Axis-Aligned Bounding Boxes). Cette approche permet :
+- Une réduction drastique du nombre de tests d'intersection (de O(n) à O(log n))
+- Un rendu quasi instantané même pour des scènes contenant des milliers d'objets
+- Une scalabilité exceptionnelle lors de l'ajout de nouveaux objets
+- Une organisation spatiale intelligente qui minimise les calculs inutiles
 
 ## 📋 Format des fichiers de configuration
 

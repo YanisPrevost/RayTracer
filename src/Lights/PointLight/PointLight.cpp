@@ -38,14 +38,14 @@ namespace RayTracer
         Math::Vector3D color =  (info.color * diffuse) * this->_color;
         return color;
     }
-}
 
-extern "C" {
-    const char *getLightName() {
-        return "point";
-    }
-    std::unique_ptr<RayTracer::ILights> createLight(RayTracer::ArgumentMap params)
-    {
-        return  std::make_unique<RayTracer::PointLight>(params);
+    extern "C" {
+        const char *getLightName() {
+            return "point";
+        }
+        std::unique_ptr<ILights> createLight(ArgumentMap params)
+        {
+            return  std::make_unique<PointLight>(params);
+        }
     }
 }

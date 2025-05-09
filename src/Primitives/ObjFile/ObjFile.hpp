@@ -22,7 +22,7 @@ namespace RayTracer {
             ObjFile(ArgumentMap params);
             ~ObjFile();
             void parseObjFile(std::string fileName);
-            std::vector<std::unique_ptr<RayTracer::IPrimitive>>  generateTriangles();
+            std::vector<std::unique_ptr<IPrimitive>>  generateTriangles();
             HitInfo intersect(const Ray& ray) const;
             std::string getName() const
             {

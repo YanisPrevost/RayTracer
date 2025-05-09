@@ -15,22 +15,20 @@
 namespace RayTracer {
     ObjFile::ObjFile(ArgumentMap params) : triangleLib("./Plugins/Primitives/libTriangle.so"), fileName(params["filename"].as<std::string>())
     {
-    
         parseObjFile(fileName);
         _color = params["color"].as<Math::Vector3D>();
         _position = params["position"].as<Math::Point3D>();
         auto res =  generateTriangles();
-        // Node node(std::move(res));
-        tree = std::make_unique<RayTracer::Node>(std::move(res));
+        tree = std::make_unique<Node>(std::move(res));
     }
 
     ObjFile::~ObjFile()
     {
     }
 
-    std::vector<std::unique_ptr<RayTracer::IPrimitive>> ObjFile::generateTriangles()
+    std::vector<std::unique_ptr<IPrimitive>> ObjFile::generateTriangles()
     {
-        std::vector<std::unique_ptr<RayTracer::IPrimitive>> triangles;
+        std::vector<std::unique_ptr<IPrimitive>> triangles;
         auto constructor = triangleLib.getConstructor<IPrimitive, ArgumentMap>("createPrimitive");
         for (auto &indices : this->_sides) {
             auto vertex1 = vertices[indices[0] - 1];
@@ -66,7 +64,6 @@ namespace RayTracer {
         }
         std::string buffer;
         while (std::getline(file, buffer)) {
-            
             if (buffer.rfind("v ", 0) == 0) {
                 double x, y, z;
                 std::stringstream bufferStream(buffer.substr(2));
@@ -101,13 +98,13 @@ namespace RayTracer {
         closestHit = tree->intersects(ray);
         return closestHit;
     }
-}
 
-extern "C" {
-    const char *getPrimitiveName() {
-        return "objfiles";
-    }
-    std::unique_ptr<RayTracer::IPrimitive> createPrimitive(RayTracer::ArgumentMap params) {
-        return std::make_unique<RayTracer::ObjFile>(params);
+    extern "C" {
+        const char *getPrimitiveName() {
+            return "objfiles";
+        }
+        std::unique_ptr<IPrimitive> createPrimitive(ArgumentMap params) {
+            return std::make_unique<ObjFile>(params);
+        }
     }
 }
