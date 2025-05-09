@@ -18,9 +18,6 @@
 namespace RayTracer {
     class Node {
         public:
-            // Node()
-            // {
-            // }
             Node(std::unique_ptr<IPrimitive> item)
             {
                 objects.push_back(std::move(item));

@@ -66,19 +66,31 @@ namespace RayTracer {
         }
         std::string buffer;
         while (std::getline(file, buffer)) {
-            if (buffer[0] == 'v') {
+            
+            if (buffer.rfind("v ", 0) == 0) {
                 double x, y, z;
-                std::stringstream bufferStream(buffer.substr(1));
+                std::stringstream bufferStream(buffer.substr(2));
                 bufferStream >> x >> y >> z;
                 vertices.push_back(Math::Point3D(x, y, z));
             }
-            if (buffer[0] == 'f') {
+            if (buffer.rfind("f ", 0) == 0) {
+                std::string v1Str, v2Str, v3Str;
                 int v1, v2, v3;
-                std::stringstream bufferStream = std::stringstream(buffer.substr(1));
-                bufferStream  >> v1 >> v2 >> v3;
+                std::stringstream bufferStream(buffer.substr(2));
+                bufferStream >> v1Str >> v2Str >> v3Str;
+                std::replace(v1Str.begin(), v1Str.end(), '/', ' ');
+                std::stringstream xBufferStream(v1Str);
+                xBufferStream >> v1;
+                std::replace(v2Str.begin(), v2Str.end(), '/', ' ');
+                std::stringstream yBufferStream(v2Str);
+                yBufferStream >> v2;
+                std::replace(v3Str.begin(), v3Str.end(), '/', ' ');
+                std::stringstream zBufferStream(v3Str);
+                zBufferStream >> v3;
                 _sides.push_back(std::vector<int>({v1, v2, v3}));
             }
         }
+        std::cout << "rendering " << _sides.size() << " polygons\n";
         file.close();
     }
 
@@ -87,24 +99,9 @@ namespace RayTracer {
         HitInfo closestHit;
         closestHit.hit = false;
         closestHit = tree->intersects(ray);
-        // for (auto &triangle : triangles) {
-        //     auto hit = triangle->intersect(ray);
-        //     if (hit.hit && (!closestHit.hit || hit.distance < closestHit.distance)) {
-        //         closestHit = hit;
-        //     }
-        // }
         return closestHit;
     }
 }
-
-// int main()
-// {
-//     RayTracer::ArgumentMap params;
-//     params["filename"] = "model/solids.obj";
-//     RayTracer::ObjFile obj(params);
-//     obj.parseObjFile("model/solids.obj");
-//     obj.generateTriangles();
-// }
 
 extern "C" {
     const char *getPrimitiveName() {
