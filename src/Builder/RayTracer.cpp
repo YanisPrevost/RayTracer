@@ -109,7 +109,6 @@ namespace RayTracer {
             return _screen.getCompletedLines()[lastLine] || !renderingActive.load();
         });
         lastLine++;
-        // lastLine = currentLine;
     }
 
     Math::Vector3D RayCaster::renderPixel(int x, int y)
@@ -151,38 +150,19 @@ namespace RayTracer {
             for (int x = 0; x < width; x++) {
                 _screen.setPixel(x, y, lineColors[x]);
             }
-            // currentLine++;
             _screen.setLineCompleted(y);
         }
-        // {
-        //     std::unique_lock<std::mutex> lock(currentLineMutex);
-        //     currentLineCV.wait(lock, [&]() {
-        //         return currentLine == y;
-        //     });
-        //     currentLine.store(y + 1);
-        // }
-        // currentLineCV.notify_all();
     }
 
     void RayCaster::renderLines()
     {
         int y;
         int height = _screen.getHeight();
-    
+
         while ((y = lineToRender.fetch_add(1)) < height) {
             renderLine(y);
         }
     }
-
-    // void RayCaster::renderLines(int startLine, int endLine)
-    // {
-    //     int height = _screen.getHeight();
-
-    //     for (int y = startLine; y < endLine && y < height && renderingActive.load(); y++) {
-    //         renderLine(y);
-    //     }
-    //     renderUpdate.notify_all();
-    // }
 
     void RayCaster::renderLoop()
     {

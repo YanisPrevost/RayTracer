@@ -5,8 +5,8 @@
 ** BoundingBox
 */
 
-#ifndef BOUNDINGBOX_HPP_
-#define BOUNDINGBOX_HPP_
+#pragma once
+
 #include "IPrimitive.hpp"
 #include "../BVHBuilder/AABB.hpp"
 
@@ -23,10 +23,7 @@ namespace RayTracer {
             AABB getBoundingBox() {
                 return axisAlignedBoundingBox;
             }
-
-        protected:
         private:
             AABB axisAlignedBoundingBox;
     };
 }
-#endif /* !BOUNDINGBOX_HPP_ */

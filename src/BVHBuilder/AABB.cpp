@@ -9,13 +9,10 @@
 #include "../Ray/Ray.hpp"
 
 namespace RayTracer {
-    AABB::AABB() : _min(0, 0, 0), _max(0, 0, 0)
-    {
-    }
 
-    AABB::~AABB()
-    {
-    }
+    AABB::AABB() : _min(0, 0, 0), _max(0, 0, 0) {}
+
+    AABB::~AABB() {}
 
     std::pair<double, double> AABB::calculateEntryPoint(const Ray& ray) const
     {
@@ -23,17 +20,17 @@ namespace RayTracer {
         double tx2 = (_max.X - ray.origin.X) / ray.direction.X;
         double tminX = std::min(tx1, tx2);
         double tmaxX = std::max(tx1, tx2);
-    
+
         double ty1  = (_min.Y - ray.origin.Y) / ray.direction.Y;
         double ty2 = (_max.Y - ray.origin.Y) / ray.direction.Y;
         double tminY = std::min(ty1, ty2);
         double tmaxY = std::max(ty1, ty2);
-    
+
         double tz1  = (_min.Z - ray.origin.Z) / ray.direction.Z;
         double tz2 = (_max.Z - ray.origin.Z) / ray.direction.Z;
         double tminZ = std::min(tz1, tz2);
         double tmaxZ = std::max(tz1, tz2);
-    
+
         double entryPoint = std::max(std::max(tminX, tminY), tminZ);
         double exitPoint  = std::min(std::min(tmaxX, tmaxY), tmaxZ);
         return (std::pair(entryPoint, exitPoint));
@@ -46,17 +43,17 @@ namespace RayTracer {
         double tx2 = (_max.X - ray.origin.X) / ray.direction.X;
         double tminX = std::min(tx1, tx2);
         double tmaxX = std::max(tx1, tx2);
-    
+
         double ty1  = (_min.Y - ray.origin.Y) / ray.direction.Y;
         double ty2 = (_max.Y - ray.origin.Y) / ray.direction.Y;
         double tminY = std::min(ty1, ty2);
         double tmaxY = std::max(ty1, ty2);
-    
+
         double tz1  = (_min.Z - ray.origin.Z) / ray.direction.Z;
         double tz2 = (_max.Z - ray.origin.Z) / ray.direction.Z;
         double tminZ = std::min(tz1, tz2);
         double tmaxZ = std::max(tz1, tz2);
-    
+
         double entryPoint = std::max(std::max(tminX, tminY), tminZ);
         double exitPoint  = std::min(std::min(tmaxX, tmaxY), tmaxZ);
 

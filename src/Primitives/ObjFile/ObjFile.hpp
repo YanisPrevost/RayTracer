@@ -5,8 +5,8 @@
 ** ObjFile
 */
 
-#ifndef OBJFILE_HPP_
-#define OBJFILE_HPP_
+#pragma once
+
 #include "ArgumentMap.hpp"
 #include "../DynamicLibrary/DynamicLibrary.hpp"
 #include <vector>
@@ -35,16 +35,13 @@ namespace RayTracer {
             AABB getBoundingBox() {
                 return AABB();
             }
-        protected:
         private:
             std::string fileName;
             DynamicLibrary triangleLib;
             std::vector<Math::Point3D>vertices;
             std::vector<std::vector<int>> _sides;
-            // std::vector<std::unique_ptr<IPrimitive>> triangles;
             std::unique_ptr<Node> tree;
             Math::Vector3D _color;
             Math::Point3D _position;
     };
 }
-#endif /* !OBJFILE_HPP_ */

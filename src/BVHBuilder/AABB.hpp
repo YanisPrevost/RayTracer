@@ -5,12 +5,12 @@
 ** AABB
 */
 
-#ifndef AABB_HPP_
-#define AABB_HPP_
+#pragma once
+
 #include "../Ray/Ray.hpp"
-// #include "IPrimitive.hpp"
 
 namespace RayTracer {
+
     class AABB {
         public:
             AABB();
@@ -18,8 +18,8 @@ namespace RayTracer {
                 centroid = (min + max) * 0.5;
             }
             ~AABB();
-            HitInfo getHitInfo(const Ray& ray) const;
 
+            HitInfo getHitInfo(const Ray& ray) const;
             AABB operator+(AABB other)
             {
                 Math::Point3D min = Math::Point3D (
@@ -34,13 +34,9 @@ namespace RayTracer {
                 );
                 return AABB(min, max);
             }
-            const Math::Point3D &getCentroid() const
-            {
-                return centroid;
-            }
+            const Math::Point3D &getCentroid() const {return centroid;}
             const Math::Point3D &getMin() const {return _min;}
             const Math::Point3D &getMax() const {return _max;}
-        protected:
         private:
             Math::Point3D _min;
             Math::Point3D _max;
@@ -48,4 +44,3 @@ namespace RayTracer {
             Math::Point3D centroid;
     };
 }
-#endif /* !AABB_HPP_ */

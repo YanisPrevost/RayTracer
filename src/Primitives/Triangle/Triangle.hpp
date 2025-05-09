@@ -5,8 +5,8 @@
 ** Triangle
 */
 
-#ifndef TRIANGLE_HPP_
-#define TRIANGLE_HPP_
+#pragma once
+
 #include "IPrimitive.hpp"
 #include "HitInfo.hpp"
 #include <memory>
@@ -29,7 +29,6 @@ namespace RayTracer {
                 return std::make_unique<Triangle>();
             }
             AABB getBoundingBox();
-        protected:
         private:
             Math::Point3D vertex1;
             Math::Point3D vertex2;
@@ -41,5 +40,3 @@ namespace RayTracer {
             std::optional<AABB> boundingBox;
     };
 }
-
-#endif /* !TRIANGLE_HPP_ */

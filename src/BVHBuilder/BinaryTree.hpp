@@ -5,8 +5,7 @@
 ** BinaryTree
 */
 
-#ifndef BINARYTREE_HPP_
-#define BINARYTREE_HPP_
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -24,10 +23,7 @@ namespace RayTracer {
             }
             Node(std::vector<std::unique_ptr<IPrimitive>> items);
 
-            bool isLeaf() const
-            {
-                return !right && !left;
-            }
+            bool isLeaf() const { return !right && !left; }
 
             HitInfo intersects(const Ray &ray) const {
                 HitInfo hitInfo;
@@ -60,17 +56,11 @@ namespace RayTracer {
 
             ~Node() = default;
 
-        protected:
         private:
             class BinaryTreeError : public std::exception {
                 public:
-                    BinaryTreeError(std::string errMessage)
-                    {
-                        errorMessage = errMessage;
-                    }
-                    const char *what() const noexcept override {
-                        return errorMessage.c_str();
-                    }
+                    BinaryTreeError(std::string errMessage) { errorMessage = errMessage; }
+                    const char *what() const noexcept override { return errorMessage.c_str(); }
                 private:
                     std::string errorMessage;
             };
@@ -81,4 +71,3 @@ namespace RayTracer {
     };
 }
 
-#endif /* !BINARYTREE_HPP_ */
