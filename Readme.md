@@ -8,6 +8,7 @@ RayTracer est un moteur de rendu 3D hautes performances basé sur la technique d
 
 - **Rendu de primitives 3D** : Sphères, Cylindres, Cônes, Plans
 - **Système d'éclairage** : Sources de lumière directionnelles et ponctuelles
+- **Caméra configurable** : Contrôle complet de la position, orientation et angle de vue de la caméra
 - **Chargement dynamique** : Plugins pour ajouter facilement de nouvelles primitives et sources de lumière
 - **Configuration flexible** : Descriptions de scènes personnalisables via des fichiers de configuration
 - **Multi-threading CPU** : Accélération du rendu grâce au calcul parallèle sur tous les cœurs disponibles
@@ -23,13 +24,14 @@ RayTracer est un moteur de rendu 3D hautes performances basé sur la technique d
 </p>
 <p align="center">
   <img src="Images/saturn.png" alt="Rendu: Saturne" width="45%">
+  <img src="Images/basic.png" alt="Rendu: Saturne" width="45%">
 </p>
 
 ## 🛠️ Installation
 
 ```bash
 # Cloner le dépôt
-git clone [url-du-depot]
+git clone https://github.com/EpitechPromo2028/B-OOP-400-MAR-4-1-raytracer-yanis.prevost.git
 cd RayTracer
 
 # Construire le projet
@@ -45,7 +47,7 @@ chmod +x build.sh
 
 # Autres exemples de configuration
 ./raytracer Config/cow.cfg
-./raytracer Config/foret.cfg
+./raytracer Config/simpleObjFile.cfg
 ./raytracer Config/spirale.cfg
 ```
 
@@ -139,6 +141,19 @@ Le moteur prend en charge l'import de fichiers 3D au format .obj:
 # Exemple d'utilisation avec un fichier 3D
 ./raytracer Config/simpleObjFile.cfg
 ```
+
+### Architecture à plugins via bibliothèques partagées (.so)
+
+Le RayTracer utilise un système de chargement dynamique de bibliothèques (DL) qui offre une grande flexibilité :
+- **Primitives et lumières modulaires** : Chaque primitive et source de lumière est compilée en bibliothèque partagée (.so)
+- **Chargement à la demande** : Les composants sont chargés dynamiquement pendant l'exécution selon les besoins de la scène
+- **Extensibilité simplifiée** : Possibilité d'ajouter facilement de nouvelles primitives sans recompiler l'ensemble du projet
+
+**Compilation automatique** :
+- Le système CMake détecte automatiquement les nouveaux plugins et les compile en bibliothèques partagées
+- Les .so générés sont placés dans le dossier `Plugins/Primitives/` ou `Plugins/Lights/`
+
+Cette architecture permet une séparation claire des responsabilités et facilite l'extension du moteur de rendu.
 
 ## 🔧 Options avancées
 
